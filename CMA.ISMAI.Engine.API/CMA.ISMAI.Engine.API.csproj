@@ -6,10 +6,14 @@
 
   <ItemGroup>
     <None Remove="WorkFlow\DeployTest.bpmn" />
+    <None Remove="WorkFlow\ismai.creditacao.bpmn" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="WorkFlow\DeployTest.bpmn">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkFlow\ismai.creditacao.bpmn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
