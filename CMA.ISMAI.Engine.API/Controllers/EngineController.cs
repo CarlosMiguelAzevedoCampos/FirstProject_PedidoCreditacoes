@@ -20,7 +20,7 @@ namespace CMA.ISMAI.Engine.API.Controllers
             _engineService = engineService;
         }
 
-        [HttpDelete()]
+        [HttpDelete]
         public IActionResult DeleteDeployment(string id)
         {
             bool result = _engineService.DeleteDeployment(id);
@@ -31,10 +31,10 @@ namespace CMA.ISMAI.Engine.API.Controllers
             return BadResultAction("A problem happend while deleting the process!");
         }
 
-        [HttpPost()]
-        public IActionResult DeployWorkFlow([FromBody]DeployDto model)
+        [HttpPost]
+        public IActionResult StartWorkFlow([FromBody]DeployDto model)
         {
-            string result = _engineService.DeployWorkFlow(Map.ConvertoToModel(model), Assembly.GetExecutingAssembly());
+            string result = _engineService.StartWorkFlow(Map.ConvertoToModel(model), Assembly.GetExecutingAssembly());
             bool isResultEmptyOrNull = !string.IsNullOrEmpty(result);
 
 

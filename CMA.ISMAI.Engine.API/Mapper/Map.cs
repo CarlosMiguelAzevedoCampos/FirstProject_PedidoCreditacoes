@@ -7,7 +7,7 @@ namespace CMA.ISMAI.Engine.API.Mapper
     {
         public static Deploy ConvertoToModel(DeployDto model)
         {
-            return new Deploy(model.WorkFlowName, model.ProcessName);
+            return new Deploy(model.WorkFlowName, model.ProcessName, model.IsCet);
         }
     }
 }

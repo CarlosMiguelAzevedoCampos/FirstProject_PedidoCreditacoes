@@ -4,10 +4,11 @@ namespace CMA.ISMAI.Engine.API.Model
 {
     public class DeployDto
     {
-        public DeployDto(string workFlowName, string processName)
+        public DeployDto(string workFlowName, string processName, bool isCet)
         {
             WorkFlowName = workFlowName;
             ProcessName = processName;
+            IsCet = isCet;
         }
 
         protected DeployDto()
@@ -16,5 +17,7 @@ namespace CMA.ISMAI.Engine.API.Model
 
         public string WorkFlowName { get; set; }
         public string ProcessName { get; set; }
+
+        public bool IsCet { get; set; }
     }
 }

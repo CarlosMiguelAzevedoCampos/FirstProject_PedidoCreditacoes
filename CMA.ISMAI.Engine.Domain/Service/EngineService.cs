@@ -34,14 +34,14 @@ namespace CMA.ISMAI.Automation.Service
             return false;
         }
 
-        public string DeployWorkFlow(Deploy deploy, Assembly assembly)
+        public string StartWorkFlow(Deploy deploy, Assembly assembly)
         {
             if (!deploy.IsValid(deploy))
                 return string.Empty;
 
             string workFlowName = ReturnWorkFlowProcess(deploy.WorkFlowName);
             string filePath = $"CMA.ISMAI.Engine.API.WorkFlow.{workFlowName}";
-            string result = _engine.DeployWorkFlow(filePath, assembly, string.Format("{0}-{1}", deploy.ProcessName, deploy.WorkFlowName));
+            string result = _engine.StartWorkFlow(filePath, assembly, string.Format("{0}-{1}", deploy.ProcessName, deploy.WorkFlowName), deploy.IsCet);
 
             _log.Info($"An Deploy order with the process name {deploy.ProcessName} has made!. " +
                 $"Was deployed? {result.ToString()}");
@@ -51,7 +51,13 @@ namespace CMA.ISMAI.Automation.Service
 
         private string ReturnWorkFlowProcess(string workFlowName)
         {
-            return "DeployTest.bpmn";
+            switch (workFlowName)
+            {
+                case "ISMAI":
+                    return "ismai.creditacao.bpmn";
+                default:
+                    return string.Empty;
+            }
         }
     }
 }

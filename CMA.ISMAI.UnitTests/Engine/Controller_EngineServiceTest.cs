@@ -49,16 +49,16 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
         }
 
         [Fact]
-        public void EngineService_DeployWorkFlow_ShouldReturnBadStatusBecauseOfEngineReturnFail()
+        public void EngineService_StartWorkFlow_ShouldReturnBadStatusBecauseOfEngineFailReturnFail()
         {
-            DeployDto deployDto = new DeployDto("ISMAI", "Process_00kjdw0");
+            DeployDto deployDto = new DeployDto("ISMAI", "Process_00kjdw0", true);
             var engineMock = new Mock<IEngineService>();
             var logMock = new Mock<ILog>();
-            engineMock.Setup(x => x.DeployWorkFlow(It.IsAny<Deploy>(), It.IsAny<Assembly>())).Returns(string.Empty);
+            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<Deploy>(), It.IsAny<Assembly>())).Returns(string.Empty);
 
             EngineController engineController = new EngineController(logMock.Object, engineMock.Object);
 
-            IActionResult result = engineController.DeployWorkFlow(deployDto);
+            IActionResult result = engineController.StartWorkFlow(deployDto);
             var resultCode = result as BadRequestObjectResult;
             Assert.IsType<BadRequestObjectResult>(result);
             Assert.True(resultCode.StatusCode == 400);
@@ -68,16 +68,16 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
 
         [Fact]
-        public void EngineService_DeployWorkFlow_ShouldReturnOkStatus()
+        public void EngineService_StartWorkFlow_ShouldReturnOkStatusWithStartWorkFlowForCET()
         {
-            DeployDto deployDto = new DeployDto("ISMAI", "Process_00kjdw0");
+            DeployDto deployDto = new DeployDto("ISMAI", "Process_00kjdw0", true);
             var engineMock = new Mock<IEngineService>();
             var logMock = new Mock<ILog>();
-            engineMock.Setup(x => x.DeployWorkFlow(It.IsAny<Deploy>(), It.IsAny<Assembly>())).Returns(Guid.NewGuid().ToString());
+            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<Deploy>(), It.IsAny<Assembly>())).Returns(Guid.NewGuid().ToString());
 
             EngineController engineController = new EngineController(logMock.Object, engineMock.Object);
 
-            IActionResult result = engineController.DeployWorkFlow(deployDto);
+            IActionResult result = engineController.StartWorkFlow(deployDto);
             var resultCode = result as OkObjectResult;
             Assert.IsType<OkObjectResult>(result);
             Assert.True(resultCode.StatusCode == 200);
@@ -85,18 +85,17 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             Assert.NotNull(response);
         }
 
-
         [Fact]
-        public void EngineService_DeployWorkFlow_ShouldReturnBadStatusBecauseOfMissingValues()
+        public void EngineService_StartWorkFlow_ShouldReturnBadStatusBecauseOfMissingValues()
         {
             var engineMock = new Mock<IEngineService>();
             var logMock = new Mock<ILog>();
             string guid = Guid.NewGuid().ToString();
-            engineMock.Setup(x => x.DeployWorkFlow(It.IsAny<Deploy>(), It.IsAny<Assembly>())).Returns(string.Empty);
+            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<Deploy>(), It.IsAny<Assembly>())).Returns(string.Empty);
 
             EngineController engineController = new EngineController(logMock.Object, engineMock.Object);
 
-            IActionResult result = engineController.DeployWorkFlow(new DeployDto("", "Process_00kjdw0"));
+            IActionResult result = engineController.StartWorkFlow(new DeployDto("", "Process_00kjdw0", true));
             var resultCode = result as BadRequestObjectResult;
             Assert.IsType<BadRequestObjectResult>(result);
             Assert.True(resultCode.StatusCode == 400);
@@ -105,16 +104,16 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
         }
 
         [Fact]
-        public void EngineService_DeployWorkFlow_ShouldReturnBadStatusBecauseOfEngineServiceReturnValue()
+        public void EngineService_StartWorkFlow_ShouldReturnBadStatusBecauseOfEngineServiceReturnValue()
         {
             var engineMock = new Mock<IEngineService>();
             var logMock = new Mock<ILog>();
             string guid = Guid.NewGuid().ToString();
-            engineMock.Setup(x => x.DeployWorkFlow(It.IsAny<Deploy>(), It.IsAny<Assembly>())).Returns(string.Empty);
+            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<Deploy>(), It.IsAny<Assembly>())).Returns(string.Empty);
 
             EngineController engineController = new EngineController(logMock.Object, engineMock.Object);
 
-            IActionResult result = engineController.DeployWorkFlow(new DeployDto("", "Process_00kjdw0"));
+            IActionResult result = engineController.StartWorkFlow(new DeployDto("", "Process_00kjdw0", false));
             var resultCode = result as BadRequestObjectResult;
             Assert.IsType<BadRequestObjectResult>(result);
             Assert.True(resultCode.StatusCode == 400);

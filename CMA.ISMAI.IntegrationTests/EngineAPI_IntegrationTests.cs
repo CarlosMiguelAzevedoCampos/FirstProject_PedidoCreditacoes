@@ -23,7 +23,7 @@ namespace CMA.ISMAI.IntegrationTests
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var myContent = new DeployDto("", Guid.NewGuid().ToString());
+            var myContent = new DeployDto("", Guid.NewGuid().ToString(), true);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -33,7 +33,7 @@ namespace CMA.ISMAI.IntegrationTests
         }
 
         [Fact]
-        public async Task EngineController_IntegrationTestUploadWorkFlowToTheAutomationEngine()
+        public async Task EngineController_IntegrationTestUploadWorkFlowToTheAutomationEngineAndStartTheCETWorkFlow()
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -42,7 +42,7 @@ namespace CMA.ISMAI.IntegrationTests
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var myContent = new DeployDto("ISMAI", Guid.NewGuid().ToString());
+            var myContent = new DeployDto("ISMAI", Guid.NewGuid().ToString(), true);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -51,6 +51,25 @@ namespace CMA.ISMAI.IntegrationTests
             Assert.True(response.IsSuccessStatusCode);
         }
 
+        [Fact]
+        public async Task EngineController_IntegrationTestUploadWorkFlowToTheAutomationEngineAndStartTheNonCETWorkFlow()
+        {
+            var builder = new WebHostBuilder()
+                          .UseEnvironment("Development")
+                          .UseStartup<Startup>();
+
+            TestServer testServer = new TestServer(builder);
+
+            HttpClient client = testServer.CreateClient();
+            var myContent = new DeployDto("ISMAI", Guid.NewGuid().ToString(), false);
+            var json = JsonConvert.SerializeObject(myContent);
+
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("Engine", stringContent);
+            Assert.True(response.IsSuccessStatusCode);
+        }
+        
         [Fact]
         public async Task EngineController_IntegrationTest_DeleteWorkFlowDeployShouldFailBecauseOfEmptyDeployementId()
         {

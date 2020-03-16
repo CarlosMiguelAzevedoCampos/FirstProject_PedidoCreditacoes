@@ -33,22 +33,43 @@ namespace CMA.ISMAI.Automation.Service
             }
             return true;
         }
-        
-        public string DeployWorkFlow(string filePath, Assembly assemblyInformation, string processName)
+
+        public string StartWorkFlow(string filePath, Assembly assemblyInformation, string processName, bool isCET)
         {
             try
             {
                 FileParameter file = FileParameter.FromManifestResource(assemblyInformation, filePath);
                 _log.Info(string.Format("{0} process workflow will be deployed to the workflow platform", processName));
                 string deployId = camundaEngineClient.RepositoryService.Deploy(processName, new List<object> { file });
-                _log.Info(string.Format("{0} process workflow deployed to the workflow platform", processName));
-                return deployId;
+                if (TheDeployWasDone(deployId, processName))
+                {
+                    return StartProcess(processName, isCET);
+                }
+                return string.Empty;
             }
             catch (Exception ex)
             {
                 _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! Aborting.. {1}", filePath, ex));
                 return string.Empty;
             }
+        }
+
+        private string StartProcess(string processName, bool isCET)
+        {
+            return camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, new Dictionary<string, object>()
+                    {
+                        {"cet", isCET }
+                    });
+        }
+
+        private bool TheDeployWasDone(string deployId, string processName)
+        {
+            if (deployId != string.Empty)
+            {
+                _log.Info(string.Format("{0} process workflow deployed to the workflow platform", processName));
+                return true;
+            }
+            return false;
         }
     }
 }

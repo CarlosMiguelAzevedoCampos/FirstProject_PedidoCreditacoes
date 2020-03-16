@@ -5,7 +5,7 @@ namespace CMA.ISMAI.Automation.DomainInterface
 {
     public interface IEngineService
     {
-        string DeployWorkFlow(Deploy deployPath, Assembly assembly);
+        string StartWorkFlow(Deploy deployPath, Assembly assembly);
         bool DeleteDeployment(string deploymentId);
 
     }
