@@ -12,8 +12,30 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 {
     public class Domain_EngineServiceTest
     {
-        [Fact]
-        public void EngineService_StartWorkFlow_ShouldReturnFalseBecauseDosentHaveFileParameter()
+        [Theory]
+        [InlineData(null, "12314124532", true)]
+        [InlineData("ISP", "", true)]
+        [InlineData(null, null, false)]
+        [InlineData("", "", true)]
+        public void EngineService_StartWorkFlow_ShouldFailBecauseEmptyOrNullParameters(string workflowname, string processname, bool isCet)
+        {
+            var engineMock = new Mock<IEngine>();
+            var logMock = new Mock<ILog>();
+            string guid = Guid.NewGuid().ToString();
+            Deploy deploy = new Deploy(workflowname, processname, isCet);
+
+            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<bool>())).Returns(string.Empty);
+
+            IEngineService engineService = new EngineService(engineMock.Object, logMock.Object);
+
+            string result = engineService.StartWorkFlow(deploy, Assembly.GetExecutingAssembly());
+            Assert.Empty(result);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void EngineService_StartWorkFlow_ShouldFailBecauseNullAssembly(bool isCet)
         {
             var engineMock = new Mock<IEngine>();
             var logMock = new Mock<ILog>();
@@ -23,25 +45,14 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
             IEngineService engineService = new EngineService(engineMock.Object, logMock.Object);
 
-            string result = engineService.StartWorkFlow(new Deploy(null, guid, true), null);
+            string result = engineService.StartWorkFlow(new Deploy("ISMAI_0210", "INF_P325", isCet), null);
             Assert.Empty(result);
         }
 
-        [Fact]
-        public void EngineService_StartWorkFlow_ShouldReturnEmptyBeucaseDosentHaveProcessName()
-        {
-            var engineMock = new Mock<IEngine>();
-            var logMock = new Mock<ILog>();
-            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<bool>())).Returns("");
-
-            IEngineService engineService = new EngineService(engineMock.Object, logMock.Object);
-
-            string result = engineService.StartWorkFlow(new Deploy(null, "", true), Assembly.GetExecutingAssembly());
-            Assert.Empty(result);
-        }
-
-        [Fact]
-        public void EngineService_StartWorkFlow_ShouldReturnDeployIDForNonCET()
+        [Theory]
+        [InlineData("ISMAI", "Process_00kjdw0", true)]
+        [InlineData("ISP", "Process_00kjd12", false)]
+        public void EngineService_StartWorkFlow_ShouldReturnDeployID(string workflowname, string processname, bool isCet)
         {
             var engineMock = new Mock<IEngine>();
             var logMock = new Mock<ILog>();
@@ -49,25 +60,14 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<bool>())).Returns(guid);
 
             IEngineService engineService = new EngineService(engineMock.Object, logMock.Object);
-            string result = engineService.StartWorkFlow(new Deploy("ISMAI", "Process_00kjdw0", false), Assembly.GetExecutingAssembly());
+            string result = engineService.StartWorkFlow(new Deploy(workflowname, processname,isCet), Assembly.GetExecutingAssembly());
             Assert.Equal(result, guid);
         }
 
-        [Fact]
-        public void EngineService_StartWorkFlow_ShouldReturnDeployIDForCET()
-        {
-            var engineMock = new Mock<IEngine>();
-            var logMock = new Mock<ILog>();
-            string guid = Guid.NewGuid().ToString();
-            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<bool>())).Returns(guid);
-
-            IEngineService engineService = new EngineService(engineMock.Object, logMock.Object);
-            string result = engineService.StartWorkFlow(new Deploy("ISMAI", "Process_00kjdw0", true), Assembly.GetExecutingAssembly());
-            Assert.Equal(result, guid);
-        }
-
-        [Fact]
-        public void EngineService_DeleteWorkFlow_ShouldReturnFalseBecauseOfEmptyName()
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void EngineService_DeleteWorkFlow_ShouldReturnFailBecauseOfNullOrEMptyParameters(string id)
         {
             var engineMock = new Mock<IEngine>();
             var logMock = new Mock<ILog>();
@@ -76,12 +76,14 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
             IEngineService engineService = new EngineService(engineMock.Object, logMock.Object);
 
-            bool result = engineService.DeleteDeployment("");
+            bool result = engineService.DeleteDeployment(id);
             Assert.False(result);
         }
 
-        [Fact]
-        public void EngineService_DeleteWorkFlow_ShouldReturnTrue()
+        [Theory]
+        [InlineData("Process_00kjd12")]
+        [InlineData("Process_00ds")]
+        public void EngineService_DeleteWorkFlow_ShouldReturnTrue(string id)
         {
             var engineMock = new Mock<IEngine>();
             var logMock = new Mock<ILog>();
@@ -90,7 +92,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
             IEngineService engineService = new EngineService(engineMock.Object, logMock.Object);
 
-            bool result = engineService.DeleteDeployment("Process_00kjdw0");
+            bool result = engineService.DeleteDeployment(id);
             Assert.True(result);
         }
     }

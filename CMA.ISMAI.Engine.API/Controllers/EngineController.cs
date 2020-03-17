@@ -34,6 +34,8 @@ namespace CMA.ISMAI.Engine.API.Controllers
         [HttpPost]
         public IActionResult StartWorkFlow([FromBody]DeployDto model)
         {
+            if(model == null)
+                return BadResultAction("Something went wrong in the deployment process! Model is null!");
             string result = _engineService.StartWorkFlow(Map.ConvertoToModel(model), Assembly.GetExecutingAssembly());
             bool isResultEmptyOrNull = !string.IsNullOrEmpty(result);
 

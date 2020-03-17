@@ -12,8 +12,12 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 {
     public class Domain_TrelloServiceTest
     {
-        [Fact]
-        public void TrelloService_AddCard_ShouldReturnFalseBecauseOfBadFormat()
+        [Theory]
+        [InlineData("ISMAI - Informatica creditaçâo", "")]
+        [InlineData("", "Carlos Campos")]
+        [InlineData("", "")]
+        [InlineData(null, null)]
+        public void TrelloService_AddCard_ShouldFailBecauseOfNullOrEmptyParameters(string name, string description)
         {
             var engineMock = new Mock<ITrello>();
             var logMock = new Mock<ILog>();
@@ -22,12 +26,14 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
             ITrelloService engineService = new TrelloService(engineMock.Object, logMock.Object);
 
-            string result = engineService.AddCard(new Card("", DateTime.Now, "")).Result;
+            string result = engineService.AddCard(new Card(name, DateTime.Now, description)).Result;
             Assert.Empty(result);
         }
 
-        [Fact]
-        public void TrelloService_AddCard_ShouldReturnTrue()
+        [Theory]
+        [InlineData("ISMAI - Informatica creditaçâo", "Carlos Campos")]
+        [InlineData("ISMAI - Multimedia creditaçâo", "Miguel Campos")]
+        public void TrelloService_AddCard_ShouldReturnTrue(string name, string description)
         {
             var engineMock = new Mock<ITrello>();
             var logMock = new Mock<ILog>();
@@ -36,26 +42,15 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
             ITrelloService engineService = new TrelloService(engineMock.Object, logMock.Object);
 
-            string result = engineService.AddCard(new Card("Carlos", DateTime.Now, "Insert card")).Result;
+            string result = engineService.AddCard(new Card(name, DateTime.Now, description)).Result;
             Assert.NotEmpty(result);
         }
 
-        [Fact]
-        public void TrelloService_IsTheProcessFinished_ShouldReturnTrue()
-        {
-            var engineMock = new Mock<ITrello>();
-            var logMock = new Mock<ILog>();
-            string guid = Guid.NewGuid().ToString();
-            engineMock.Setup(x => x.IsTheProcessFinished(It.IsAny<string>())).Returns(Task.FromResult(true));
 
-            ITrelloService engineService = new TrelloService(engineMock.Object, logMock.Object);
-
-            bool result = engineService.IsTheProcessFinished(Guid.NewGuid().ToString()).Result;
-            Assert.True(result);
-        }
-
-        [Fact]
-        public void TrelloService_IsTheProcessFinished_ShouldReturnNo()
+        [Theory]
+        [InlineData("ifh2i992h2b-asfa-1w")]
+        [InlineData("cjckamrb222-we-1w")]
+        public void TrelloService_IsTheProcessFinished_ShouldReturnNullOrEmptyParameters(string id)
         {
             var engineMock = new Mock<ITrello>();
             var logMock = new Mock<ILog>();
@@ -64,9 +59,27 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
             ITrelloService engineService = new TrelloService(engineMock.Object, logMock.Object);
 
-            bool result = engineService.IsTheProcessFinished(Guid.NewGuid().ToString()).Result;
+            bool result = engineService.IsTheProcessFinished(id).Result;
             Assert.False(result);
         }
+
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void TrelloService_IsTheProcessFinished_ShouldReturnTrue(string id)
+        {
+            var engineMock = new Mock<ITrello>();
+            var logMock = new Mock<ILog>();
+            string guid = Guid.NewGuid().ToString();
+            engineMock.Setup(x => x.IsTheProcessFinished(It.IsAny<string>())).Returns(Task.FromResult(true));
+
+            ITrelloService engineService = new TrelloService(engineMock.Object, logMock.Object);
+
+            bool result = engineService.IsTheProcessFinished(id).Result;
+            Assert.True(result);
+        }
+
 
 
     }

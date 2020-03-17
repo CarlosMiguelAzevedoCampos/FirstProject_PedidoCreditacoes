@@ -13,8 +13,14 @@ namespace CMA.ISMAI.IntegrationTests
 {
     public class TrelloAPI_IntegrationTests
     {
-        [Fact]
-        public async Task TrelloController_IntegrationTest_ShouldFailTheCreationDueToBadParameters()
+        [Theory]
+        [InlineData("", "Carlos Miguel Campos")]
+        [InlineData(null, "Carlos Miguel Campos")]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData("ISEP - Engenharia informática", "")]
+        [InlineData("ISEP - Engenharia informática", null)]
+        public async Task TrelloController_IntegrationTest_ShouldFailTheCreationDueToNullOrEmtpyParameters(string name, string description)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -23,7 +29,7 @@ namespace CMA.ISMAI.IntegrationTests
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var myContent = new CardDto("", DateTime.Now.AddDays(2), Guid.NewGuid().ToString());
+            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -32,8 +38,10 @@ namespace CMA.ISMAI.IntegrationTests
             Assert.False(response.IsSuccessStatusCode);
         }
 
-        [Fact]
-        public async Task TrelloController_IntegrationTest_ShouldCreateANewCard()
+        [Theory]
+        [InlineData("Informática - ISMAI", "Carlos Miguel Campos")]
+        [InlineData("ISEP - Engenharia informática", "Miguel Azevedo Silva")]
+        public async Task TrelloController_IntegrationTest_ShouldCreateANewCard(string name, string description)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -42,7 +50,7 @@ namespace CMA.ISMAI.IntegrationTests
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var myContent = new CardDto(Guid.NewGuid().ToString(), DateTime.Now.AddDays(2), Guid.NewGuid().ToString());
+            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -52,7 +60,7 @@ namespace CMA.ISMAI.IntegrationTests
         }
 
         [Fact]
-        public async Task TrelloController_IntegrationTest_ShouldFailBecauseOfNullDto()
+        public async Task TrelloController_IntegrationTest_ShouldFailBecauseOfNullParameter()
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -70,8 +78,10 @@ namespace CMA.ISMAI.IntegrationTests
         }
 
 
-        [Fact]
-        public async Task TrelloController_IntegrationTest_ShouldReturnFailOnCardValidation()
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task TrelloController_IntegrationTest_ShouldReturnFailOnCardValidation(string id)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -81,12 +91,14 @@ namespace CMA.ISMAI.IntegrationTests
 
             HttpClient client = testServer.CreateClient();
 
-            var response = await client.GetAsync("Trello");
+            var response = await client.GetAsync(string.Format("Trello?id={0}", id));
             Assert.False(response.IsSuccessStatusCode);
         }
 
-        [Fact]
-        public async Task TrelloController_IntegrationTest_ShouldReturnTheCardValidation()
+        [Theory]
+        [InlineData("23423423423")]
+        [InlineData("1234422")]
+        public async Task TrelloController_IntegrationTest_ShouldReturnTheCardValidation(string id)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -96,7 +108,7 @@ namespace CMA.ISMAI.IntegrationTests
 
             HttpClient client = testServer.CreateClient();
 
-            var response = await client.GetAsync("Trello?id=5e6e8509dddc96602b7ac32d");
+            var response = await client.GetAsync(string.Format("Trello?id={0}", id));
             Assert.True(response.IsSuccessStatusCode);
         }
     }

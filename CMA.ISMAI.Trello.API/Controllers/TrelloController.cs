@@ -22,12 +22,14 @@ namespace CMA.ISMAI.Trello.API.Controllers
         [HttpPost]
         public IActionResult AddCard([FromBody]CardDto card)
         {
+            if(card == null)
+                return BadResultAction("A problem happend while deleting the process! Model is null!");
             string result = _engineService.AddCard(Map.ConverToModel(card)).Result;
             return result != string.Empty ? OkAction(result) : BadResultAction("A problem happend while deleting the process!");
         }
 
         [HttpGet]
-        public IActionResult GetCardStat(string id)
+        public IActionResult GetCardStatus(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
