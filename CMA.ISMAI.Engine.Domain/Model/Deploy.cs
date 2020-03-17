@@ -1,19 +1,22 @@
-﻿using System.Reflection;
+﻿using CMA.ISMAI.Core.Models;
+using System;
+using System.Collections.Generic;
 
 namespace CMA.ISMAI.Engine.Domain.Model
 {
-    public class Deploy
+    public class Deploy : Entity
     {
-        public Deploy(string workFlowName, string processName, bool isCet)
+        public Deploy(Guid id, string workFlowName, string processName, Dictionary<string, object> parameters)
         {
+            Id = id;
             WorkFlowName = workFlowName;
             ProcessName = processName;
-            IsCet = isCet;
+            Parameters = parameters;
         }
 
         public string WorkFlowName { get; set; }
         public string ProcessName { get; set; }
-        public bool IsCet { get; set; }
+        public Dictionary<string, object> Parameters { get; set; }
 
         public bool IsValid(Deploy deploy)
         {

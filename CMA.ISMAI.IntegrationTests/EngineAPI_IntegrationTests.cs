@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,28 @@ namespace CMA.ISMAI.IntegrationTests
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var myContent = new DeployDto(workflowName, processName, isCet);
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("cet", isCet);
+            var myContent = new DeployDto(workflowName, processName, parameters);
+            var json = JsonConvert.SerializeObject(myContent);
+
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("Engine", stringContent);
+            Assert.False(response.IsSuccessStatusCode);
+        }
+
+        [Fact]
+        public async Task EngineController_IntegrationTest_UploadWorkFlowToTheAutomation_ShouldFailBecauseOfNullParameters()
+        {
+            var builder = new WebHostBuilder()
+                          .UseEnvironment("Development")
+                          .UseStartup<Startup>();
+
+            TestServer testServer = new TestServer(builder);
+
+            HttpClient client = testServer.CreateClient();
+            var myContent = new DeployDto("ISMAI", "Process_xs747", null);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -48,7 +70,9 @@ namespace CMA.ISMAI.IntegrationTests
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var myContent = new DeployDto(workflowName, processName, isCet);
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("cet", isCet);
+            var myContent = new DeployDto(workflowName, processName, new Dictionary<string, object>());
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -73,47 +97,6 @@ namespace CMA.ISMAI.IntegrationTests
 
             var response = await client.PostAsync("Engine", stringContent);
             Assert.False(response.IsSuccessStatusCode);
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData(null)]
-        public async Task EngineController_IntegrationTest_DeleteWorkFlowDeploy_ShouldFailBecauseOfEmptyOrNullsDeployementId(string id)
-        {
-            var builder = new WebHostBuilder()
-                          .UseEnvironment("Development")
-                          .UseStartup<Startup>();
-
-            TestServer testServer = new TestServer(builder);
-
-            HttpClient client = testServer.CreateClient();
-
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Delete,
-                RequestUri = new Uri("http://localhost/Engine"),
-                Content = new StringContent(JsonConvert.SerializeObject(id), Encoding.UTF8, "application/json")
-            };
-
-            var response = await client.SendAsync(request);
-            Assert.False(response.IsSuccessStatusCode);
-        }
-
-        [Theory]
-        [InlineData("e9a0a61e-66d8-11ea-a7fb-0242ac130002")]
-        public async Task EngineController_IntegrationTest_DeleteWorkFlowDeployShouldPass(string id)
-        {
-            var builder = new WebHostBuilder()
-                          .UseEnvironment("Development")
-                          .UseStartup<Startup>();
-
-            TestServer testServer = new TestServer(builder);
-
-            HttpClient client = testServer.CreateClient();
-
-
-            var response = await client.DeleteAsync(string.Format("Engine?id={0}", id));
-            Assert.True(response.IsSuccessStatusCode);
         }
     }
 }

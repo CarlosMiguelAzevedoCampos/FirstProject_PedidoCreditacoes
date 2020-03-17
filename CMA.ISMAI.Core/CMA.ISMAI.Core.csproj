@@ -9,9 +9,4 @@
     <PackageReference Include="MediatR" Version="8.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CMA.ISMAI.Core\CMA.ISMAI.Core.csproj" />
-    <ProjectReference Include="..\CMA.ISMAI.Engine.Automation\CMA.ISMAI.Engine.Automation.csproj" />
-  </ItemGroup>
-
 </Project>

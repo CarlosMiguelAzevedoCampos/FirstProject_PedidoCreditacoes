@@ -1,13 +1,13 @@
 ﻿using CMA.ISMAI.Engine.API.Model;
-using CMA.ISMAI.Engine.Domain.Model;
+using CMA.ISMAI.Engine.Domain.Commands;
 
 namespace CMA.ISMAI.Engine.API.Mapper
 {
     public static class Map
     {
-        public static Deploy ConvertoToModel(DeployDto model)
+        public static StartDeployCommand ConvertToCommand(DeployDto model)
         {
-            return new Deploy(model.WorkFlowName, model.ProcessName, model.IsCet);
+            return new StartDeployCommand(model.WorkFlowName, model.ProcessName, model.AssemblyName, model.Parameters);
         }
     }
 }

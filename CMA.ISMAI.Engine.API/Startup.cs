@@ -1,9 +1,7 @@
-using CMA.ISMAI.Automation.DomainInterface;
 using CMA.ISMAI.Automation.Interface;
 using CMA.ISMAI.Automation.Service;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -52,7 +50,6 @@ namespace CMA.ISMAI.Engine.API
         {
             services.AddScoped<ILog, LoggingService>();
             services.AddScoped<IEngine, Automation.Service.Engine>();
-            services.AddScoped<IEngineService, EngineService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
