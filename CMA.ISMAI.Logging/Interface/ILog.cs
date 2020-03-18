@@ -4,7 +4,5 @@
     {
         void Fatal(string message);
         void Info(string message);
-        void Warning(string message);
-        void Actions(string message);
     }
 }

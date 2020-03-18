@@ -60,7 +60,7 @@ namespace CMA.ISMAI.IntegrationTests
 
         [Theory]
         [InlineData("ISMAI", "INF_34324", true)]
-        [InlineData("ISEP", "EINF_2334324", false)]
+        [InlineData("ISMAI", "EINF_2334324", false)]
         public async Task EngineController_IntegrationTest_UploadWorkFlowToTheAutomationEngineAndStartTheWorkFlow(string workflowName, string processName, bool isCet)
         {
             var builder = new WebHostBuilder()
@@ -81,17 +81,20 @@ namespace CMA.ISMAI.IntegrationTests
             Assert.True(response.IsSuccessStatusCode);
         }
 
-        [Fact]
-        public async Task EngineController_IntegrationTest_UploadWorkFlowToTheAutomationShouldFailBecauseNullDto()
+
+        [Theory]
+        [InlineData("ISEP", "Process_00kjdw0")]
+        [InlineData("FEUP", "Process_00kjd12")]
+        public async Task EngineService_StartWorkFlow_ShouldReturnBadStatusBecauseOfNonExistingWorkFlow(string workflowName, string processName)
         {
             var builder = new WebHostBuilder()
-                          .UseEnvironment("Development")
-                          .UseStartup<Startup>();
+                        .UseEnvironment("Development")
+                        .UseStartup<Startup>();
 
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var json = JsonConvert.SerializeObject(null);
+            var json = JsonConvert.SerializeObject(new DeployDto(workflowName, processName, new Dictionary<string, object>()));
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 

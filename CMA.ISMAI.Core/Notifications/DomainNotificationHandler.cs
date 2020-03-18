@@ -31,10 +31,5 @@ namespace CMA.ISMAI.Core.Notifications
         {
             return GetNotifications().Any();
         }
-
-        public void Dispose()
-        {
-            _notifications = new List<DomainNotification>();
-        }
     }
 }

@@ -19,20 +19,6 @@ namespace CMA.ISMAI.Automation.Service
             camundaEngineClient = new CamundaEngineClient(new Uri("http://localhost:8080/engine-rest/engine/default/"), null, null);
         }
 
-        public bool DeleteDeployment(string deploymentId)
-        {
-            try
-            {
-                _log.Info(string.Format("{0} workflow deployed will be deleted from the workflow platform", deploymentId));
-                camundaEngineClient.RepositoryService.DeleteDeployment(deploymentId);
-            }
-            catch (Exception ex)
-            {
-                _log.Fatal(string.Format("An error happend deleting the deployment {0}.. Aborting ", deploymentId, ex));
-                return false;
-            }
-            return true;
-        }
 
         public string StartWorkFlow(string filePath, Assembly assemblyInformation, string processName, bool isCET)
         {
@@ -43,24 +29,24 @@ namespace CMA.ISMAI.Automation.Service
                 string deployId = camundaEngineClient.RepositoryService.Deploy(processName, new List<object> { file });
                 if (TheDeployWasDone(deployId, processName))
                 {
-                    return StartProcess(processName, isCET);
+                    return Guid.NewGuid().ToString();
                 }
-                return string.Empty;
+                _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! No DeployId returned!", processName));
             }
             catch (Exception ex)
             {
                 _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! Aborting.. {1}", filePath, ex));
-                return string.Empty;
             }
+            return string.Empty;
         }
 
-        private string StartProcess(string processName, bool isCET)
-        {
-            return camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, new Dictionary<string, object>()
-                    {
-                        {"cet", isCET }
-                    });
-        }
+        //private string StartProcess(string processName, bool isCET)
+        //{
+        //    return camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, new Dictionary<string, object>()
+        //            {
+        //                {"cet", isCET }
+        //            });
+        //}
 
         private bool TheDeployWasDone(string deployId, string processName)
         {

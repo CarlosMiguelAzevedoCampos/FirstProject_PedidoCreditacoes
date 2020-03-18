@@ -1,7 +1,13 @@
 using CMA.ISMAI.Automation.Interface;
-using CMA.ISMAI.Automation.Service;
+using CMA.ISMAI.Core.Bus;
+using CMA.ISMAI.Core.Notifications;
+using CMA.ISMAI.Engine.Domain.CommandHandlers;
+using CMA.ISMAI.Engine.Domain.Commands;
+using CMA.ISMAI.Engine.Domain.EventHandlers;
+using CMA.ISMAI.Engine.Domain.Events;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -43,6 +49,9 @@ namespace CMA.ISMAI.Engine.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            // Adding MediatR for Domain Events and Notifications
+            services.AddMediatR(typeof(Startup));
+
             InitializeDependecyInjection(services);
         }
 
@@ -50,6 +59,15 @@ namespace CMA.ISMAI.Engine.API
         {
             services.AddScoped<ILog, LoggingService>();
             services.AddScoped<IEngine, Automation.Service.Engine>();
+            // Domain - Events
+            services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
+            services.AddScoped<INotificationHandler<WorkFlowStartCompletedEvent>, WorkFlowEventHandler>();
+            // Domain Bus (Mediator)
+            services.AddScoped<IMediatorHandler, InMemoryBus>();
+            // Domain - Commands
+            services.AddScoped<IRequestHandler<StartWorkFlowCommand, bool>, WorkFlowCommandHandler>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

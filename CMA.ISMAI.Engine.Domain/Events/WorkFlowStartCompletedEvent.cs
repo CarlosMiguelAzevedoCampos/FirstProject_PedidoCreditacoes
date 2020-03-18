@@ -3,9 +3,9 @@ using System;
 
 namespace CMA.ISMAI.Engine.Domain.Events
 {
-    public class DeployCompletedEvent : Event
+    public class WorkFlowStartCompletedEvent : Event
     {
-        public DeployCompletedEvent(Guid id, string workFlowName, string processName, bool isCet)
+        public WorkFlowStartCompletedEvent(Guid id, string workFlowName, string processName, bool isCet)
         {
             Id = id;
             WorkFlowName = workFlowName;

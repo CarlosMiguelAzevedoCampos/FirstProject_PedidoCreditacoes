@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Engine.Domain.EventHandlers
 {
-    public class DeployEventHandler : INotificationHandler<DeployCompletedEvent>
+    public class WorkFlowEventHandler : INotificationHandler<WorkFlowStartCompletedEvent>
     {
-        public Task Handle(DeployCompletedEvent notification, CancellationToken cancellationToken)
+        public Task Handle(WorkFlowStartCompletedEvent notification, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

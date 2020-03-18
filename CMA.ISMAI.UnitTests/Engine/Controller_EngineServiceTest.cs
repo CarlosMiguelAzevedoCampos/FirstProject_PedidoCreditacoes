@@ -20,7 +20,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
             EngineController engineController = new EngineController(logMock.Object, busMock.Object, new DomainNotificationHandler());
 
-            IActionResult result = engineController.DeployWorkFlow(null);
+            IActionResult result = engineController.StartWorkFlow(null);
             var resultCode = result as BadRequestResult;
             Assert.IsType<BadRequestResult>(result);
             Assert.True(resultCode.StatusCode == 400);
@@ -30,9 +30,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
         [Theory]
         [InlineData("ISMAI", "Process_00kjdw0")]
-        [InlineData("FEUP", "Process_00kjdw0")]
-        [InlineData("ISLA", "Process_00kjdw0")]
-        [InlineData("ISP", "Process_00kjd12")]
+        [InlineData("ISMAI", "Process_00kjd12")]
         public void EngineService_StartWorkFlow_ShouldReturnOkStatus(string workflowName, string processName)
         {
             var logMock = new Mock<ILog>();
@@ -40,7 +38,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
             EngineController engineController = new EngineController(logMock.Object, busMock.Object, new DomainNotificationHandler());
 
-            IActionResult result = engineController.DeployWorkFlow(new DeployDto(workflowName, processName, new Dictionary<string, object>()));
+            IActionResult result = engineController.StartWorkFlow(new DeployDto(workflowName, processName, new Dictionary<string, object>()));
             var resultCode = result as OkObjectResult;
             Assert.IsType<OkObjectResult>(result);
             Assert.True(resultCode.StatusCode == 200);

@@ -2,9 +2,9 @@
 
 namespace CMA.ISMAI.Engine.Domain.Validations
 {
-    public class StartDeployCommandValidations : DeployValidations<StartDeployCommand>
+    public class StartWorkFlowCommandValidations : WorkFlowValidations<StartWorkFlowCommand>
     {
-        public StartDeployCommandValidations()
+        public StartWorkFlowCommandValidations()
         {
             ValidateProcessName();
             ValidateWorkFlowName();

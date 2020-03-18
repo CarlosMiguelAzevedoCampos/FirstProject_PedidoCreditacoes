@@ -1,10 +1,9 @@
 ﻿using CMA.ISMAI.Engine.Domain.Commands;
 using FluentValidation;
-using System;
 
 namespace CMA.ISMAI.Engine.Domain.Validations
 {
-    public abstract class DeployValidations<T> : AbstractValidator<T> where T : DeployCommand
+    public abstract class WorkFlowValidations<T> : AbstractValidator<T> where T : WorkFlowCommand
     {
         protected void ValidateProcessName()
         {

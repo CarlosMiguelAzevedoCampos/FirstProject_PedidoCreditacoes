@@ -18,7 +18,6 @@ namespace CMA.ISMAI.Engine.API.Model
 
         public string WorkFlowName { get; set; }
         public string ProcessName { get; set; }
-        public Assembly AssemblyName { get; set; }
         public Dictionary<string, object> Parameters { get; set; }
     }
 }

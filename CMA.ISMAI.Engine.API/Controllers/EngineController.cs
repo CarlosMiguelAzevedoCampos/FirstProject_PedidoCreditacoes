@@ -5,7 +5,6 @@ using CMA.ISMAI.Engine.API.Model;
 using CMA.ISMAI.Logging.Interface;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace CMA.ISMAI.Engine.API.Controllers
 {
@@ -24,14 +23,13 @@ namespace CMA.ISMAI.Engine.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeployWorkFlow([FromBody]DeployDto model)
+        public IActionResult StartWorkFlow([FromBody] DeployDto model)
         {
-            if(model == null)
+            if (model == null)
             {
+                _logger.Fatal("An null DeployDto has recived!");
                 return BadRequest();
-            }
-            model.AssemblyName = Assembly.GetExecutingAssembly();
-            
+            }            
             Bus.SendCommand(Map.ConvertToCommand(model));
             return Response();
         }

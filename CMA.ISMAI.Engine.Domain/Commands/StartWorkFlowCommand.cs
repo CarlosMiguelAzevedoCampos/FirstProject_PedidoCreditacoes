@@ -1,13 +1,15 @@
 ﻿using CMA.ISMAI.Engine.Domain.Validations;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace CMA.ISMAI.Engine.Domain.Commands
 {
-    public class StartDeployCommand : DeployCommand
+    public class StartWorkFlowCommand : WorkFlowCommand
     {
-        public StartDeployCommand(string workFlowName, string processName, Assembly assembly, Dictionary<string, object> parameters)
+        public StartWorkFlowCommand(string workFlowName, string processName, Assembly assembly, Dictionary<string, object> parameters)
         {
+            Id = Guid.NewGuid();
             WorkFlowName = workFlowName;
             ProcessName = processName;
             Parameters = parameters;
@@ -16,7 +18,7 @@ namespace CMA.ISMAI.Engine.Domain.Commands
 
         public override bool IsValid()
         {
-            ValidationResult = new StartDeployCommandValidations().Validate(this);
+            ValidationResult = new StartWorkFlowCommandValidations().Validate(this);
             return ValidationResult.IsValid;
         }
     }
