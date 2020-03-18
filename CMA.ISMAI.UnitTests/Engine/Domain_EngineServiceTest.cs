@@ -71,7 +71,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             var logMock = new Mock<ILog>();
             var engineMock = new Mock<IEngine>();
             var busMock = new Mock<IMediatorHandler>();
-            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<bool>())).Returns(Guid.NewGuid().ToString());
+            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(Guid.NewGuid().ToString());
             StartWorkFlowCommand Start = new StartWorkFlowCommand(workflowname, processname, Assembly.GetExecutingAssembly(), new Dictionary<string, object>());
             WorkFlowCommandHandler startStartCommandHandler = new WorkFlowCommandHandler(busMock.Object, new DomainNotificationHandler(), engineMock.Object, logMock.Object);
 
@@ -87,7 +87,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             var logMock = new Mock<ILog>();
             var engineMock = new Mock<IEngine>();
             var busMock = new Mock<IMediatorHandler>();
-            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<bool>())).Returns(Guid.NewGuid().ToString());
+            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(Guid.NewGuid().ToString());
             StartWorkFlowCommand Start = new StartWorkFlowCommand(workflowname, processname, Assembly.GetExecutingAssembly(), new Dictionary<string, object>());
             WorkFlowCommandHandler startStartCommandHandler = new WorkFlowCommandHandler(busMock.Object, new DomainNotificationHandler(), engineMock.Object, logMock.Object);
 
@@ -103,7 +103,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             var logMock = new Mock<ILog>();
             var engineMock = new Mock<IEngine>();
             var busMock = new Mock<IMediatorHandler>();
-            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<bool>())).Returns(string.Empty);
+            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<Dictionary<string, object>>())).Returns(string.Empty);
             StartWorkFlowCommand Start = new StartWorkFlowCommand(workflowname, processname, Assembly.GetExecutingAssembly(), new Dictionary<string, object>());
             WorkFlowCommandHandler startStartCommandHandler = new WorkFlowCommandHandler(busMock.Object, new DomainNotificationHandler(), engineMock.Object, logMock.Object);
 
@@ -115,12 +115,8 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
         [Theory]
         [InlineData("ISMAI", "Process_00kjdw0")]
         [InlineData("ISMAI", "Process_00kjd12")]
-        public async Task EngineService_StartWorkFlowEvent_ShouldReturnEventCompletedAsync(string workflowname, string processname)
+        public void EngineService_StartWorkFlowEvent_ShouldReturnEventCompleted(string workflowname, string processname)
         {
-            var logMock = new Mock<ILog>();
-            var engineMock = new Mock<IEngine>();
-            var busMock = new Mock<IMediatorHandler>();
-            engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<Assembly>(), It.IsAny<string>(), It.IsAny<bool>())).Returns(string.Empty);
             WorkFlowStartCompletedEvent workflowEvent = new WorkFlowStartCompletedEvent(Guid.NewGuid(), workflowname, processname, true);
             WorkFlowEventHandler startWorkFlowEvent = new WorkFlowEventHandler();
 

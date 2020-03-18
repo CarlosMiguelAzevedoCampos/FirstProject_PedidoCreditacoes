@@ -20,7 +20,7 @@ namespace CMA.ISMAI.Automation.Service
         }
 
 
-        public string StartWorkFlow(string filePath, Assembly assemblyInformation, string processName, bool isCET)
+        public string StartWorkFlow(string filePath, Assembly assemblyInformation, string processName, Dictionary<string, object> parameters)
         {
             try
             {
@@ -40,13 +40,10 @@ namespace CMA.ISMAI.Automation.Service
             return string.Empty;
         }
 
-        //private string StartProcess(string processName, bool isCET)
-        //{
-        //    return camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, new Dictionary<string, object>()
-        //            {
-        //                {"cet", isCET }
-        //            });
-        //}
+        private string StartProcess(string processName, Dictionary<string, object> parameters)
+        {
+            return camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, parameters);
+        }
 
         private bool TheDeployWasDone(string deployId, string processName)
         {

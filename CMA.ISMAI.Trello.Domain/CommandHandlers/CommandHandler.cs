@@ -3,7 +3,7 @@ using CMA.ISMAI.Core.Commands;
 using CMA.ISMAI.Core.Notifications;
 using MediatR;
 
-namespace CMA.ISMAI.Engine.Domain.CommandHandlers
+namespace CMA.ISMAI.Trello.Domain.CommandHandlers
 {
     public class CommandHandler
     {

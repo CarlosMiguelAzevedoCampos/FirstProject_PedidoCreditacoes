@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CMA.ISMAI.Core\CMA.ISMAI.Core.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.Engine\CMA.ISMAI.Trello.Engine.csproj" />
   </ItemGroup>
 

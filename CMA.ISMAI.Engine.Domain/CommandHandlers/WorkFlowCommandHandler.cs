@@ -43,7 +43,7 @@ namespace CMA.ISMAI.Engine.Domain.CommandHandlers
             }
 
             string filePath = $"CMA.ISMAI.Engine.API.WorkFlow.{workFlowName}";
-            string result = _engine.StartWorkFlow(filePath, request.AssemblyName, string.Format("{0}-{1}", request.ProcessName, request.WorkFlowName), true);
+            string result = _engine.StartWorkFlow(filePath, request.AssemblyName, string.Format("{0}-{1}", request.ProcessName, request.WorkFlowName), request.Parameters);
 
             if (string.IsNullOrEmpty(result))
             {

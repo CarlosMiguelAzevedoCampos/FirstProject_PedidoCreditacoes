@@ -1,7 +1,10 @@
-﻿using CMA.ISMAI.Logging.Interface;
+﻿using CMA.ISMAI.Core.Bus;
+using CMA.ISMAI.Core.Notifications;
+using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Trello.API.Mapper;
 using CMA.ISMAI.Trello.API.Model;
-using CMA.ISMAI.Trello.Domain.Interface;
+using CMA.ISMAI.Trello.Domain.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CMA.ISMAI.Trello.API.Controllers
@@ -11,21 +14,25 @@ namespace CMA.ISMAI.Trello.API.Controllers
     public class TrelloController : BaseController
     {
         private readonly ILog _logger;
-        private readonly ITrelloService _engineService;
+        private readonly IMediatorHandler Bus;
 
-        public TrelloController(ILog logger, ITrelloService engineService)
+        public TrelloController(ILog logger, IMediatorHandler bus,
+            INotificationHandler<DomainNotification> notifications) : base(notifications, bus)
         {
             _logger = logger;
-            _engineService = engineService;
+            Bus = bus;
         }
 
         [HttpPost]
         public IActionResult AddCard([FromBody]CardDto card)
         {
-            if(card == null)
-                return BadResultAction("A problem happend while deleting the process! Model is null!");
-            string result = _engineService.AddCard(Map.ConverToModel(card)).Result;
-            return result != string.Empty ? OkAction(result) : BadResultAction("A problem happend while deleting the process!");
+            if (card == null)
+            {
+                _logger.Fatal("Card Dto is null!");
+                return BadRequest();
+            }
+            Bus.SendCommand(Map.ConverToModel(card));
+            return Response();
         }
 
         [HttpGet]
@@ -34,10 +41,10 @@ namespace CMA.ISMAI.Trello.API.Controllers
             if (string.IsNullOrEmpty(id))
             {
                 _logger.Fatal("Card ID is null!");
-                return BadResultAction("A null or empty card id was passed!");
+                return BadRequest();
             }
-            bool result = _engineService.IsTheProcessFinished(id).Result;
-            return OkAction(result.ToString());
+            string result = Bus.SendCommand(new ObtainCardStatusCommand(id)).ToString();
+            return Response();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace CMA.ISMAI.IntegrationTests
         [InlineData("", "")]
         [InlineData("ISEP - Engenharia informática", "")]
         [InlineData("ISEP - Engenharia informática", null)]
-        public async Task TrelloController_IntegrationTest_ShouldFailTheCreationDueToNullOrEmtpyParameters(string name, string description)
+        public async Task TrelloController_IntegrationTest_AddCard_ShouldFailTheCreationDueToNullOrEmtpyParameters(string name, string description)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -41,7 +41,7 @@ namespace CMA.ISMAI.IntegrationTests
         [Theory]
         [InlineData("Informática - ISMAI", "Carlos Miguel Campos")]
         [InlineData("ISEP - Engenharia informática", "Miguel Azevedo Silva")]
-        public async Task TrelloController_IntegrationTest_ShouldCreateANewCard(string name, string description)
+        public async Task TrelloController_IntegrationTest_AddCard_ShouldCreateANewCard(string name, string description)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -59,29 +59,10 @@ namespace CMA.ISMAI.IntegrationTests
             Assert.True(response.IsSuccessStatusCode);
         }
 
-        [Fact]
-        public async Task TrelloController_IntegrationTest_ShouldFailBecauseOfNullParameter()
-        {
-            var builder = new WebHostBuilder()
-                          .UseEnvironment("Development")
-                          .UseStartup<Startup>();
-
-            TestServer testServer = new TestServer(builder);
-
-            HttpClient client = testServer.CreateClient();
-            var json = JsonConvert.SerializeObject(null);
-
-            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-
-            var response = await client.PostAsync("Trello", stringContent);
-            Assert.False(response.IsSuccessStatusCode);
-        }
-
-
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public async Task TrelloController_IntegrationTest_ShouldReturnFailOnCardValidation(string id)
+        public async Task TrelloController_IntegrationTest_GetCardStatus_ShouldReturnFailOnCardValidation(string id)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -98,7 +79,7 @@ namespace CMA.ISMAI.IntegrationTests
         [Theory]
         [InlineData("23423423423")]
         [InlineData("1234422")]
-        public async Task TrelloController_IntegrationTest_ShouldReturnTheCardValidation(string id)
+        public async Task TrelloController_IntegrationTest_GetCardStatus__ShouldReturnTheCardValidation(string id)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
