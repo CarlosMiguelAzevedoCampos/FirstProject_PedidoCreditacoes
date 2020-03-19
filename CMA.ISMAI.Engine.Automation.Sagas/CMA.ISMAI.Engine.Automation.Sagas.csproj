@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BerndRuecker.Sample.CamundaClient" Version="0.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CMA.ISMAI.Engine.Automation\CMA.ISMAI.Engine.Automation.csproj" />
+  </ItemGroup>
+
+</Project>

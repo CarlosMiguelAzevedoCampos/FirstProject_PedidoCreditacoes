@@ -6,13 +6,11 @@
 
   <ItemGroup>
     <None Remove="WorkFlow\DeployTest.bpmn" />
+    <None Remove="WorkFlow\FlowingTripBookingSaga.bpmn" />
     <None Remove="WorkFlow\ismai.creditacao.bpmn" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="WorkFlow\DeployTest.bpmn">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="WorkFlow\ismai.creditacao.bpmn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -29,6 +27,12 @@
   <ItemGroup>
     <ProjectReference Include="..\CMA.ISMAI.Engine.Automation\CMA.ISMAI.Engine.Automation.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Engine.Domain\CMA.ISMAI.Engine.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="WorkFlow\FlowingTripBookingSaga.bpmn">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 

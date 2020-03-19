@@ -42,7 +42,7 @@ namespace CMA.ISMAI.Engine.Domain.CommandHandlers
                 return Task.FromResult(false);
             }
 
-            string filePath = $"CMA.ISMAI.Engine.API.WorkFlow.{workFlowName}";
+            string filePath = $"CMA.ISMAI.Engine.API.WorkFlow.FlowingTripBookingSaga.bpmn";
             string result = _engine.StartWorkFlow(filePath, request.AssemblyName, string.Format("{0}-{1}", request.ProcessName, request.WorkFlowName), request.Parameters);
 
             if (string.IsNullOrEmpty(result))
