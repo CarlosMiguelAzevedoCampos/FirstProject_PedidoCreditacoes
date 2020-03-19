@@ -49,7 +49,8 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI
         private void pollTasks()
         {
             _log.Info($"It's Poll Time in creditacao!!");
-            var tasks = _engine.FetchAndLockTasks("ISMAI", 10000, workers.Keys, 5 * 60 * 1000, null);
+            IDictionary<string, Action<ExternalTask>> lockedWorkers = workers;
+            var tasks = _engine.FetchAndLockTasks("ISMAI", 10000, lockedWorkers.Keys, 5 * 60 * 1000, null);
             if (tasks.Count > 0) {
                 _log.Info($"It's Poll Time in creditacao!!, and we have tasks!");
                 Parallel.ForEach(
@@ -57,7 +58,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI
                     new ParallelOptions { MaxDegreeOfParallelism = 1 },
                     (externalTask) => {
                         _log.Info($"A new worker task's will be processed! - {externalTask.TopicName}");
-                        workers[externalTask.TopicName](externalTask);
+                        lockedWorkers[externalTask.TopicName](externalTask);
                     });
             }
             // schedule next run

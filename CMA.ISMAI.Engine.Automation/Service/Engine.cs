@@ -57,11 +57,11 @@ namespace CMA.ISMAI.Automation.Service
                 string deployId = camundaEngineClient.RepositoryService.Deploy(processName, new List<object> { file });
                 if (TheDeployWasDone(deployId, processName))
                 {
-                    return StartProcess("FlowingTripBookingSaga", parameters);
+                    return StartProcess(processName, parameters);
                 }
                 _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! No DeployId returned!", processName));
             }
-            catch(Exception ex)
+            catch
             {
                 _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! Aborting.. {1}", filePath, processName));
             }
