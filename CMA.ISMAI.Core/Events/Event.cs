@@ -1,9 +1,8 @@
-﻿using MediatR;
-using System;
+﻿using System;
 
 namespace CMA.ISMAI.Core.Events
 {
-    public abstract class Event : Message, INotification
+    public class Event : Message
     {
         public DateTime Timestamp { get; private set; }
 

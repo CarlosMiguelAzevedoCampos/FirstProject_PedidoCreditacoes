@@ -1,26 +1,28 @@
 ﻿using CMA.ISMAI.Trello.Domain.Events;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
+using CMA.ISMAI.Trello.Domain.Interface;
 
 namespace CMA.ISMAI.Trello.Domain.EventHandlers
 {
-    public class CardEventHandler : INotificationHandler<AddCardCompletedEvent>,
-        INotificationHandler<CardCompletedStatusEvent>, INotificationHandler<CardIncompletedStatusEvent>
+    public class CardEventHandler : ICardEventHandler
     {
-        public Task Handle(AddCardCompletedEvent notification, CancellationToken cancellationToken)
+        public void Handler(AddCardCompletedEvent request)
         {
-            return Task.CompletedTask;
         }
 
-        public Task Handle(CardIncompletedStatusEvent notification, CancellationToken cancellationToken)
+        public void Handler(AddCardFailedEvent request)
         {
-            return Task.CompletedTask;
         }
 
-        public Task Handle(CardCompletedStatusEvent notification, CancellationToken cancellationToken)
+        public void Handler(CardStatusCompletedEvent request)
         {
-            return Task.CompletedTask;
+        }
+
+        public void Handler(CardStatusIncompletedEvent request)
+        {
+        }
+
+        public void Handler(CardStatusUnableToFindEvent request)
+        {
         }
     }
 }

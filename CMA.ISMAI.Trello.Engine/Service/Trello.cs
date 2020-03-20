@@ -37,19 +37,20 @@ namespace CMA.ISMAI.Trello.Engine.Service
             return string.Empty;
         }
 
-        public async Task<bool> IsTheProcessFinished(string cardId)
+        public async Task<int> IsTheProcessFinished(string cardId)
         {
             try
             {
                 var card = _factory.Card(cardId);
                 await card.Refresh();
-                return card.IsComplete ?? false;
+                bool result = card.IsComplete ?? false;
+                return result ? 1 : 0;
             }
             catch (Exception ex)
             {
                 this._log.Fatal(ex.ToString());
             }
-            return false;
+            return 3;
         }
     }
 }

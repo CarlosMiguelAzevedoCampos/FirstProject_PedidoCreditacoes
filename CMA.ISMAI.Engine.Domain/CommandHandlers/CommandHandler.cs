@@ -1,27 +1,19 @@
-﻿using CMA.ISMAI.Core.Bus;
-using CMA.ISMAI.Core.Commands;
+﻿using CMA.ISMAI.Core.Commands;
 using CMA.ISMAI.Core.Notifications;
-using MediatR;
+using System.Collections.Generic;
 
 namespace CMA.ISMAI.Engine.Domain.CommandHandlers
 {
     public class CommandHandler
     {
-        private readonly IMediatorHandler _bus;
-        private readonly DomainNotificationHandler _notifications;
-
-        public CommandHandler(IMediatorHandler bus, INotificationHandler<DomainNotification> notifications)
+        protected List<DomainNotification> NotifyValidationErrors(Command message)
         {
-            _notifications = (DomainNotificationHandler)notifications;
-            _bus = bus;
-        }
-
-        protected void NotifyValidationErrors(Command message)
-        {
+            List<DomainNotification> domainNotification = new List<DomainNotification>();
             foreach (var error in message.ValidationResult.Errors)
             {
-                _bus.RaiseEvent(new DomainNotification(message.MessageType, error.ErrorMessage));
+                domainNotification.Add(new DomainNotification(message.MessageType, error.ErrorMessage));
             }
+            return domainNotification;
         }
     }
 }

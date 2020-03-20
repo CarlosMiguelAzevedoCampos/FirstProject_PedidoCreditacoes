@@ -15,11 +15,11 @@ namespace CMA.ISMAI.IntegrationTests
     public class EngineAPI_IntegrationTests
     {
         [Theory]
-        [InlineData("", "INF_34324", true)]
-        [InlineData("", "", false)]
-        [InlineData(null, null, true)]
-        [InlineData("ISMAI", "", true)]
-        public async Task EngineController_IntegrationTest_UploadWorkFlowToTheAutomation_ShouldFailBecauseOfEmptyOrNullParameters(string workflowName, string processName, bool isCet)
+        [InlineData("", true)]
+        [InlineData("", false)]
+        [InlineData(null, true)]
+        [InlineData(null, false)]
+        public async Task EngineController_IntegrationTest_UploadWorkFlowToTheAutomation_ShouldFailBecauseOfEmptyOrNullParameters(string workflowName, bool isCet)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -30,7 +30,7 @@ namespace CMA.ISMAI.IntegrationTests
             HttpClient client = testServer.CreateClient();
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("cet", isCet);
-            var myContent = new DeployDto(workflowName, processName, parameters);
+            var myContent = new DeployDto(workflowName, parameters);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -49,7 +49,7 @@ namespace CMA.ISMAI.IntegrationTests
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var myContent = new DeployDto("ISMAI", "Process_xs747", null);
+            var myContent = new DeployDto("ISMAI", null);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -59,9 +59,9 @@ namespace CMA.ISMAI.IntegrationTests
         }
 
         [Theory]
-        [InlineData("ISMAI", "INF_34324", true)]
-        [InlineData("ISMAI", "EINF_2334324", false)]
-        public async Task EngineController_IntegrationTest_UploadWorkFlowToTheAutomationEngineAndStartTheWorkFlow(string workflowName, string processName, bool isCet)
+        [InlineData("ISMAI", true)]
+        [InlineData("ISMAI", false)]
+        public async Task EngineController_IntegrationTest_UploadWorkFlowToTheAutomationEngineAndStartTheWorkFlow(string workflowName, bool isCet)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -72,7 +72,7 @@ namespace CMA.ISMAI.IntegrationTests
             HttpClient client = testServer.CreateClient();
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("cet", isCet);
-            var myContent = new DeployDto(workflowName, processName, parameters);
+            var myContent = new DeployDto(workflowName, parameters);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -83,9 +83,8 @@ namespace CMA.ISMAI.IntegrationTests
 
 
         [Theory]
-        [InlineData("ISEP", "Process_00kjdw0")]
-        [InlineData("FEUP", "Process_00kjd12")]
-        public async Task EngineService_StartWorkFlow_ShouldReturnBadStatusBecauseOfNonExistingWorkFlow(string workflowName, string processName)
+        [InlineData("ISEP")]
+        public async Task EngineService_StartWorkFlow_ShouldReturnBadStatusBecauseOfNonExistingWorkFlow(string workflowName)
         {
             var builder = new WebHostBuilder()
                         .UseEnvironment("Development")
@@ -94,7 +93,7 @@ namespace CMA.ISMAI.IntegrationTests
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var json = JsonConvert.SerializeObject(new DeployDto(workflowName, processName, new Dictionary<string, object>()));
+            var json = JsonConvert.SerializeObject(new DeployDto(workflowName, new Dictionary<string, object>()));
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 

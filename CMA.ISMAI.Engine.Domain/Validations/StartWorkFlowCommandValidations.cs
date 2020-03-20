@@ -6,8 +6,6 @@ namespace CMA.ISMAI.Engine.Domain.Validations
     {
         public StartWorkFlowCommandValidations()
         {
-            ValidateProcessName();
-            ValidateWorkFlowName();
             ValidateParametersDictionary();
             ValidateAssembly();
         }

@@ -7,11 +7,9 @@ namespace CMA.ISMAI.Engine.Domain.Commands
 {
     public class StartWorkFlowCommand : WorkFlowCommand
     {
-        public StartWorkFlowCommand(string workFlowName, string processName, Assembly assembly, Dictionary<string, object> parameters)
+        public StartWorkFlowCommand(string workFlowName, Assembly assembly, Dictionary<string, object> parameters)
         {
-            Id = Guid.NewGuid();
             WorkFlowName = workFlowName;
-            ProcessName = processName;
             Parameters = parameters;
             AssemblyName = assembly;
         }

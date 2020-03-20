@@ -1,71 +1,92 @@
 ﻿using CMA.ISMAI.Automation.Interface;
-using CMA.ISMAI.Core.Bus;
+using CMA.ISMAI.Core.Events;
 using CMA.ISMAI.Core.Notifications;
 using CMA.ISMAI.Engine.Domain.Commands;
 using CMA.ISMAI.Engine.Domain.Events;
+using CMA.ISMAI.Engine.Domain.Interface;
 using CMA.ISMAI.Logging.Interface;
-using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace CMA.ISMAI.Engine.Domain.CommandHandlers
 {
-    public class WorkFlowCommandHandler : CommandHandler,
-        IRequestHandler<StartWorkFlowCommand, bool>
+    public class WorkFlowCommandHandler : CommandHandler, IWorkflowCommandHandler
     {
-        private readonly IMediatorHandler Bus;
         private readonly IEngine _engine;
         private readonly ILog _log;
+        private readonly IWorkflowEventHandler _workflowEventHandler;
 
-        public WorkFlowCommandHandler(IMediatorHandler bus,
-                                      INotificationHandler<DomainNotification> notifications, IEngine engine, ILog log) : base(bus, notifications)
+        public WorkFlowCommandHandler(IEngine engine, ILog log, IWorkflowEventHandler workflowEventHandler)
         {
-            Bus = bus;
             _engine = engine;
             _log = log;
+            _workflowEventHandler = workflowEventHandler;
         }
-        public Task<bool> Handle(StartWorkFlowCommand request, CancellationToken cancellationToken)
+        public Event Handle(StartWorkFlowCommand request)
         {
+            Event @event;
             if (!request.IsValid())
             {
-                NotifyValidationErrors(request);
-                return Task.FromResult(false);
+                @event = new WorkFlowStartFailedEvent(NotifyValidationErrors(request));
+                _workflowEventHandler.Handle(@event as WorkFlowStartFailedEvent);
+                return @event;
             }
 
             string workFlowName = ReturnWorkFlowProcess(request.WorkFlowName);
+
             if (string.IsNullOrEmpty(workFlowName))
             {
-                _log.Fatal(@$"An Deploy order with the process name {request.ProcessName} has made!. But Failed!!!,
+                _log.Fatal(@$"An Deploy order with the workflow name {workFlowName} has made!. But Failed!!!,
                                 check the WorkFlowName! TimeStamp {request.Timestamp} - AggregateId - {request.AggregateId}");
-                Bus.RaiseEvent(new DomainNotification(request.MessageType, "The deploy process failed! Invalid WorkFlowName!"));
-                return Task.FromResult(false);
+                @event = new WorkFlowStartFailedEvent(GetWorkFlowNotificationError("WorkFlow Name", "Couldn't find the workflow process name!"));
+                return @event;
             }
 
-            string filePath = $"CMA.ISMAI.Engine.API.WorkFlow.FlowingTripBookingSaga.bpmn";
-            string result = _engine.StartWorkFlow(filePath, request.AssemblyName, string.Format("{0}-{1}", request.ProcessName, request.WorkFlowName), request.Parameters);
+            string filePath = $"CMA.ISMAI.Engine.API.WorkFlow.{workFlowName}";
+            string getProcessName = obtainProcessName(workFlowName);
+            string result = _engine.StartWorkFlow(filePath, request.AssemblyName, getProcessName, request.Parameters);
 
+            return ResultEventReturn(request, workFlowName, result);
+        }
+
+        private Event ResultEventReturn(StartWorkFlowCommand request, string workFlowName, string result)
+        {
+            Event @event;
             if (string.IsNullOrEmpty(result))
             {
-                _log.Fatal($"An Deploy order with the process name {request.ProcessName} has made!. But Failed!!! TimeStamp {request.Timestamp} - AggregateId - {request.AggregateId}");
-                Bus.RaiseEvent(new DomainNotification(request.MessageType, "The deploy process failed! Empty deploymentId!"));
-                return Task.FromResult(false);
+                _log.Fatal($"An Deploy order with the workflow name {workFlowName} has made!. But Failed!!! TimeStamp {request.Timestamp} - AggregateId - {request.AggregateId}");
+                @event = new WorkFlowStartFailedEvent(GetWorkFlowNotificationError("WorkFlow Start Failed!", "Couldn't start the workflow!"));
+                return @event;
             }
-
-            _log.Info($"An Deploy order with the process name {request.ProcessName} has made!. " +
+            _log.Info($"An Deploy order with the workflow name {workFlowName} has made!. " +
                 $"Was deployed? {result.ToString()}");
-
-            Bus.RaiseEvent(new WorkFlowStartCompletedEvent(request.Id, request.WorkFlowName, request.ProcessName, true));
-
-            return Task.FromResult(true);
+            @event = new WorkFlowStartCompletedEvent(result, request.WorkFlowName);
+            return @event;
         }
-        
+
+        private List<DomainNotification> GetWorkFlowNotificationError(string key, string value)
+        {
+            List<DomainNotification> domainNotification = new List<DomainNotification>();
+            domainNotification.Add(new DomainNotification(key, value));
+            return domainNotification;
+        }
+
+        private string obtainProcessName(string workFlowName)
+        {
+            switch (workFlowName)
+            {
+                case "FlowingTripBookingSaga.bpmn":
+                    return "ismaiCreditacaoSaga";
+                default:
+                    return string.Empty;
+            }
+        }
+
         private string ReturnWorkFlowProcess(string workFlowName)
         {
             switch (workFlowName)
             {
                 case "ISMAI":
-                    return "ismai.creditacao.bpmn";
+                    return "FlowingTripBookingSaga.bpmn";
                 default:
                     return string.Empty;
             }

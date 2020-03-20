@@ -27,10 +27,13 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI
         {
             _log.Info("A new worker will be added!");
 
-            registerWorker("book-hotel", externalTask =>
+            #region Creation of the workers
+            registerWorker("excel-coordenador", externalTask =>
             {
-                _engine.CompleteTask("ISMAI", externalTask.Id);
+                // Complete task
+                _engine.CompleteTask("ISMAI", externalTask.Id, null);
             });
+            #endregion
 
             _log.Info("New workers added!");
         }

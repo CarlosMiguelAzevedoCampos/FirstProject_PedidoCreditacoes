@@ -1,15 +1,16 @@
 ﻿using CMA.ISMAI.Engine.Domain.Events;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
+using CMA.ISMAI.Engine.Domain.Interface;
 
 namespace CMA.ISMAI.Engine.Domain.EventHandlers
 {
-    public class WorkFlowEventHandler : INotificationHandler<WorkFlowStartCompletedEvent>
+    public class WorkFlowEventHandler : IWorkflowEventHandler
     {
-        public Task Handle(WorkFlowStartCompletedEvent notification, CancellationToken cancellationToken)
+        public void Handle(WorkFlowStartCompletedEvent notification)
         {
-            return Task.CompletedTask;
+        }
+
+        public void Handle(WorkFlowStartFailedEvent notification)
+        {
         }
     }
 }

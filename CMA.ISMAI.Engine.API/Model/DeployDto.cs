@@ -5,10 +5,9 @@ namespace CMA.ISMAI.Engine.API.Model
 {
     public class DeployDto
     {
-        public DeployDto(string workFlowName, string processName, Dictionary<string, object> parameters)
+        public DeployDto(string workFlowName, Dictionary<string, object> parameters)
         {
             WorkFlowName = workFlowName;
-            ProcessName = processName;
             Parameters = parameters;
         }
 
@@ -17,7 +16,6 @@ namespace CMA.ISMAI.Engine.API.Model
         }
 
         public string WorkFlowName { get; set; }
-        public string ProcessName { get; set; }
         public Dictionary<string, object> Parameters { get; set; }
     }
 }

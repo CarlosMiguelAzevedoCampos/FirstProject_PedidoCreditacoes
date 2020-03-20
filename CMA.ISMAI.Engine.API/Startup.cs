@@ -1,10 +1,7 @@
 using CMA.ISMAI.Automation.Interface;
-using CMA.ISMAI.Core.Bus;
-using CMA.ISMAI.Core.Notifications;
 using CMA.ISMAI.Engine.Domain.CommandHandlers;
-using CMA.ISMAI.Engine.Domain.Commands;
 using CMA.ISMAI.Engine.Domain.EventHandlers;
-using CMA.ISMAI.Engine.Domain.Events;
+using CMA.ISMAI.Engine.Domain.Interface;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
 using MediatR;
@@ -59,15 +56,10 @@ namespace CMA.ISMAI.Engine.API
         {
             services.AddScoped<ILog, LoggingService>();
             services.AddScoped<IEngine, Automation.Service.Engine>();
-            // Domain - Events
-            services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
-            services.AddScoped<INotificationHandler<WorkFlowStartCompletedEvent>, WorkFlowEventHandler>();
-            // Domain Bus (Mediator)
-            services.AddScoped<IMediatorHandler, InMemoryBus>();
             // Domain - Commands
-            services.AddScoped<IRequestHandler<StartWorkFlowCommand, bool>, WorkFlowCommandHandler>();
-
-
+            services.AddScoped<IWorkflowCommandHandler, WorkFlowCommandHandler>();
+            // Domain - Events
+            services.AddScoped<IWorkflowEventHandler, WorkFlowEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

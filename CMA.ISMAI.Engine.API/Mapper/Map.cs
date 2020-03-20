@@ -8,7 +8,7 @@ namespace CMA.ISMAI.Engine.API.Mapper
     {
         public static StartWorkFlowCommand ConvertToCommand(DeployDto model)
         {
-            return new StartWorkFlowCommand(model.WorkFlowName, model.ProcessName, Assembly.GetExecutingAssembly(), model.Parameters);
+            return new StartWorkFlowCommand(model.WorkFlowName, Assembly.GetExecutingAssembly(), model.Parameters);
         }
     }
 }

@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMA.ISMAI.Core", "CMA.ISMAI
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sagas", "Sagas", "{DBE2A4DE-CC48-4F48-9F34-2C6548D42B14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMA.ISMAI.Engine.Automation.Sagas", "CMA.ISMAI.Engine.Automation.Sagas\CMA.ISMAI.Engine.Automation.Sagas.csproj", "{3B92B8E6-F252-4527-9F9A-0D69874835E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CMA.ISMAI.Engine.Automation.Sagas", "CMA.ISMAI.Engine.Automation.Sagas\CMA.ISMAI.Engine.Automation.Sagas.csproj", "{3B92B8E6-F252-4527-9F9A-0D69874835E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

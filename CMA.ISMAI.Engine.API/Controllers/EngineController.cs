@@ -1,9 +1,9 @@
-﻿using CMA.ISMAI.Core.Bus;
-using CMA.ISMAI.Core.Notifications;
+﻿using CMA.ISMAI.Core.Events;
 using CMA.ISMAI.Engine.API.Mapper;
 using CMA.ISMAI.Engine.API.Model;
+using CMA.ISMAI.Engine.Domain.Events;
+using CMA.ISMAI.Engine.Domain.Interface;
 using CMA.ISMAI.Logging.Interface;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CMA.ISMAI.Engine.API.Controllers
@@ -13,13 +13,12 @@ namespace CMA.ISMAI.Engine.API.Controllers
     public class EngineController : BaseController
     {
         private readonly ILog _logger;
-        private readonly IMediatorHandler Bus;
+        private readonly IWorkflowCommandHandler _workflowCommandHandler;
 
-        public EngineController(ILog logger, IMediatorHandler bus,
-            INotificationHandler<DomainNotification> notifications) : base(notifications, bus)
+        public EngineController(ILog logger, IWorkflowCommandHandler workflowCommandHandler)
         {
             _logger = logger;
-            Bus = bus;
+            _workflowCommandHandler = workflowCommandHandler;
         }
 
         [HttpPost]
@@ -29,9 +28,13 @@ namespace CMA.ISMAI.Engine.API.Controllers
             {
                 _logger.Fatal("An null DeployDto has recived!");
                 return BadRequest();
-            }            
-            Bus.SendCommand(Map.ConvertToCommand(model));
-            return Response();
+            }
+            Event @event = _workflowCommandHandler.Handle(Map.ConvertToCommand(model));
+
+            if (@event is WorkFlowStartCompletedEvent)
+                return Response(true, @event as WorkFlowStartCompletedEvent);
+
+            return Response(false, @event as WorkFlowStartFailedEvent);
         }
     }
 }

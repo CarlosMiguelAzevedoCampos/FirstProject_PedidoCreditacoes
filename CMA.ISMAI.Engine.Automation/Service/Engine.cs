@@ -20,12 +20,12 @@ namespace CMA.ISMAI.Automation.Service
             camundaEngineClient = new CamundaEngineClient(new Uri("http://localhost:8080/engine-rest/engine/default/"), null, null);
         }
 
-        public void CompleteTask(string workerId, string id)
+        public void CompleteTask(string workerId, string id, Dictionary<string, object> parameters)
         {
             try
             {
                 _log.Fatal($"Task with the workerId {workerId}, will be completed!");
-                camundaEngineClient.ExternalTaskService.Complete(workerId, id);
+                camundaEngineClient.ExternalTaskService.Complete(workerId, id, parameters);
                 _log.Fatal($"Task with the workerId {workerId}, completed!");
             }
             catch

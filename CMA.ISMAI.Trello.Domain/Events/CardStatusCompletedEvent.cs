@@ -3,11 +3,11 @@ using System;
 
 namespace CMA.ISMAI.Trello.Domain.Events
 {
-    public class CardCompletedStatusEvent : Event
+    public class CardStatusCompletedEvent : Event
     {
-        public CardCompletedStatusEvent(string id)
+        public CardStatusCompletedEvent(string id)
         {
-            Id = id;
+            this.Id = id;
             AggregateId = Guid.NewGuid();
         }
 

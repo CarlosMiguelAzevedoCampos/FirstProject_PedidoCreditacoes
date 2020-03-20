@@ -1,10 +1,11 @@
-﻿using CMA.ISMAI.Core.Bus;
-using CMA.ISMAI.Core.Notifications;
+﻿using CMA.ISMAI.Core.Events;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Trello.API.Mapper;
 using CMA.ISMAI.Trello.API.Model;
 using CMA.ISMAI.Trello.Domain.Commands;
-using MediatR;
+using CMA.ISMAI.Trello.Domain.Events;
+using CMA.ISMAI.Trello.Domain.Interface;
+using CMA.ISMAI.Trello.Engine.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CMA.ISMAI.Trello.API.Controllers
@@ -14,13 +15,12 @@ namespace CMA.ISMAI.Trello.API.Controllers
     public class TrelloController : BaseController
     {
         private readonly ILog _logger;
-        private readonly IMediatorHandler Bus;
+        private readonly ICardCommandHandler _cardHandler;
 
-        public TrelloController(ILog logger, IMediatorHandler bus,
-            INotificationHandler<DomainNotification> notifications) : base(notifications, bus)
+        public TrelloController(ILog logger, ICardCommandHandler cardHandler)
         {
             _logger = logger;
-            Bus = bus;
+            _cardHandler = cardHandler;
         }
 
         [HttpPost]
@@ -31,8 +31,11 @@ namespace CMA.ISMAI.Trello.API.Controllers
                 _logger.Fatal("Card Dto is null!");
                 return BadRequest();
             }
-            Bus.SendCommand(Map.ConverToModel(card));
-            return Response();
+
+            Event @event = _cardHandler.Handler(Map.ConverToModel(card));
+            if (@event is AddCardCompletedEvent)
+                return Response(true, @event as AddCardCompletedEvent);
+            return Response(false, @event as AddCardFailedEvent);
         }
 
         [HttpGet]
@@ -43,8 +46,14 @@ namespace CMA.ISMAI.Trello.API.Controllers
                 _logger.Fatal("Card ID is null!");
                 return BadRequest();
             }
-            string result = Bus.SendCommand(new ObtainCardStatusCommand(id)).ToString();
-            return Response();
+            Event @event = _cardHandler.Handler(new GetCardStatusCommand(id));
+
+            if (@event is CardStatusCompletedEvent)
+                return Response(true, @event as CardStatusCompletedEvent);
+            else if (@event is CardStatusIncompletedEvent)
+                return Response(true, @event as CardStatusIncompletedEvent);
+            else
+                return Response(false, @event as CardStatusUnableToFindEvent);
         }
     }
 }

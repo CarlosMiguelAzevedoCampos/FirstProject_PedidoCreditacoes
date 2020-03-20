@@ -77,8 +77,7 @@ namespace CMA.ISMAI.IntegrationTests
         }
 
         [Theory]
-        [InlineData("23423423423")]
-        [InlineData("1234422")]
+        [InlineData("5e6e8509dddc96602b7ac32d")]
         public async Task TrelloController_IntegrationTest_GetCardStatus__ShouldReturnTheCardValidation(string id)
         {
             var builder = new WebHostBuilder()
