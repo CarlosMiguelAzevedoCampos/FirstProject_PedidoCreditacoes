@@ -1,18 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>CMA.ISMAI.Automation</AssemblyName>
-    <RootNamespace>CMA.ISMAI.Automation</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BerndRuecker.Sample.CamundaClient" Version="0.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CMA.ISMAI.Logging\CMA.ISMAI.Logging.csproj" />
   </ItemGroup>
 
 </Project>

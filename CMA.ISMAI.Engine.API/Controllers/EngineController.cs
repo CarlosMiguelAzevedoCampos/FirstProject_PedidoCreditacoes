@@ -5,6 +5,7 @@ using CMA.ISMAI.Engine.Domain.Events;
 using CMA.ISMAI.Engine.Domain.Interface;
 using CMA.ISMAI.Logging.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace CMA.ISMAI.Engine.API.Controllers
 {
@@ -24,6 +25,7 @@ namespace CMA.ISMAI.Engine.API.Controllers
         [HttpPost]
         public IActionResult StartWorkFlow([FromBody] DeployDto model)
         {
+            model = (new DeployDto("ISMAI", new Dictionary<string, object>()));
             if (model == null)
             {
                 _logger.Fatal("An null DeployDto has recived!");

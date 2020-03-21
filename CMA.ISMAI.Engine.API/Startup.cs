@@ -1,10 +1,10 @@
 using CMA.ISMAI.Automation.Interface;
+using CMA.ISMAI.Automation.Service;
 using CMA.ISMAI.Engine.Domain.CommandHandlers;
 using CMA.ISMAI.Engine.Domain.EventHandlers;
 using CMA.ISMAI.Engine.Domain.Interface;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -46,16 +46,13 @@ namespace CMA.ISMAI.Engine.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            // Adding MediatR for Domain Events and Notifications
-            services.AddMediatR(typeof(Startup));
-
             InitializeDependecyInjection(services);
         }
 
         private void InitializeDependecyInjection(IServiceCollection services)
         {
             services.AddScoped<ILog, LoggingService>();
-            services.AddScoped<IEngine, Automation.Service.Engine>();
+            services.AddScoped<IEngine, EngineService>();
             // Domain - Commands
             services.AddScoped<IWorkflowCommandHandler, WorkFlowCommandHandler>();
             // Domain - Events

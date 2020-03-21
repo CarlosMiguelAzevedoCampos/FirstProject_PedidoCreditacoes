@@ -26,8 +26,8 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             EngineController engineController = new EngineController(logMock.Object, workFlowMock.Object);
 
             IActionResult result = engineController.StartWorkFlow(null);
-            var resultCode = result as BadRequestResult;
-            Assert.IsType<BadRequestResult>(result);
+            var resultCode = result as BadRequestObjectResult;
+            Assert.IsType<BadRequestObjectResult>(result);
             Assert.True(resultCode.StatusCode == 400);
         }
 

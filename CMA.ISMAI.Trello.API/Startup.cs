@@ -4,6 +4,7 @@ using CMA.ISMAI.Trello.Domain.CommandHandlers;
 using CMA.ISMAI.Trello.Domain.EventHandlers;
 using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Interface;
+using CMA.ISMAI.Trello.Engine.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -51,7 +52,7 @@ namespace CMA.ISMAI.Trello.API
         private void InitializeDependecyInjection(IServiceCollection services)
         {
             services.AddScoped<ILog, LoggingService>();
-            services.AddScoped<ITrello, Engine.Service.Trello>();
+            services.AddScoped<ITrello, TrelloService>();
             // Domain - Commands
             services.AddScoped<ICardCommandHandler, CardCommandHandler>();
             // Domain - Commands

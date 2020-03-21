@@ -9,31 +9,16 @@ using System.Reflection;
 
 namespace CMA.ISMAI.Automation.Service
 {
-    public class Engine : IEngine
+    public class EngineService : IEngine
     {
         private readonly CamundaEngineClient camundaEngineClient;
         private readonly ILog _log;
 
-        public Engine(ILog log)
+        public EngineService(ILog log)
         {
             this._log = log;
             camundaEngineClient = new CamundaEngineClient(new Uri("http://localhost:8080/engine-rest/engine/default/"), null, null);
         }
-
-        public void CompleteTask(string workerId, string id, Dictionary<string, object> parameters)
-        {
-            try
-            {
-                _log.Fatal($"Task with the workerId {workerId}, will be completed!");
-                camundaEngineClient.ExternalTaskService.Complete(workerId, id, parameters);
-                _log.Fatal($"Task with the workerId {workerId}, completed!");
-            }
-            catch
-            {
-                _log.Fatal($"Task with the workerId {workerId}, couldn't be completed!");
-            }
-        }
-
         public List<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, IEnumerable<string> topicNames, long lockDurationInMilliseconds, IEnumerable<string> variablesToFetch = null)
         {
             try
@@ -57,7 +42,7 @@ namespace CMA.ISMAI.Automation.Service
                 string deployId = camundaEngineClient.RepositoryService.Deploy(processName, new List<object> { file });
                 if (TheDeployWasDone(deployId, processName))
                 {
-                    return StartProcess(processName, parameters);
+                    return StartAWorkersAndProcessBasedOnProcessName(processName, parameters);
                 }
                 _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! No DeployId returned!", processName));
             }
@@ -68,9 +53,20 @@ namespace CMA.ISMAI.Automation.Service
             return string.Empty;
         }
 
-        private string StartProcess(string processName, Dictionary<string, object> parameters)
+        private string StartAWorkersAndProcessBasedOnProcessName(string processName, Dictionary<string, object> parameters)
         {
-            return camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, parameters);
+            switch (processName)
+            {
+                case "FlowingTripBookingSaga":
+                    return StartISMAICreditacoesService(processName, parameters);
+                default:
+                    return string.Empty;
+            }
+        }
+        private string StartISMAICreditacoesService(string processName, Dictionary<string, object> parameters)
+        {
+            string result = camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, parameters);
+            return !string.IsNullOrEmpty(result) ? result : string.Empty;
         }
 
         private bool TheDeployWasDone(string deployId, string processName)

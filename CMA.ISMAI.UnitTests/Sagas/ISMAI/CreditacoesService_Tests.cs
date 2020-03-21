@@ -1,4 +1,5 @@
-﻿using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
+﻿using CMA.ISMAI.Engine.Automation.Sagas;
+using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
 using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service;
 using CMA.ISMAI.Logging.Interface;
 using Moq;

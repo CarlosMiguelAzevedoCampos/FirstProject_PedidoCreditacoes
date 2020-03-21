@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Trello.Engine.Service
 {
-    public class Trello : ITrello
+    public class TrelloService : ITrello
     {
         private readonly Logging.Interface.ILog _log;
         private readonly TrelloFactory _factory;
 
-        public Trello(Logging.Interface.ILog log)
+        public TrelloService(Logging.Interface.ILog log)
         {
             _log = log;
             _factory = new TrelloFactory();

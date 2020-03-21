@@ -1,9 +1,8 @@
-﻿using MediatR;
-using System;
+﻿using System;
 
 namespace CMA.ISMAI.Core.Events
 {
-    public abstract class Message  : IRequest<bool>
+    public abstract class Message
     {
         public string MessageType { get; protected set; }
         public Guid AggregateId { get; protected set; }
