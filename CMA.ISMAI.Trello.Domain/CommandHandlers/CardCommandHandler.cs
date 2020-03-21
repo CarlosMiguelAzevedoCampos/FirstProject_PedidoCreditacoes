@@ -40,11 +40,13 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             if (string.IsNullOrEmpty(cardId))
             {
                 _log.Fatal($"The creation of an card failed! - TimeStamp {request.Timestamp} - AggregateId - {request.AggregateId}");
-                @event = new AddCardFailedEvent(NotifyDomainErros("CardId", "CardId is null or empty!"));
+                @event = new AddCardFailedEvent(NotifyDomainErrors("CardId", "CardId is null or empty!"));
                 _cardEventHandler.Handler(@event as AddCardFailedEvent);
                 return @event;
             }
-            return new AddCardCompletedEvent(cardId, request.Name, request.Description, request.DueTime);
+            @event = new AddCardCompletedEvent(cardId, request.Name, request.Description, request.DueTime);
+            _cardEventHandler.Handler(@event as AddCardCompletedEvent);
+            return @event;
         }
 
         public Event Handler(GetCardStatusCommand request)

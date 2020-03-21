@@ -16,7 +16,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             return domainNotification;
         }
 
-        protected List<DomainNotification> NotifyDomainErros(string key, string value)
+        protected List<DomainNotification> NotifyDomainErrors(string key, string value)
         {
             List<DomainNotification> domainNotification = new List<DomainNotification>();
             domainNotification.Add(new DomainNotification(key, value));

@@ -91,5 +91,37 @@ namespace CMA.ISMAI.IntegrationTests
             var response = await client.GetAsync(string.Format("Trello?id={0}", id));
             Assert.True(response.IsSuccessStatusCode);
         }
+
+        [Theory]
+        [InlineData("12")]
+        public async Task TrelloController_IntegrationTest_GetCardStatus__ShouldReturnBadRequest_UnknowCard(string id)
+        {
+            var builder = new WebHostBuilder()
+                          .UseEnvironment("Development")
+                          .UseStartup<Startup>();
+
+            TestServer testServer = new TestServer(builder);
+
+            HttpClient client = testServer.CreateClient();
+
+            var response = await client.GetAsync(string.Format("Trello?id={0}", id));
+            Assert.False(response.IsSuccessStatusCode);
+        }
+
+        [Theory]
+        [InlineData("5e6e84b7b878a307a3e9f6ca")]
+        public async Task TrelloController_IntegrationTest_GetCardStatus__ShouldReturnOkRequest_ActiveCard(string id)
+        {
+            var builder = new WebHostBuilder()
+                          .UseEnvironment("Development")
+                          .UseStartup<Startup>();
+
+            TestServer testServer = new TestServer(builder);
+
+            HttpClient client = testServer.CreateClient();
+
+            var response = await client.GetAsync(string.Format("Trello?id={0}", id));
+            Assert.True(response.IsSuccessStatusCode);
+        }
     }
 }

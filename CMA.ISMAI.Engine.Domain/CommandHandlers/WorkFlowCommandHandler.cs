@@ -55,11 +55,13 @@ namespace CMA.ISMAI.Engine.Domain.CommandHandlers
             {
                 _log.Fatal($"An Deploy order with the workflow name {workFlowName} has made!. But Failed!!! TimeStamp {request.Timestamp} - AggregateId - {request.AggregateId}");
                 @event = new WorkFlowStartFailedEvent(GetWorkFlowNotificationError("WorkFlow Start Failed!", "Couldn't start the workflow!"));
+                _workflowEventHandler.Handle(@event as WorkFlowStartFailedEvent);
                 return @event;
             }
             _log.Info($"An Deploy order with the workflow name {workFlowName} has made!. " +
                 $"Was deployed? {result.ToString()}");
             @event = new WorkFlowStartCompletedEvent(result, request.WorkFlowName);
+            _workflowEventHandler.Handle(@event as WorkFlowStartCompletedEvent);
             return @event;
         }
 
@@ -75,7 +77,7 @@ namespace CMA.ISMAI.Engine.Domain.CommandHandlers
             switch (workFlowName)
             {
                 case "FlowingTripBookingSaga.bpmn":
-                    return "ismaiCreditacaoSaga";
+                    return "FlowingTripBookingSaga";
                 default:
                     return string.Empty;
             }
