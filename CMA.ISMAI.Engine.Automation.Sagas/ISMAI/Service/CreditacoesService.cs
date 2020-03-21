@@ -13,18 +13,18 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             this._log = log;
             this._httpRequest = httpRequest;
         }
-        public bool CoordenatorExcelAction(string cardId, string files)
+        public string CoordenatorExcelAction(string cardId, string files)
         {
             _log.Info($"CoordenatorExcelAction for card Id {cardId}");
-            bool result = _httpRequest.CardStateAsync(cardId).Result;
-            if (result)
+            bool getCardState = _httpRequest.CardStateAsync(cardId).Result;
+            _log.Info($"CoordenatorExcelAction for card Id {cardId} - the result was {getCardState.ToString()}");
+            if (getCardState)
             {
-                CreateCompleteProcess(cardId);
-                return true;
+                // Create new card
+                string createCard = _httpRequest.CardPostAsync("", DateTime.Now.AddDays(1), "").Result;
+                return createCard;
             }
-            NotifyUser(cardId);
-            _log.Info($"CoordenatorExcelAction for card Id {cardId} - the result was {result.ToString()}");
-            return false;
+            return string.Empty;
         }
 
 
@@ -42,16 +42,6 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
         public bool PublishResult(string cardId, string files)
         {
             throw new System.NotImplementedException();
-        }
-        private void NotifyUser(string cardId)
-        {
-            _log.Info($"Notify user about the card {cardId}..");
-
-        }
-
-        private void CreateCompleteProcess(string cardId)
-        {
-            _log.Info($"Process completed for cardId {cardId}!");
         }
     }
 }

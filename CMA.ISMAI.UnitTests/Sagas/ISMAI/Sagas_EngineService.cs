@@ -2,6 +2,7 @@
 using CMA.ISMAI.Automation.Interface;
 using CMA.ISMAI.Engine.Automation.Sagas.Interface;
 using CMA.ISMAI.Engine.Automation.Sagas.ISMAI;
+using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
 using CMA.ISMAI.Logging.Interface;
 using Moq;
 using System;
@@ -17,8 +18,9 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
         {
             var logMock = new Mock<ILog>();
             var engineMock = new Mock<IEngine>();
+            var creditacoesMock = new Mock<ICreditacoesService>();
 
-            ISaga creditacaoSaga = new CreditacaoSaga(engineMock.Object, logMock.Object);
+            ISaga creditacaoSaga = new CreditacaoSaga(engineMock.Object, logMock.Object, creditacoesMock.Object);
             creditacaoSaga.RegisterNewWorker();
             IDictionary<string, Action<ExternalTask>> workers = creditacaoSaga.ReturnExternalWorkersTasks();
             Assert.True(workers.Count > 0);

@@ -17,6 +17,12 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             client = new HttpClient();
             this._log = log;
         }
+
+        public Task<string> CardPostAsync(string name, DateTime dueTime, string description)
+        {
+            return Task.FromResult(string.Empty);
+        }
+
         public async Task<bool> CardStateAsync(string cardId)
         {
             try
