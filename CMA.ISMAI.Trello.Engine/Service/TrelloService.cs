@@ -26,7 +26,7 @@ namespace CMA.ISMAI.Trello.Engine.Service
                 var board = _factory.Board("5e6e76819bd75b48b5f5a9ec");
                 await board.Refresh();
                 var list = board.Lists.First();
-                var newCard = await list.Cards.Add(name, description,null,dueDate);
+                var newCard = await list.Cards.Add(name, description, null, dueDate);
                 this._log.Info("A new card has created in trello!");
                 return newCard.Id;
             }

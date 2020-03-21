@@ -38,6 +38,7 @@ namespace CMA.ISMAI.Engine.Domain.CommandHandlers
                 _log.Fatal(@$"An Deploy order with the workflow name {workFlowName} has made!. But Failed!!!,
                                 check the WorkFlowName! TimeStamp {request.Timestamp} - AggregateId - {request.AggregateId}");
                 @event = new WorkFlowStartFailedEvent(GetWorkFlowNotificationError("WorkFlow Name", "Couldn't find the workflow process name!"));
+                _workflowEventHandler.Handle(@event as WorkFlowStartFailedEvent);
                 return @event;
             }
 

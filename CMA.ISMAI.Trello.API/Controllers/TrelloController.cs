@@ -5,7 +5,6 @@ using CMA.ISMAI.Trello.API.Model;
 using CMA.ISMAI.Trello.Domain.Commands;
 using CMA.ISMAI.Trello.Domain.Events;
 using CMA.ISMAI.Trello.Domain.Interface;
-using CMA.ISMAI.Trello.Engine.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CMA.ISMAI.Trello.API.Controllers

@@ -1,15 +1,12 @@
-﻿using CMA.ISMAI.Core.Events;
-using CMA.ISMAI.Core.Notifications;
+﻿using CMA.ISMAI.Core.Notifications;
 using CMA.ISMAI.Engine.API.Controllers;
 using CMA.ISMAI.Engine.API.Model;
 using CMA.ISMAI.Engine.Domain.Commands;
 using CMA.ISMAI.Engine.Domain.Events;
 using CMA.ISMAI.Engine.Domain.Interface;
 using CMA.ISMAI.Logging.Interface;
-using CMA.ISMAI.Trello.Domain.Events;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -26,8 +23,8 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             EngineController engineController = new EngineController(logMock.Object, workFlowMock.Object);
 
             IActionResult result = engineController.StartWorkFlow(null);
-            var resultCode = result as BadRequestObjectResult;
-            Assert.IsType<BadRequestObjectResult>(result);
+            var resultCode = result as BadRequestResult;
+            Assert.IsType<BadRequestResult>(result);
             Assert.True(resultCode.StatusCode == 400);
         }
 
