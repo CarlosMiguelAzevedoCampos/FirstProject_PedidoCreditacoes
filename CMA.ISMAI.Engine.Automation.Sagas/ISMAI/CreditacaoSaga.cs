@@ -33,9 +33,14 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI
             #region Creation of the workers
             registerWorker("excel-coordenador", externalTask =>
             {
-                string result = _creditacoesService.CoordenatorExcelAction("", "");
+                string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+                string result = _creditacoesService.CoordenatorExcelAction(cardId, "");
                 if (!string.IsNullOrEmpty(result))
-                    _engine.CompleteTask("ISMAI", externalTask.Id, null);
+                {
+                    Dictionary<string, object> parameters = new Dictionary<string, object>();
+                    parameters.Add("cardId", result);
+                    _engine.CompleteTask("ISMAI", externalTask.Id, parameters);
+                }
             });
             #endregion
 
