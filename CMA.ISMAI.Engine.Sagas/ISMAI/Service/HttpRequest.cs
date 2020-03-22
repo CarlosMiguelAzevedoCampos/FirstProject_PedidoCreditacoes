@@ -21,11 +21,11 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             this._log = log;
         }
 
-        public async Task<string> CardPostAsync(string name, DateTime dueTime, string description)
+        public async Task<string> CardPostAsync(string name, DateTime dueTime, int boardId, string description)
         {
             try
             {
-                var myContent = new CardDto(name, DateTime.Now.AddDays(2), description);
+                var myContent = new CardDto(name, DateTime.Now.AddDays(2), boardId ,description);
                 var json = JsonConvert.SerializeObject(myContent);
 
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");

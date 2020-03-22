@@ -1,5 +1,7 @@
 ﻿using CamundaClient;
 using CamundaClient.Dto;
+using CMA.ISMAI.Engine.Automation.Sagas;
+using CMA.ISMAI.Logging.Interface;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,6 +14,8 @@ namespace CMA.ISMAI.Sagas
         private static CamundaEngineClient camundaEngineClient;
         private static IDictionary<string, Action<ExternalTask>> workers;
         private static Timer pollingTimer;
+        private static ILog _log;
+        private static ICreditacoesService _creditacoesService;
 
         static void Main(string[] args)
         {
@@ -20,7 +24,7 @@ namespace CMA.ISMAI.Sagas
             workers = new Dictionary<string, Action<ExternalTask>>();
 
             new Thread(() => RegistCreditacoesWorkers("FlowingTripBookingSaga")).Start();
-            
+
             Console.ReadKey();
         }
 
@@ -31,28 +35,22 @@ namespace CMA.ISMAI.Sagas
 
         private static void RegistCreditacoesWorkers(string processName)
         {
-            registerWorker("book-hotel", externalTask =>
+            registerWorker("course-coordinator-excel", externalTask =>
             {
-                Console.WriteLine($"Book hotel now...{externalTask.Id} -{DateTime.Now}"); // e.g. by calling a REST endpoint
+                Console.WriteLine($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
+                _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
+                string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+                if (string.IsNullOrEmpty(cardId))
+                {
+                    Console.WriteLine($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
+                    _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}, but cardId is null or empty!!");
+                }
+                string newCardId = _creditacoesService.CoordenatorExcelAction(cardId, string.Empty);
+                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
+                keyValuePairs.Add("cardId", newCardId);
+                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
+            });
 
-                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
-                keyValuePairs.Add("cardId", Guid.NewGuid().ToString());
-                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
-            });
-            registerWorker("book-car", externalTask =>
-            {
-                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
-                keyValuePairs.Add("cardId", Guid.NewGuid().ToString());
-                string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                Console.WriteLine($"Book car now... {externalTask.Id} - {DateTime.Now} --- {cardId}"); // e.g. by calling a REST endpoint
-                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
-            });
-            registerWorker("book-flight", externalTask =>
-            {
-                string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                Console.WriteLine($"Book flight now...{externalTask.Id} -{DateTime.Now} --- {cardId}"); // e.g. by calling a REST endpoint
-                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, null);
-            });
             pollingTimer = new Timer(_ => PollTasks("FlowingTripBookingSaga"), null, 1, Timeout.Infinite);
         }
 

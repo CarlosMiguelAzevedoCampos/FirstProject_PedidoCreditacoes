@@ -21,7 +21,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             if (getCardState)
             {
                 // Create new card
-                string createCard = _httpRequest.CardPostAsync("CoordenatorExcelAction", DateTime.Now.AddDays(1), "CoordenatorExcelAction").Result;
+                string createCard = _httpRequest.CardPostAsync("CoordenatorExcelAction", DateTime.Now.AddDays(1), 1, "CoordenatorExcelAction").Result;
                 return createCard;
             }
             return string.Empty;
@@ -36,7 +36,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             if (getCardState)
             {
                 // Create new card
-                string createCard = _httpRequest.CardPostAsync("CientificVerifiesCreditions", DateTime.Now.AddDays(1), "CientificVerifiesCreditions").Result;
+                string createCard = _httpRequest.CardPostAsync("CientificVerifiesCreditions", DateTime.Now.AddDays(1), 1, "CientificVerifiesCreditions").Result;
                 return createCard;
             }
             return string.Empty;
@@ -51,7 +51,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             if (getCardState)
             {
                 // Create new card
-                string createCard = _httpRequest.CardPostAsync("DepartamentVerifyProcess", DateTime.Now.AddDays(1), "DepartamentVerifyProcess").Result;
+                string createCard = _httpRequest.CardPostAsync("DepartamentVerifyProcess", DateTime.Now.AddDays(1), 1, "DepartamentVerifyProcess").Result;
                 return createCard;
             }
             return string.Empty;
@@ -65,7 +65,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             if (getCardState)
             {
                 // Create new card
-                string createCard = _httpRequest.CardPostAsync("Publish Result", DateTime.Now.AddDays(1), "LolxD").Result;
+                string createCard = _httpRequest.CardPostAsync("Publish Result", DateTime.Now.AddDays(1), 1, "LolxD").Result;
                 return createCard;
             }
             return string.Empty;
