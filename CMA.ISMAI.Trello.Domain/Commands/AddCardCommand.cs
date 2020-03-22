@@ -5,12 +5,13 @@ namespace CMA.ISMAI.Trello.Domain.Commands
 {
     public class AddCardCommand : CardCommand
     {
-        public AddCardCommand(string name, DateTime dueTime, string description)
+        public AddCardCommand(string name, DateTime dueTime, string description, int boardId)
         {
             Id = Guid.NewGuid();
             Name = name;
             Description = description;
             DueTime = dueTime;
+            BoardId = boardId;
         }
 
         public override bool IsValid()

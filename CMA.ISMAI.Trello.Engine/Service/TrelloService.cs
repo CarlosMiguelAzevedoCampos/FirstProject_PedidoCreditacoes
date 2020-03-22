@@ -1,4 +1,5 @@
-﻿using CMA.ISMAI.Trello.Engine.Interface;
+﻿using CMA.ISMAI.Trello.Engine.Enum;
+using CMA.ISMAI.Trello.Engine.Interface;
 using Manatee.Trello;
 using System;
 using System.Linq;
@@ -19,11 +20,14 @@ namespace CMA.ISMAI.Trello.Engine.Service
             TrelloAuthorization.Default.UserToken = "0aa0946c32a9925cbcbf5125c4a6db676061502adde9b8213fc0e9059f59f9e9";
         }
 
-        public async Task<string> AddCard(string name, string description, DateTime dueDate)
+        public async Task<string> AddCard(string name, string description, DateTime dueDate, int boardId)
         {
             try
             {
-                var board = _factory.Board("5e6e76819bd75b48b5f5a9ec");
+                string boardIdentifier = GetBoardId(boardId);
+                if (VerifyBoardIdentifier(boardIdentifier))
+                    return string.Empty;
+                var board = _factory.Board(GetBoardId(boardId));
                 await board.Refresh();
                 var list = board.Lists.First();
                 var newCard = await list.Cards.Add(name, description, null, dueDate);
@@ -35,6 +39,28 @@ namespace CMA.ISMAI.Trello.Engine.Service
                 this._log.Fatal(ex.ToString());
             }
             return string.Empty;
+        }
+
+        private bool VerifyBoardIdentifier(string id)
+        {
+            return string.IsNullOrEmpty(id);
+        }
+
+        private string GetBoardId(int boardId)
+        {
+            switch (boardId)
+            {
+                case (int)BoardType.Couse_coordinator:
+                    return "5e6e76819bd75b48b5f5a9ec";
+                case (int)BoardType.Jury:
+                    return "5e6e76819bd75b48b5f5a9ec";
+                case (int)BoardType.Department_director:
+                    return "5e6e76819bd75b48b5f5a9ec";
+                case (int)BoardType.Scientific_council:
+                    return "5e6e76819bd75b48b5f5a9ec";
+                default:
+                    return string.Empty;
+            }
         }
 
         public async Task<int> IsTheProcessFinished(string cardId)

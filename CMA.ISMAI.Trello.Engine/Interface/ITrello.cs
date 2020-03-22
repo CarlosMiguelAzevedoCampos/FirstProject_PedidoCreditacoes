@@ -5,7 +5,7 @@ namespace CMA.ISMAI.Trello.Engine.Interface
 {
     public interface ITrello
     {
-        Task<string> AddCard(string name, string description, DateTime dueDate);
+        Task<string> AddCard(string name, string description, DateTime dueDate, int boardId);
 
         Task<int> IsTheProcessFinished(string cardId);
     }

@@ -31,7 +31,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 _cardEventHandler.Handler(@event as AddCardFailedEvent);
                 return @event;
             }
-            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime).Result;
+            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId).Result;
             return ReturnEventBasedOnCardId(request, cardId);
         }
         private Event ReturnEventBasedOnCardId(AddCardCommand request, string cardId)

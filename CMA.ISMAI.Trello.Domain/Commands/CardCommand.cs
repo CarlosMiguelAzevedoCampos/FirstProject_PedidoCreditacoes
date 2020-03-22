@@ -9,5 +9,6 @@ namespace CMA.ISMAI.Trello.Domain.Commands
         public string Name { get; set; }
         public DateTime DueTime { get; set; }
         public string Description { get; set; }
+        public int BoardId { get; set; }
     }
 }

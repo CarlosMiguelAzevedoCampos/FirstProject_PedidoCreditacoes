@@ -28,6 +28,18 @@ namespace CMA.ISMAI.Trello.Domain.Validations
                 .WithMessage("The card must have an date bigger than the today date!");
         }
 
+        protected void ValidateBoardId()
+        {
+            RuleFor(c => c.BoardId)
+                 .NotEmpty().WithMessage("Please ensure you have entered the BoardId")
+                 .Must(BoardVerifier).WithMessage("The card must have an boardId bigger or equal than the 0!");
+        }
+
+        private bool BoardVerifier(int arg)
+        {
+            return arg >= 0;
+        }
+
         private bool TimeToFinishIt(DateTime arg)
         {
             return arg > DateTime.Now;
