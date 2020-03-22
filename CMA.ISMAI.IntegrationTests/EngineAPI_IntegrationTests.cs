@@ -70,8 +70,10 @@ namespace CMA.ISMAI.IntegrationTests
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("cet", isCet);
+            Dictionary<string, object> parameters = new Dictionary<string, object>()
+            {
+                {"cet",isCet }
+            };
             var myContent = new DeployDto(workflowName, parameters);
             var json = JsonConvert.SerializeObject(myContent);
 

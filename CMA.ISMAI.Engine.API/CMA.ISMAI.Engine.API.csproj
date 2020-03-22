@@ -5,13 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="WorkFlow\creditacaoISMAI.bpmn" />
     <None Remove="WorkFlow\DeployTest.bpmn" />
     <None Remove="WorkFlow\FlowingTripBookingSaga.bpmn" />
     <None Remove="WorkFlow\ismaicreditacao.bpmn" />
+    <None Remove="WorkFlow\s.bpmn" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
@@ -25,6 +28,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="WorkFlow\FlowingTripBookingSaga.bpmn">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkFlow\creditacaoISMAI.bpmn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

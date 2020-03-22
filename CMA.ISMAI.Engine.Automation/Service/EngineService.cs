@@ -42,7 +42,7 @@ namespace CMA.ISMAI.Automation.Service
                 string deployId = camundaEngineClient.RepositoryService.Deploy(processName, new List<object> { file });
                 if (TheDeployWasDone(deployId, processName))
                 {
-                    return StartAWorkersAndProcessBasedOnProcessName(processName, parameters);
+                   return camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, parameters);
                 }
                 _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! No DeployId returned!", processName));
             }
@@ -51,22 +51,6 @@ namespace CMA.ISMAI.Automation.Service
                 _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! Aborting.. {1}", filePath, processName));
             }
             return string.Empty;
-        }
-
-        private string StartAWorkersAndProcessBasedOnProcessName(string processName, Dictionary<string, object> parameters)
-        {
-            switch (processName)
-            {
-                case "FlowingTripBookingSaga":
-                    return StartISMAICreditacoesService(processName, parameters);
-                default:
-                    return string.Empty;
-            }
-        }
-        private string StartISMAICreditacoesService(string processName, Dictionary<string, object> parameters)
-        {
-            string result = camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, parameters);
-            return !string.IsNullOrEmpty(result) ? result : string.Empty;
         }
 
         private bool TheDeployWasDone(string deployId, string processName)

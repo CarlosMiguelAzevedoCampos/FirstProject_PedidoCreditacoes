@@ -77,8 +77,8 @@ namespace CMA.ISMAI.Engine.Domain.CommandHandlers
         {
             switch (workFlowName)
             {
-                case "FlowingTripBookingSaga.bpmn":
-                    return "FlowingTripBookingSaga";
+                case "creditacaoISMAI.bpmn":
+                    return "CreditacaoISMAI";
                 default:
                     return string.Empty;
             }
@@ -89,7 +89,7 @@ namespace CMA.ISMAI.Engine.Domain.CommandHandlers
             switch (workFlowName)
             {
                 case "ISMAI":
-                    return "FlowingTripBookingSaga.bpmn";
+                    return "creditacaoISMAI.bpmn";
                 default:
                     return string.Empty;
             }
