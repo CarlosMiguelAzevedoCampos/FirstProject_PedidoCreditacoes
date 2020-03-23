@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CMA.ISMAI.Sagas.Engine.ISMAI.Model
 {
-    public class CardDto
+    internal class CardDto
     {
         public CardDto(string name, DateTime dueTime, int boardId, string description)
         {

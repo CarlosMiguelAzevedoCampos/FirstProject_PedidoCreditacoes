@@ -22,7 +22,8 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             {
                 // Create new card
                 string createCard = _httpRequest.CardPostAsync("CoordenatorExcelAction", DateTime.Now.AddDays(1), 1, "CoordenatorExcelAction").Result;
-                return createCard;
+               
+                return string.IsNullOrEmpty(createCard) ? string.Empty : createCard;
             }
             return string.Empty;
         }
@@ -37,7 +38,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             {
                 // Create new card
                 string createCard = _httpRequest.CardPostAsync("CientificVerifiesCreditions", DateTime.Now.AddDays(1), 1, "CientificVerifiesCreditions").Result;
-                return createCard;
+                return string.IsNullOrEmpty(createCard) ? string.Empty : createCard;
             }
             return string.Empty;
         }
@@ -52,7 +53,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             {
                 // Create new card
                 string createCard = _httpRequest.CardPostAsync("DepartamentVerifyProcess", DateTime.Now.AddDays(1), 1, "DepartamentVerifyProcess").Result;
-                return createCard;
+                return string.IsNullOrEmpty(createCard) ? string.Empty : createCard;
             }
             return string.Empty;
         }
@@ -65,7 +66,8 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             if (getCardState)
             {
                 // Create new card
-                return Guid.NewGuid().ToString();
+                string createCard = _httpRequest.CardPostAsync("DepartamentVerifyProcess", DateTime.Now.AddDays(1), 1, "DepartamentVerifyProcess").Result;
+                return string.IsNullOrEmpty(createCard) ? string.Empty : createCard;
             }
             return string.Empty;
         }

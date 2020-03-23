@@ -32,7 +32,7 @@ namespace CMA.ISMAI.Sagas
 
             _log = serviceProvider.GetService<ILog>();
             _creditacoesService = serviceProvider.GetService<ICreditacoesService>();
-            _creditacoesService.CoordenatorExcelAction("kk", "");
+      //      _creditacoesService.CoordenatorExcelAction("kk", "");
             Console.WriteLine("Sagas started...");
             camundaEngineClient = new CamundaEngineClient(new Uri("http://localhost:8080/engine-rest/engine/default/"), null, null);
             workers = new Dictionary<string, Action<ExternalTask>>();
@@ -54,12 +54,12 @@ namespace CMA.ISMAI.Sagas
                 Console.WriteLine($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
                 //  _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
                 string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                if (string.IsNullOrEmpty(cardId))
-                {
-                    Console.WriteLine($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
-                    //      _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}, but cardId is null or empty!!");
-                }
-                string newCardId = Guid.NewGuid().ToString();// _creditacoesService.CientificVerifiesCreditions(cardId, string.Empty);
+                string courseName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+                string studentName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+
+                string newCardId = _creditacoesService.CoordenatorExcelAction(cardId, string.Empty);
+                if (string.IsNullOrEmpty(newCardId))
+                    return;
                 Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
                 keyValuePairs.Add("cardId", newCardId);
                 camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
@@ -68,14 +68,14 @@ namespace CMA.ISMAI.Sagas
             registerWorker("department-director", externalTask =>
             {
                 Console.WriteLine($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
-                // _log.Info($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
+                //  _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
                 string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                if (string.IsNullOrEmpty(cardId))
-                {
-                    Console.WriteLine($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
-                    //       _log.Info($"Department director task is running..{externalTask.Id} -{DateTime.Now}, but cardId is null or empty!!");
-                }
-                string newCardId = Guid.NewGuid().ToString();// _creditacoesService.CientificVerifiesCreditions(cardId, string.Empty);
+                string courseName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+                string studentName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+
+                string newCardId = _creditacoesService.CoordenatorExcelAction(cardId, string.Empty);
+                if (string.IsNullOrEmpty(newCardId))
+                    return;
                 Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
                 keyValuePairs.Add("cardId", newCardId);
                 camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
@@ -83,14 +83,14 @@ namespace CMA.ISMAI.Sagas
             registerWorker("scientific-council", externalTask =>
             {
                 Console.WriteLine($"Scientific council task is running..{externalTask.Id} -{DateTime.Now}");
-                // _log.Info($"Scientific council task is running..{externalTask.Id} -{DateTime.Now}");
+                //  _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
                 string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                if (string.IsNullOrEmpty(cardId))
-                {
-                    Console.WriteLine($"Scientific council task is running..{externalTask.Id} -{DateTime.Now}");
-                    //       _log.Info($"Scientific council task is running..{externalTask.Id} -{DateTime.Now}, but cardId is null or empty!!");
-                }
-                string newCardId = Guid.NewGuid().ToString();// _creditacoesService.CientificVerifiesCreditions(cardId, string.Empty);
+                string courseName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+                string studentName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+
+                string newCardId = _creditacoesService.CoordenatorExcelAction(cardId, string.Empty);
+                if (string.IsNullOrEmpty(newCardId))
+                    return;
                 Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
                 keyValuePairs.Add("cardId", newCardId);
                 camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
@@ -99,15 +99,17 @@ namespace CMA.ISMAI.Sagas
             registerWorker("final-result", externalTask =>
             {
                 Console.WriteLine($"Final result task is running..{externalTask.Id} -{DateTime.Now}");
-                //    _log.Info($"Final result task is running..{externalTask.Id} -{DateTime.Now}");
+                //  _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
                 string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                if (string.IsNullOrEmpty(cardId))
-                {
-                    Console.WriteLine($"Final result task is running..{externalTask.Id} -{DateTime.Now}");
-                    //      _log.Info($"Final result task is running..{externalTask.Id} -{DateTime.Now}, but cardId is null or empty!!");
-                }
-                Console.WriteLine("Over!");
-                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id);
+                string courseName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+                string studentName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
+
+                string newCardId = _creditacoesService.CoordenatorExcelAction(cardId, string.Empty);
+                if (string.IsNullOrEmpty(newCardId))
+                    return;
+                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
+                keyValuePairs.Add("cardId", newCardId);
+                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
             });
 
             pollingTimer = new Timer(_ => PollTasks("CreditacaoISMAI"), null, 1, Timeout.Infinite);
@@ -115,7 +117,7 @@ namespace CMA.ISMAI.Sagas
 
         private static void PollTasks(string workerId)
         {
-            var tasks = camundaEngineClient.ExternalTaskService.FetchAndLockTasks(workerId, 1000000, workers.Keys, 5 * 60 * 1000, null);
+            var tasks = camundaEngineClient.ExternalTaskService.FetchAndLockTasks(workerId, 1000000, workers.Keys, 2 * 60 * 1000, null);
             Parallel.ForEach(
                 tasks,
                 new ParallelOptions { MaxDegreeOfParallelism = 1 },

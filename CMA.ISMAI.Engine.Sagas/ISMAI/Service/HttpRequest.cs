@@ -25,12 +25,18 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
         {
             try
             {
-                var myContent = new CardDto(name, DateTime.Now.AddDays(2), boardId ,description);
+                var myContent = new CardDto(name, DateTime.Now.AddDays(2), boardId, description);
                 var json = JsonConvert.SerializeObject(myContent);
 
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-                HttpResponseMessage request = await client.PostAsync("https://localhost:5002/Trello", stringContent);
+                HttpResponseMessage request = await client.PostAsync("https://localhost:5001/Trello", stringContent);
+                if (request.IsSuccessStatusCode)
+                {
+                    var response = request.Content.ReadAsStringAsync();
+                    Response addCardCompletedEvent = JsonConvert.DeserializeObject<Response>(response.Result);
+                    return addCardCompletedEvent.Data.Id;
+                }
                 return Task.FromResult(Guid.NewGuid().ToString()).Result;
             }
             catch (Exception ex)
@@ -45,14 +51,12 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             try
             {
                 var response = await client.GetAsync(string.Format("https://localhost:5001/Trello?id={0}", cardId));
-                HttpStatusCode result = HttpStatusCode.BadRequest;
+                var readAsStringAsync = response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)
-                {
-                    result = response.StatusCode;
-                }
-                return result == HttpStatusCode.OK;
+                    return true;
+                return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.Fatal(ex.ToString());
                 return false;

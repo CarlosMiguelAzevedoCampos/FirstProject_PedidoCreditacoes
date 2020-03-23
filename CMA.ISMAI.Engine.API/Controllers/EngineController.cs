@@ -28,7 +28,7 @@ namespace CMA.ISMAI.Engine.API.Controllers
         {
             model = new DeployDto("ISMAI",new Dictionary<string, object>()
             {
-                {"cet" ,true },
+                {"cet" ,false },
                 {"cardId","213" }
             });
             if (model == null)
