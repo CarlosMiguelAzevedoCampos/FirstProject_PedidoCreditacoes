@@ -44,7 +44,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
         {
             try
             {
-                var response = await client.GetAsync(string.Format("https://localhost:5002/Trello?id={0}", cardId));
+                var response = await client.GetAsync(string.Format("https://localhost:5001/Trello?id={0}", cardId));
                 HttpStatusCode result = HttpStatusCode.BadRequest;
                 if (response.IsSuccessStatusCode)
                 {

@@ -26,6 +26,11 @@ namespace CMA.ISMAI.Engine.API.Controllers
         [HttpPost]
         public IActionResult StartWorkFlow([FromBody] DeployDto model)
         {
+            model = new DeployDto("ISMAI",new Dictionary<string, object>()
+            {
+                {"cet" ,true },
+                {"cardId","213" }
+            });
             if (model == null)
             {
                 _logger.Fatal("An null DeployDto has recived!");

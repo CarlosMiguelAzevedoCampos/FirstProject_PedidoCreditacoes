@@ -65,8 +65,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             if (getCardState)
             {
                 // Create new card
-                string createCard = _httpRequest.CardPostAsync("Publish Result", DateTime.Now.AddDays(1), 1, "LolxD").Result;
-                return createCard;
+                return Guid.NewGuid().ToString();
             }
             return string.Empty;
         }
