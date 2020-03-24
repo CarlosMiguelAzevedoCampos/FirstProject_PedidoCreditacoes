@@ -29,7 +29,7 @@ namespace CMA.ISMAI.Trello.Engine.Service
                     return string.Empty;
                 var board = _factory.Board(GetBoardId(boardId));
                 await board.Refresh();
-                var list = board.Lists.First();
+                var list = board.Lists.FirstOrDefault();
                 var newCard = await list.Cards.Add(name, description, null, dueDate);
                 this._log.Info("A new card has created in trello!");
                 return newCard.Id;
@@ -50,14 +50,12 @@ namespace CMA.ISMAI.Trello.Engine.Service
         {
             switch (boardId)
             {
-                case (int)BoardType.Couse_coordinator:
-                    return "5e6e76819bd75b48b5f5a9ec";
-                case (int)BoardType.Jury:
-                    return "5e6e76819bd75b48b5f5a9ec";
+                case (int)BoardType.Course_coordinator:
+                    return "5e7a615492c8e839429fd13b";
                 case (int)BoardType.Department_director:
-                    return "5e6e76819bd75b48b5f5a9ec";
+                    return "5e7a61697c32d815f76c71ce";
                 case (int)BoardType.Scientific_council:
-                    return "5e6e76819bd75b48b5f5a9ec";
+                    return "5e7a617c1c87ae276116c00f";
                 default:
                     return string.Empty;
             }

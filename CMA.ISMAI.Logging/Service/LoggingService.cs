@@ -15,12 +15,12 @@ namespace CMA.ISMAI.Logging.Service
 
         public void Fatal(string message)
         {
-          //  _logger.LogError($"Please, take care of this as soon as possible! - {message}");
+            _logger.LogError($"Please, take care of this as soon as possible! - {message}");
         }
-          
+
         public void Info(string message)
         {
-            // _logger.LogInformation($"Just a information.., look! - {message}");
+            _logger.LogInformation($"Just a information.., look! - {message}");
         }
     }
 }

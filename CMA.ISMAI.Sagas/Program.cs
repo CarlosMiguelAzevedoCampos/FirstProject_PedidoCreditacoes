@@ -1,132 +1,47 @@
-﻿using CamundaClient;
-using CamundaClient.Dto;
-using CMA.ISMAI.Engine.Automation.Sagas;
+﻿using CMA.ISMAI.Engine.Automation.Sagas;
 using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
 using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
 using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Sagas
 {
     class Program
     {
-        private static CamundaEngineClient camundaEngineClient;
-        private static IDictionary<string, Action<ExternalTask>> workers;
-        private static Timer pollingTimer;
-        private static ILog _log;
-        private static ICreditacoesService _creditacoesService;
-
         static void Main(string[] args)
         {
-            var serviceProvider = new ServiceCollection()
-              .AddSingleton<ILog, LoggingService>()
-              .AddSingleton<ICreditacoesService, CreditacoesService>()
-              .AddSingleton<IHttpRequest, HttpRequest>()
-          .BuildServiceProvider();
-         //   serviceProvider.GetService<App>().Run();
+            var services = ConfigureServices();
 
-            _log = serviceProvider.GetService<ILog>();
-            _creditacoesService = serviceProvider.GetService<ICreditacoesService>();
-      //      _creditacoesService.CoordenatorExcelAction("kk", "");
-            Console.WriteLine("Sagas started...");
-            camundaEngineClient = new CamundaEngineClient(new Uri("http://localhost:8080/engine-rest/engine/default/"), null, null);
-            workers = new Dictionary<string, Action<ExternalTask>>();
+            var serviceProvider = services.BuildServiceProvider();
+            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+            loggerFactory.AddSerilog();
 
-            new Thread(() => RegistCreditacoesWorkers("CreditacaoISMAI")).Start();
-
+            serviceProvider.GetRequiredService<ConsoleApplication>().Run();
             Console.ReadKey();
         }
 
-        private static void registerWorker(string topicName, Action<ExternalTask> action)
+        private static IServiceCollection ConfigureServices()
         {
-            workers.Add(topicName, action);
-        }
+            IServiceCollection services = new ServiceCollection();
+            Log.Logger = new LoggerConfiguration()
+               .Enrich.FromLogContext()
+               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200/"))
+               {
+                   AutoRegisterTemplate = true,
+               })
+            .CreateLogger();
 
-        private static void RegistCreditacoesWorkers(string processName)
-        {
-            registerWorker("course-coordinator", externalTask =>
-            {
-                Console.WriteLine($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
-                //  _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
-                string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                string courseName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                string studentName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-
-                string newCardId = _creditacoesService.CoordenatorExcelAction(cardId, string.Empty);
-                if (string.IsNullOrEmpty(newCardId))
-                    return;
-                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
-                keyValuePairs.Add("cardId", newCardId);
-                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
-            });
-
-            registerWorker("department-director", externalTask =>
-            {
-                Console.WriteLine($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
-                //  _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
-                string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                string courseName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                string studentName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-
-                string newCardId = _creditacoesService.CoordenatorExcelAction(cardId, string.Empty);
-                if (string.IsNullOrEmpty(newCardId))
-                    return;
-                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
-                keyValuePairs.Add("cardId", newCardId);
-                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
-            });
-            registerWorker("scientific-council", externalTask =>
-            {
-                Console.WriteLine($"Scientific council task is running..{externalTask.Id} -{DateTime.Now}");
-                //  _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
-                string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                string courseName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                string studentName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-
-                string newCardId = _creditacoesService.CoordenatorExcelAction(cardId, string.Empty);
-                if (string.IsNullOrEmpty(newCardId))
-                    return;
-                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
-                keyValuePairs.Add("cardId", newCardId);
-                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
-            });
-
-            registerWorker("final-result", externalTask =>
-            {
-                Console.WriteLine($"Final result task is running..{externalTask.Id} -{DateTime.Now}");
-                //  _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
-                string cardId = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                string courseName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-                string studentName = externalTask.Variables.GetValueOrDefault("cardId").Value.ToString();
-
-                string newCardId = _creditacoesService.CoordenatorExcelAction(cardId, string.Empty);
-                if (string.IsNullOrEmpty(newCardId))
-                    return;
-                Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
-                keyValuePairs.Add("cardId", newCardId);
-                camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
-            });
-
-            pollingTimer = new Timer(_ => PollTasks("CreditacaoISMAI"), null, 1, Timeout.Infinite);
-        }
-
-        private static void PollTasks(string workerId)
-        {
-            var tasks = camundaEngineClient.ExternalTaskService.FetchAndLockTasks(workerId, 1000000, workers.Keys, 2 * 60 * 1000, null);
-            Parallel.ForEach(
-                tasks,
-                new ParallelOptions { MaxDegreeOfParallelism = 1 },
-                (externalTask) =>
-                {
-                    workers[externalTask.TopicName](externalTask);
-                });
-
-            pollingTimer.Change(1, Timeout.Infinite);
-        }
+            services.AddLogging();
+            services.AddScoped<ILog, LoggingService>();
+            services.AddTransient<ICreditacoesService, CreditacoesService>();
+            services.AddTransient<IHttpRequest, HttpRequest>();
+            services.AddTransient<ConsoleApplication>();
+            return services;
+        }       
     }
 }

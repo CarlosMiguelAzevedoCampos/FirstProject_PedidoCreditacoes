@@ -104,7 +104,6 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
         [InlineData("ISMAI", "Process_00kjdw0", 0)]
         [InlineData("FEUP", "Process_00kjdw0", 1)]
         [InlineData("FEUP", "Process_00kjdw0", 2)]
-        [InlineData("FEUP", "Process_00kjdw0", 3)]
         public void TrelloController_AddCard_ShouldReturnOkStatus(string cardName, string cardDescription, int boardId)
         {
             var logMock = new Mock<ILog>();

@@ -1,8 +1,8 @@
 ﻿namespace CMA.ISMAI.Sagas.Engine.ISMAI.Model
 {
-    internal class Response
+    internal class Response<T> where T : class
     {
         public bool Success { get; set; }
-        public AddCardCompletedEvent Data { get; set; }
+        public T Data { get; set; }
     }
 }

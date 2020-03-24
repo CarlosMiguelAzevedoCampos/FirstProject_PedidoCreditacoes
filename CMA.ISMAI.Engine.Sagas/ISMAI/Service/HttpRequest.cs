@@ -21,23 +21,29 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             this._log = log;
         }
 
-        public async Task<string> CardPostAsync(string name, DateTime dueTime, int boardId, string description)
+        public async Task<string> CardPostAsync(CardDto card)
         {
             try
             {
-                var myContent = new CardDto(name, DateTime.Now.AddDays(2), boardId, description);
-                var json = JsonConvert.SerializeObject(myContent);
+                _log.Info($"CardPostAsync is being executed!, card Information - Board - {card.BoardId} - Description - {card.Description} - Name {card.Name}");
+
+                var json = JsonConvert.SerializeObject(card);
 
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
                 HttpResponseMessage request = await client.PostAsync("https://localhost:5001/Trello", stringContent);
+                _log.Info($"CardPostAsync post request - Board - {card.BoardId} - Description - {card.Description} - Name {card.Name}");
+
                 if (request.IsSuccessStatusCode)
                 {
                     var response = request.Content.ReadAsStringAsync();
-                    Response addCardCompletedEvent = JsonConvert.DeserializeObject<Response>(response.Result);
+                    Response<AddCardCompletedEvent> addCardCompletedEvent = JsonConvert.DeserializeObject<Response<AddCardCompletedEvent>>(response.Result);
+                    _log.Info($"CardPostAsync post request - Done!! - CardId - {addCardCompletedEvent.Data.Id} - Board - {card.BoardId} - Description - {card.Description} - Name {card.Name}");
                     return addCardCompletedEvent.Data.Id;
                 }
-                return Task.FromResult(Guid.NewGuid().ToString()).Result;
+                _log.Info($"CardPostAsync post request - Failed!! - Board - {card.BoardId} - Description - {card.Description} - Name {card.Name}");
+
+                return Task.FromResult(string.Empty).Result;
             }
             catch (Exception ex)
             {
@@ -50,10 +56,21 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
         {
             try
             {
+                _log.Info($"CardStateAsync is being executed!, card Information - Id {cardId}");
+
                 var response = await client.GetAsync(string.Format("https://localhost:5001/Trello?id={0}", cardId));
-                var readAsStringAsync = response.Content.ReadAsStringAsync();
+                _log.Info($"CardStateAsync is getting information!, card Information - Id {cardId}");
+
                 if (response.IsSuccessStatusCode)
-                    return true;
+                {
+                    var readAsStringAsync = response.Content.ReadAsStringAsync();
+                    Response<GetCardStatusResult> cardStatus = JsonConvert.DeserializeObject<Response<GetCardStatusResult>>(readAsStringAsync.Result);
+                    _log.Info($"CardStateAsync done!, card Information - Id {cardId} - Status {cardStatus.Data.MessageType}");
+
+                    return cardStatus.Data.MessageType == "CardStatusCompletedEvent";
+                }
+                _log.Info($"CardStateAsync failed!, card Information - Id {cardId}");
+
                 return false;
             }
             catch (Exception ex)

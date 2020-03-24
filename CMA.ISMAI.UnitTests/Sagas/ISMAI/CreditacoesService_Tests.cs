@@ -2,6 +2,7 @@
 using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
 using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service;
 using CMA.ISMAI.Logging.Interface;
+using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -17,11 +18,9 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
             httprequestMock.Setup(x => x.CardStateAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
-            httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<int>(),
-                It.IsAny<string>())).Returns(Task.FromResult(Guid.NewGuid().ToString()));
             ICreditacoesService creditacoesService = new CreditacoesService(logMock.Object, httprequestMock.Object);
-            string result = creditacoesService.CoordenatorExcelAction("12", string.Empty);
-            Assert.True(!string.IsNullOrEmpty(result));
+            bool result = creditacoesService.GetCardState("12");
+            Assert.True(result);
         }
 
         [Fact]
@@ -30,11 +29,10 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
             httprequestMock.Setup(x => x.CardStateAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-            httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<string>(), It.IsAny<DateTime>(),
-                It.IsAny<int>(), It.IsAny<string>())).Returns(Task.FromResult(""));
+            httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(""));
             ICreditacoesService creditacoesService = new CreditacoesService(logMock.Object, httprequestMock.Object);
-            string result = creditacoesService.CoordenatorExcelAction("12", string.Empty);
-            Assert.True(string.IsNullOrEmpty(result));
+            bool result = creditacoesService.GetCardState("12");
+            Assert.False(result);
         }
 
 
@@ -45,9 +43,30 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             var httprequestMock = new Mock<IHttpRequest>();
             httprequestMock.Setup(x => x.CardStateAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
             ICreditacoesService creditacoesService = new CreditacoesService(logMock.Object, httprequestMock.Object);
-            string result = creditacoesService.CoordenatorExcelAction("12", string.Empty);
-            Assert.True(string.IsNullOrEmpty(result));
+            bool result = creditacoesService.GetCardState("12");
+            Assert.False(result);
         }
 
+        [Fact]
+        public void CreditacoesService_PostCard_ShouldFailToPostTheCard()
+        {
+            var logMock = new Mock<ILog>();
+            var httprequestMock = new Mock<IHttpRequest>();
+            httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(string.Empty));
+            ICreditacoesService creditacoesService = new CreditacoesService(logMock.Object, httprequestMock.Object);
+            string result = creditacoesService.PostNewCard(new CardDto("Carlos Campos", DateTime.Now.AddDays(1),1, "Carlos Campos"));
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void CreditacoesService_PostCard_ShouldPostTheCard()
+        {
+            var logMock = new Mock<ILog>();
+            var httprequestMock = new Mock<IHttpRequest>();
+            httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(Guid.NewGuid().ToString()));
+            ICreditacoesService creditacoesService = new CreditacoesService(logMock.Object, httprequestMock.Object);
+            string result = creditacoesService.PostNewCard(new CardDto("Carlos Campos", DateTime.Now.AddDays(1), 1, "Carlos Campos"));
+            Assert.NotEmpty(result);
+        }
     }
 }

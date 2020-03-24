@@ -17,7 +17,7 @@ namespace CMA.ISMAI.IntegrationTests
         [InlineData("", "Carlos Miguel Campos",-1)]
         [InlineData(null, "Carlos Miguel Campos",1)]
         [InlineData(null, null,2)]
-        [InlineData("", "",3)]
+        [InlineData("", "",1)]
         [InlineData("ISEP - Engenharia informática", "",0)]
         [InlineData("ISEP - Engenharia informática", null,-1)]
         public async Task TrelloController_IntegrationTest_AddCard_ShouldFailTheCreationDueToNullOrEmtpyParameters(string name, string description, int boardId)
@@ -42,7 +42,6 @@ namespace CMA.ISMAI.IntegrationTests
         [InlineData("ISEP - Engenharia informática", "Miguel Azevedo Silva", 0)]
         [InlineData("Informática - ISMAI", "Carlos Miguel Campos", 1)]
         [InlineData("ISEP - Engenharia informática", "Miguel Azevedo Silva", 2)]
-        [InlineData("ISEP - Engenharia informática", "Miguel Azevedo Silva", 3)]
         public async Task TrelloController_IntegrationTest_AddCard_ShouldCreateANewCard(string name, string description, int boardId)
         {
             var builder = new WebHostBuilder()

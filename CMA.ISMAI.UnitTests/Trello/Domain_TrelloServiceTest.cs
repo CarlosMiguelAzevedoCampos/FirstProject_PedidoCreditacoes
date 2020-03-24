@@ -18,7 +18,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
         [InlineData("ISMAI - Informatica creditaçâo", "", -1)]
         [InlineData("", "Carlos Campos", 1)]
         [InlineData("", "", 2)]
-        [InlineData(null, null, 3)]
+        [InlineData(null, null, 1)]
         public void TrelloService_AddCard_ShouldFailBecauseOfNullOrEmptyParameters(string name, string description, int boardId)
         {
             var logMock = new Mock<ILog>();
@@ -37,7 +37,6 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
         [InlineData("ISMAI - Informatica creditaçâo", "Carlos Campos", 1)]
         [InlineData("ISMAI - Multimedia creditaçâo", "Miguel Campos", 0)]
         [InlineData("ISMAI - Multimedia creditaçâo", "Miguel Campos", 2)]
-        [InlineData("ISMAI - Multimedia creditaçâo", "Miguel Campos", 3)]
         public void TrelloService_AddCard_ShouldReturnTrue(string name, string description, int boardId)
         {
             var logMock = new Mock<ILog>();
@@ -58,7 +57,6 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
         [InlineData("ISMAI - Informatica creditaçâo", "Carlos Campos", 1)]
         [InlineData("ISMAI - Multimedia creditaçâo", "Miguel Campos", 2)]
         [InlineData("ISMAI - Multimedia creditaçâo", "Miguel Campos", 0)]
-        [InlineData("ISMAI - Multimedia creditaçâo", "Miguel Campos", 3)]
         public void TrelloService_AddCard_ShouldFail_EngineCrash(string name, string description, int boardId)
         {
             var logMock = new Mock<ILog>();

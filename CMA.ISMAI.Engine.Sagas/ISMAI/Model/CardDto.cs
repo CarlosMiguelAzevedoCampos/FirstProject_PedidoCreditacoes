@@ -2,7 +2,7 @@
 
 namespace CMA.ISMAI.Sagas.Engine.ISMAI.Model
 {
-    internal class CardDto
+    public class CardDto
     {
         public CardDto(string name, DateTime dueTime, int boardId, string description)
         {
