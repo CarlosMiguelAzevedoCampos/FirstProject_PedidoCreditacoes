@@ -52,13 +52,13 @@ namespace CMA.ISMAI.Sagas
             {
                 Console.WriteLine($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
-                creditacoesSaga(processName, externalTask, 1, DateTime.Now.AddDays(2));
+                creditacoesSaga(processName, externalTask, 2, DateTime.Now.AddDays(2));
             });
             registerWorker("scientific-council", externalTask =>
             {
                 Console.WriteLine($"Scientific council task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Scientific council task is running..{externalTask.Id} -{DateTime.Now}");
-                creditacoesSaga(processName, externalTask, 1, DateTime.Now.AddDays(2));
+                creditacoesSaga_scientific(processName, externalTask);
 
             });
 
@@ -66,10 +66,10 @@ namespace CMA.ISMAI.Sagas
             {
                 Console.WriteLine($"Final result task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Final result task is running..{externalTask.Id} -{DateTime.Now}");
-                creditacoesSagaFinal(processName, externalTask);
+                creditacoesSagaFinal(processName,2, externalTask);
             });
 
-            pollingTimer = new Timer(_ => PollTasks("CreditacaoISMAI"), null, 1, Timeout.Infinite);
+            pollingTimer = new Timer(_ => PollTasks("CreditacaoISMAI"), null, 30000, Timeout.Infinite);
         }
 
 
@@ -78,7 +78,7 @@ namespace CMA.ISMAI.Sagas
             _log.Info($"Time to poll tasks!, workerId is {workerId}");
             Console.WriteLine($"Time to poll tasks!, workerId is {workerId} - {DateTime.Now}");
 
-            var tasks = camundaEngineClient.ExternalTaskService.FetchAndLockTasks(workerId, 1000000, workers.Keys, 2 * 60 * 1000, null);
+            var tasks = camundaEngineClient.ExternalTaskService.FetchAndLockTasks(workerId, 1000000, workers.Keys, 30000, null);
             Parallel.ForEach(
                 tasks,
                 new ParallelOptions { MaxDegreeOfParallelism = 1 },
@@ -87,7 +87,7 @@ namespace CMA.ISMAI.Sagas
                     workers[externalTask.TopicName](externalTask);
                 });
 
-            pollingTimer.Change(1, Timeout.Infinite);
+            pollingTimer.Change(30000, Timeout.Infinite);
         }
         private void creditacoesSaga(string processName, ExternalTask externalTask, int boardId, DateTime dueTime)
         {
@@ -100,31 +100,54 @@ namespace CMA.ISMAI.Sagas
 
             if (!getCardStatus(cardId))
                 return;
-
+            List<string> filesUrl = getCardAttachments(cardId, boardId);
             string newCardId = _creditacoesService.PostNewCard(new CardDto($"{courseInstitute} - {courseName} - {studentName}",
-                dueTime, boardId, $"{courseInstitute} - {courseName} - {studentName} - A new card has been created. When this task is done, please check it has done"));
+                dueTime, $"{courseInstitute} - {courseName} - {studentName} - A new card has been created. When this task is done, please check it has done",
+                boardId,
+                filesUrl));
             if (string.IsNullOrEmpty(newCardId))
                 return;
-            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - creating variables for the next proccess..");
+            camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, returnDictionary(cardId, courseName, studentName, courseInstitute));
+            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - completed!");
+        }
+
+        private List<string> getCardAttachments(string cardId, int boardId)
+        {
+            return _creditacoesService.GetCardAttachments(cardId, boardId);
+        }
+
+        private void creditacoesSaga_scientific(string processName, ExternalTask externalTask)
+        {
+            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - executing..");
+            string cardId = getCardId(externalTask);
+            string courseName = getCourseName(externalTask);
+            string studentName = getStudentName(externalTask);
+            string courseInstitute = getInstituteName(externalTask);
+            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - card details obtained from camunda..");
+            if (!getCardStatus(cardId))
+                return;
+            camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, returnDictionary(cardId, courseName, studentName, courseInstitute));
+            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - completed!");
+        }
+        private void creditacoesSagaFinal(string processName, int boardId, ExternalTask externalTask)
+        {
+            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - executing..");
+            string cardId = getCardId(externalTask);
+            List<string> filesUrl = getCardAttachments(cardId, boardId);
+
+            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - card details obtained from camunda..");
+            camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id);
+            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - completed!");
+        }
+
+        private Dictionary<string, object> returnDictionary(string newCardId, string courseName, string studentName, string courseInstitute)
+        {
             Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
             keyValuePairs.Add("cardId", newCardId);
             keyValuePairs.Add("courseName", courseName);
             keyValuePairs.Add("studentName", studentName);
             keyValuePairs.Add("courseInstitute", courseInstitute);
-            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - completed!");
-
-            camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id, keyValuePairs);
-        }
-
-        private void creditacoesSagaFinal(string processName, ExternalTask externalTask)
-        {
-            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - executing..");
-            string cardId = getCardId(externalTask);
-            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - card details obtained from camunda..");
-            if (!getCardStatus(cardId))
-                return;
-            _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - completed!");
-            camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id);
+            return keyValuePairs;
         }
 
         private string getInstituteName(ExternalTask externalTask)

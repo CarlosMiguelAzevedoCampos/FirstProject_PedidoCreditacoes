@@ -10,6 +10,7 @@ namespace CMA.ISMAI.Trello.Domain.Validations
             ValidateDescription();
             ValidateDueDate();
             ValidateBoardId();
+            ValidateFilesUrl();
         }
     }
 }

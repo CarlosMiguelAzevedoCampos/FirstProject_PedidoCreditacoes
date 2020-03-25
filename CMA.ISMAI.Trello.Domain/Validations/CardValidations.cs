@@ -34,6 +34,11 @@ namespace CMA.ISMAI.Trello.Domain.Validations
                  .GreaterThanOrEqualTo(0).WithMessage("The card must have an boardId bigger or equal than the 0!");
         }
 
+        protected void ValidateFilesUrl()
+        {
+            RuleFor(c => c.FilesUrl)
+                .NotNull().WithMessage("Please ensure you have entered the files url list");
+        }
 
         private bool TimeToFinishIt(DateTime arg)
         {

@@ -1,4 +1,5 @@
 ﻿using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
+using System.Collections.Generic;
 
 namespace CMA.ISMAI.Engine.Automation.Sagas
 {
@@ -6,8 +7,6 @@ namespace CMA.ISMAI.Engine.Automation.Sagas
     {
         bool GetCardState(string cardId);
         string PostNewCard(CardDto card);
-    /*    string DepartamentVerifyProcess(string cardId, string files);
-        string CientificVerifiesCreditions(string cardId, string files);
-        string PublishResult(string cardId, string files);*/
+        List<string> GetCardAttachments(string cardId, int boardId);
     }
 }

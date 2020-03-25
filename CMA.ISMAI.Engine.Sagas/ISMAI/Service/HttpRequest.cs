@@ -3,6 +3,7 @@ using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -78,6 +79,11 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
                 _log.Fatal(ex.ToString());
                 return false;
             }
+        }
+
+        public Task<List<string>> GetCardAttachments(string cardId, int boardId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

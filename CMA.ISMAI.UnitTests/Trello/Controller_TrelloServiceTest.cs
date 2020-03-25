@@ -19,7 +19,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void TrelloController_GetCardStatus_ShouldReturnBadRequestBecauseOfEmptyOrNullParameters(string id)
+        public void TrelloController_GetCardStatus_ShouldReturnBadRequest_BecauseOfEmptyOrNullParameters(string id)
         {
             var logMock = new Mock<ILog>();
             var eventMock = new Mock<ICardCommandHandler>();
@@ -112,7 +112,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()));
             TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
 
-            IActionResult result = trelloController.AddCard(new CardDto(cardName, DateTime.Now.AddDays(1), cardDescription, boardId));
+            IActionResult result = trelloController.AddCard(new CardDto(cardName, DateTime.Now.AddDays(1), cardDescription, boardId, new List<string>()));
             var resultCode = result as OkObjectResult;
             Assert.IsType<OkObjectResult>(result);
             Assert.True(resultCode.StatusCode == 200);
@@ -120,9 +120,6 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
         [Theory]
         [InlineData("ISMAI", "Process_00kjdw0", -1)]
-        [InlineData("FEUP", "Process_00kjdw0",0)]
-        [InlineData("FEUP", "Process_00kjdw0", 1)]
-        [InlineData("FEUP", "Process_00kjdw0",2)]
         public void TrelloController_AddCard_ShouldReturnBadStatusBasedDomainExceptions(string cardName, string cardDescription,int boardId)
         {
             var logMock = new Mock<ILog>();
@@ -131,9 +128,62 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             eventMock.Setup(x => x.Handler(It.IsAny<AddCardCommand>())).Returns(new AddCardFailedEvent(domainNotifications));
             TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
 
-            IActionResult result = trelloController.AddCard(new CardDto(cardName, DateTime.Now.AddDays(1), cardDescription, boardId));
+            IActionResult result = trelloController.AddCard(new CardDto(cardName, DateTime.Now.AddDays(1), cardDescription, boardId, new List<string>()));
             var resultCode = result as BadRequestObjectResult;
             Assert.IsType<BadRequestObjectResult>(result);
+            Assert.True(resultCode.StatusCode == 400);
+        }
+
+        [Theory]
+        [InlineData("ifh2i992h2b-asfa-1w", 1)]
+        [InlineData("cjckamrb222-we-1w", 2)]
+        public void TrelloController_GetCardAttachments_ShouldReturnOkStatus(string cardId, int boardId)
+        {
+            List<string> urls = new List<string>();
+            urls.Add("google.pt");
+            var logMock = new Mock<ILog>();
+            var eventMock = new Mock<ICardCommandHandler>();
+            eventMock.Setup(x => x.Handler(It.IsAny<GetCardAttachmentsCommand>()))
+                .Returns(new CardHasAttachmentsEvent(urls));
+
+            TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
+
+            IActionResult result = trelloController.GetCardAttachments(cardId, boardId);
+            var resultCode = result as OkObjectResult;
+            Assert.IsType<OkObjectResult>(result);
+            Assert.True(resultCode.StatusCode == 200);
+        }
+
+        [Theory]
+        [InlineData("ifh2i992h2b-asfa-1w", 1)]
+        [InlineData("cjckamrb222-we-1w", 2)]
+        public void TrelloController_GetCardAttachments_ShouldReturnOkStatus_ButEmptyAttachmentsList(string cardId, int boardId)
+        {
+            var logMock = new Mock<ILog>();
+            var eventMock = new Mock<ICardCommandHandler>();
+            eventMock.Setup(x => x.Handler(It.IsAny<GetCardAttachmentsCommand>()))
+                .Returns(new CardDosentHaveAttachmentsEvent());
+
+            TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
+
+            IActionResult result = trelloController.GetCardAttachments(cardId, boardId);
+            var resultCode = result as OkObjectResult;
+            Assert.IsType<OkObjectResult>(result);
+            Assert.True(resultCode.StatusCode == 200);
+        }
+
+        [Theory]
+        [InlineData("", -1)]
+        [InlineData(null, 1)]
+        public void TrelloController_GetCardStatus_ShouldReturnBadRequest_BecauseOfEmptyCardIdAndBadBoardId(string cardId, int boardId)
+        {
+            var logMock = new Mock<ILog>();
+            var eventMock = new Mock<ICardCommandHandler>();
+            TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
+
+            IActionResult result = trelloController.GetCardAttachments(cardId, boardId);
+            var resultCode = result as BadRequestResult;
+            Assert.IsType<BadRequestResult>(result);
             Assert.True(resultCode.StatusCode == 400);
         }
     }

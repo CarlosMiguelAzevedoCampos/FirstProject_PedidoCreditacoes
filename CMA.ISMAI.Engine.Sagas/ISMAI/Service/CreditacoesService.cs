@@ -2,6 +2,7 @@
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
 using System;
+using System.Collections.Generic;
 
 namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
 {
@@ -14,6 +15,15 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             this._log = log;
             this._httpRequest = httpRequest;
         }
+
+        public List<string> GetCardAttachments(string cardId, int boardId)
+        {
+            _log.Info($"GetCardAttachments for card Id {cardId}... getting attachments");
+            List<string> cardAttachments = _httpRequest.GetCardAttachments(cardId, boardId).Result;
+            _log.Info($"GetCardAttachments for card Id {cardId} - the result was {cardAttachments.Count} files");
+            return cardAttachments;
+        }
+
         public bool GetCardState(string cardId)
         {
             _log.Info($"CoordenatorExcelAction for card Id {cardId}");

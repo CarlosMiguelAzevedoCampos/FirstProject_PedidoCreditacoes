@@ -1,5 +1,6 @@
 ﻿using CMA.ISMAI.Core.Commands;
 using System;
+using System.Collections.Generic;
 
 namespace CMA.ISMAI.Trello.Domain.Commands
 {
@@ -9,6 +10,7 @@ namespace CMA.ISMAI.Trello.Domain.Commands
         public string Name { get; set; }
         public DateTime DueTime { get; set; }
         public string Description { get; set; }
+        public List<string> FilesUrl { get; set; }
         public int BoardId { get; set; }
     }
 }

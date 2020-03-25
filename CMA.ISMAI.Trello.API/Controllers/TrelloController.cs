@@ -6,6 +6,7 @@ using CMA.ISMAI.Trello.Domain.Commands;
 using CMA.ISMAI.Trello.Domain.Events;
 using CMA.ISMAI.Trello.Domain.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace CMA.ISMAI.Trello.API.Controllers
 {
@@ -53,6 +54,21 @@ namespace CMA.ISMAI.Trello.API.Controllers
                 return Response(true, @event as CardStatusIncompletedEvent);
             else
                 return Response(false, @event as CardStatusUnableToFindEvent);
+        }
+
+        [HttpGet]
+        public IActionResult GetCardAttachments(string cardId, int boardId)
+        {
+            if (string.IsNullOrEmpty(cardId) || boardId < 0)
+            {
+                _logger.Fatal("Card ID is null or boardId is lower than 0!");
+                return BadRequest();
+            }
+            Event @event = _cardHandler.Handler(new GetCardAttachmentsCommand(cardId, boardId));
+
+            if (@event is CardHasAttachmentsEvent)
+                return Response(true, @event as CardHasAttachmentsEvent);
+            return Response(true, @event as CardDosentHaveAttachmentsEvent);
         }
     }
 }

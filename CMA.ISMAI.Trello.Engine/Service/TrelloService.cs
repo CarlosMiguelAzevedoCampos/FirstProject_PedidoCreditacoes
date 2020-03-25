@@ -2,6 +2,7 @@
 using CMA.ISMAI.Trello.Engine.Interface;
 using Manatee.Trello;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,13 +21,14 @@ namespace CMA.ISMAI.Trello.Engine.Service
             TrelloAuthorization.Default.UserToken = "0aa0946c32a9925cbcbf5125c4a6db676061502adde9b8213fc0e9059f59f9e9";
         }
 
-        public async Task<string> AddCard(string name, string description, DateTime dueDate, int boardId)
+        public async Task<string> AddCard(string name, string description, DateTime dueDate, int boardId, List<string> filesUrl)
         {
             try
             {
                 string boardIdentifier = GetBoardId(boardId);
                 if (VerifyBoardIdentifier(boardIdentifier))
                     return string.Empty;
+
                 var board = _factory.Board(GetBoardId(boardId));
                 await board.Refresh();
                 var list = board.Lists.FirstOrDefault();
@@ -75,6 +77,27 @@ namespace CMA.ISMAI.Trello.Engine.Service
                 this._log.Fatal(ex.ToString());
             }
             return 3;
+        }
+
+        public async Task<List<string>> ReturnCardAttachmenets(string cardId, int boardId)
+        {
+            List<string> filesUrl = new List<string>();
+            string boardIdentifier = GetBoardId(boardId);
+            if (VerifyBoardIdentifier(boardIdentifier))
+                return filesUrl;
+
+            var board = _factory.Board(GetBoardId(boardId));
+            await board.Refresh();
+            var list = board.Lists.FirstOrDefault();
+            var newCard = list.Cards.Where(x => x.Id == cardId).FirstOrDefault();
+            if (newCard != null)
+            {
+                foreach (var item in newCard.Attachments)
+                {
+                    filesUrl.Add(item.Url);
+                }
+            }
+            return filesUrl;
         }
     }
 }

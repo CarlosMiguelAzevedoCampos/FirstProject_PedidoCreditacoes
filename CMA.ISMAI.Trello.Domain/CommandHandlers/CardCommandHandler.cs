@@ -5,6 +5,7 @@ using CMA.ISMAI.Trello.Domain.Enum;
 using CMA.ISMAI.Trello.Domain.Events;
 using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Interface;
+using System.Collections.Generic;
 
 namespace CMA.ISMAI.Trello.Domain.CommandHandlers
 {
@@ -31,7 +32,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 _cardEventHandler.Handler(@event as AddCardFailedEvent);
                 return @event;
             }
-            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId).Result;
+            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
             return ReturnEventBasedOnCardId(request, cardId);
         }
         private Event ReturnEventBasedOnCardId(AddCardCommand request, string cardId)
@@ -59,7 +60,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 _cardEventHandler.Handler(@event as CardStatusCompletedEvent);
                 return @event;
             }
-            else if(result == (int)CardStatus.Active)
+            else if (result == (int)CardStatus.Active)
             {
                 @event = new CardStatusIncompletedEvent(request.Id);
                 _cardEventHandler.Handler(@event as CardStatusIncompletedEvent);
@@ -71,6 +72,14 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 _cardEventHandler.Handler(@event as CardStatusUnableToFindEvent);
                 return @event;
             }
+        }
+
+        public Event Handler(GetCardAttachmentsCommand request)
+        {
+            List<string> filesUrl = _trello.ReturnCardAttachmenets(request.CardId, request.BoardId).Result;
+            if (filesUrl.Count > 0)
+                return new CardHasAttachmentsEvent(filesUrl);
+            return new CardDosentHaveAttachmentsEvent();
         }
     }
 }
