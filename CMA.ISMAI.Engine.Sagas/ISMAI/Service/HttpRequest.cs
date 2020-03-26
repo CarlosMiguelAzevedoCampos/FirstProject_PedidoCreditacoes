@@ -59,7 +59,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             {
                 _log.Info($"CardStateAsync is being executed!, card Information - Id {cardId}");
 
-                var response = await client.GetAsync(string.Format("https://localhost:5001/Trello?id={0}", cardId));
+                var response = await client.GetAsync(string.Format("https://localhost:5001/Trello/GetCardStatus?cardId={0}", cardId));
                 _log.Info($"CardStateAsync is getting information!, card Information - Id {cardId}");
 
                 if (response.IsSuccessStatusCode)
@@ -81,9 +81,33 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             }
         }
 
-        public Task<List<string>> GetCardAttachments(string cardId, int boardId)
+        public async Task<List<string>> GetCardAttachments(string cardId, int boardId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _log.Info($"GetCardAttachments is being executed!, card Information - Id {cardId}");
+
+                var response = await client.GetAsync(string.Format("https://localhost:5001/Trello/GetCardAttachments?cardId={0}&boardId={1}"
+                    , cardId,boardId));
+                _log.Info($"GetCardAttachments is getting information!, card Information - Id {cardId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var readAsStringAsync = response.Content.ReadAsStringAsync();
+                    Response<ReturnCardAttachmentsEvent> cardStatus = JsonConvert.DeserializeObject<Response<ReturnCardAttachmentsEvent>>(readAsStringAsync.Result);
+                    _log.Info($"GetCardAttachments done!, card Information - Id {cardId} - Event {cardStatus.Data.MessageType}");
+
+                    return cardStatus.Data.Attachments;
+                }
+                _log.Info($"CardStateAsync failed!, card Information - Id {cardId}");
+
+                return new List<string>();
+            }
+            catch (Exception ex)
+            {
+                _log.Fatal(ex.ToString());
+                return new List<string>();
+            }
         }
     }
 }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace CMA.ISMAI.Trello.Domain.Events
 {
-    public class CardHasAttachmentsEvent : Event
+    public class ReturnCardAttachmentsEvent : Event
     {
-        public CardHasAttachmentsEvent(List<string> attachments)
+        public ReturnCardAttachmentsEvent(List<string> attachments)
         {
             this.Id = Guid.NewGuid();
             AggregateId = Guid.NewGuid();

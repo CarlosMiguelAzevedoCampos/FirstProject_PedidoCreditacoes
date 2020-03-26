@@ -77,9 +77,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
         public Event Handler(GetCardAttachmentsCommand request)
         {
             List<string> filesUrl = _trello.ReturnCardAttachmenets(request.CardId, request.BoardId).Result;
-            if (filesUrl.Count > 0)
-                return new CardHasAttachmentsEvent(filesUrl);
-            return new CardDosentHaveAttachmentsEvent();
+            return new ReturnCardAttachmentsEvent(filesUrl);
         }
     }
 }

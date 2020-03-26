@@ -120,7 +120,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
         [Theory]
         [InlineData("ISMAI", "Process_00kjdw0", -1)]
-        public void TrelloController_AddCard_ShouldReturnBadStatusBasedDomainExceptions(string cardName, string cardDescription,int boardId)
+        public void TrelloController_AddCard_ShouldReturnBadStatusBasedDomainExceptions(string cardName, string cardDescription, int boardId)
         {
             var logMock = new Mock<ILog>();
             var eventMock = new Mock<ICardCommandHandler>();
@@ -144,7 +144,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             var logMock = new Mock<ILog>();
             var eventMock = new Mock<ICardCommandHandler>();
             eventMock.Setup(x => x.Handler(It.IsAny<GetCardAttachmentsCommand>()))
-                .Returns(new CardHasAttachmentsEvent(urls));
+                .Returns(new ReturnCardAttachmentsEvent(urls));
 
             TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
 
@@ -154,23 +154,6 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             Assert.True(resultCode.StatusCode == 200);
         }
 
-        [Theory]
-        [InlineData("ifh2i992h2b-asfa-1w", 1)]
-        [InlineData("cjckamrb222-we-1w", 2)]
-        public void TrelloController_GetCardAttachments_ShouldReturnOkStatus_ButEmptyAttachmentsList(string cardId, int boardId)
-        {
-            var logMock = new Mock<ILog>();
-            var eventMock = new Mock<ICardCommandHandler>();
-            eventMock.Setup(x => x.Handler(It.IsAny<GetCardAttachmentsCommand>()))
-                .Returns(new CardDosentHaveAttachmentsEvent());
-
-            TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
-
-            IActionResult result = trelloController.GetCardAttachments(cardId, boardId);
-            var resultCode = result as OkObjectResult;
-            Assert.IsType<OkObjectResult>(result);
-            Assert.True(resultCode.StatusCode == 200);
-        }
 
         [Theory]
         [InlineData("", -1)]

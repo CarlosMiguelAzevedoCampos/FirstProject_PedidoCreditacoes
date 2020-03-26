@@ -100,7 +100,7 @@ namespace CMA.ISMAI.Sagas
 
             if (!getCardStatus(cardId))
                 return;
-            List<string> filesUrl = getCardAttachments(cardId, boardId);
+            List<string> filesUrl = getCardAttachments(cardId, boardId - 1);
             string newCardId = _creditacoesService.PostNewCard(new CardDto($"{courseInstitute} - {courseName} - {studentName}",
                 dueTime, $"{courseInstitute} - {courseName} - {studentName} - A new card has been created. When this task is done, please check it has done",
                 boardId,
@@ -133,7 +133,7 @@ namespace CMA.ISMAI.Sagas
         {
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - executing..");
             string cardId = getCardId(externalTask);
-            List<string> filesUrl = getCardAttachments(cardId, boardId);
+            List<string> filesUrl = getCardAttachments(cardId, boardId - 1);
 
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - card details obtained from camunda..");
             camundaEngineClient.ExternalTaskService.Complete(processName, externalTask.Id);

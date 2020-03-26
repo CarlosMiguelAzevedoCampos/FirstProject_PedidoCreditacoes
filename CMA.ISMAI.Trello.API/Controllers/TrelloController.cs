@@ -6,6 +6,7 @@ using CMA.ISMAI.Trello.Domain.Commands;
 using CMA.ISMAI.Trello.Domain.Events;
 using CMA.ISMAI.Trello.Domain.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace CMA.ISMAI.Trello.API.Controllers
@@ -26,6 +27,10 @@ namespace CMA.ISMAI.Trello.API.Controllers
         [HttpPost]
         public IActionResult AddCard([FromBody]CardDto card)
         {
+            card = new CardDto("ISMAI - Informática - Carlos Campos", DateTime.Now.AddDays(2), "ISMAI - Informática - Carlos Campos", 0, new List<string>() { "https://stackoverflow.com/questions/30201170/trello-manatee-adding-attachment",
+            "https://stackoverflow.com/questions/30201170/trello-manatee-adding-attachment"
+            ,"https://stackoverflow.com/questions/30201170/trello-manatee-adding-attachment"});
+
             if (card == null)
             {
                 _logger.Fatal("Card Dto is null!");
@@ -39,14 +44,15 @@ namespace CMA.ISMAI.Trello.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCardStatus(string id)
+        [Route("GetCardStatus")]
+        public IActionResult GetCardStatus(string cardId)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(cardId))
             {
                 _logger.Fatal("Card ID is null!");
                 return BadRequest();
             }
-            Event @event = _cardHandler.Handler(new GetCardStatusCommand(id));
+            Event @event = _cardHandler.Handler(new GetCardStatusCommand(cardId));
 
             if (@event is CardStatusCompletedEvent)
                 return Response(true, @event as CardStatusCompletedEvent);
@@ -57,6 +63,7 @@ namespace CMA.ISMAI.Trello.API.Controllers
         }
 
         [HttpGet]
+        [Route("GetCardAttachments")]
         public IActionResult GetCardAttachments(string cardId, int boardId)
         {
             if (string.IsNullOrEmpty(cardId) || boardId < 0)
@@ -65,10 +72,7 @@ namespace CMA.ISMAI.Trello.API.Controllers
                 return BadRequest();
             }
             Event @event = _cardHandler.Handler(new GetCardAttachmentsCommand(cardId, boardId));
-
-            if (@event is CardHasAttachmentsEvent)
-                return Response(true, @event as CardHasAttachmentsEvent);
-            return Response(true, @event as CardDosentHaveAttachmentsEvent);
+            return Response(true, @event as ReturnCardAttachmentsEvent);
         }
     }
 }

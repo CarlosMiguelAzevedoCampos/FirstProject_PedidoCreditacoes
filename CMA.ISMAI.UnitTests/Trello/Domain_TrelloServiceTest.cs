@@ -107,26 +107,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, engineMock.Object, notificaitionMock.Object);
 
             Event result = cardCommandHandler.Handler(getCardAttachmentsCommand);
-            Assert.True(result is CardHasAttachmentsEvent);
-        }
-
-        [Theory]
-        [InlineData("44454a2sda3s562a", 1)]
-        [InlineData("44454a34sda3s562a", 2)]
-        [InlineData("444513a2sda3s562a", 0)]
-        public void TrelloService_GetCardAttachments_ShouldReturnAListOfEmptyAttachments(string cardId, int boardId)
-        {
-            var logMock = new Mock<ILog>();
-            var engineMock = new Mock<ITrello>();
-            var notificaitionMock = new Mock<ICardEventHandler>();
-            engineMock.Setup(x => x.ReturnCardAttachmenets(It.IsAny<string>(), It.IsAny<int>()))
-               .Returns(Task.FromResult(new List<string>()));
-
-            GetCardAttachmentsCommand getCardAttachmentsCommand = new GetCardAttachmentsCommand(cardId, boardId);
-            CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, engineMock.Object, notificaitionMock.Object);
-
-            Event result = cardCommandHandler.Handler(getCardAttachmentsCommand);
-            Assert.True(result is CardDosentHaveAttachmentsEvent);
-        }
+            Assert.True(result is ReturnCardAttachmentsEvent);
+        }     
     }
 }

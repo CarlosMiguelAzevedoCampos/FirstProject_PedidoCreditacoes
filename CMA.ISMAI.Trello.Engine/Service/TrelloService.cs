@@ -33,6 +33,8 @@ namespace CMA.ISMAI.Trello.Engine.Service
                 await board.Refresh();
                 var list = board.Lists.FirstOrDefault();
                 var newCard = await list.Cards.Add(name, description, null, dueDate);
+                var tasks = AddAttachmentsToACardAsync(newCard, filesUrl);
+                await Task.WhenAll(tasks);
                 this._log.Info("A new card has created in trello!");
                 return newCard.Id;
             }
@@ -41,6 +43,14 @@ namespace CMA.ISMAI.Trello.Engine.Service
                 this._log.Fatal(ex.ToString());
             }
             return string.Empty;
+        }
+
+        private async Task AddAttachmentsToACardAsync(ICard newCard, List<string> filesUrl)
+        {
+            foreach (var item in filesUrl)
+            {
+                await newCard.Attachments.Add(item, "Documents");
+            }
         }
 
         private bool VerifyBoardIdentifier(string id)
@@ -82,17 +92,11 @@ namespace CMA.ISMAI.Trello.Engine.Service
         public async Task<List<string>> ReturnCardAttachmenets(string cardId, int boardId)
         {
             List<string> filesUrl = new List<string>();
-            string boardIdentifier = GetBoardId(boardId);
-            if (VerifyBoardIdentifier(boardIdentifier))
-                return filesUrl;
-
-            var board = _factory.Board(GetBoardId(boardId));
-            await board.Refresh();
-            var list = board.Lists.FirstOrDefault();
-            var newCard = list.Cards.Where(x => x.Id == cardId).FirstOrDefault();
-            if (newCard != null)
+            var card = _factory.Card(cardId);
+            await card.Refresh();
+            if (card != null)
             {
-                foreach (var item in newCard.Attachments)
+                foreach (var item in card.Attachments)
                 {
                     filesUrl.Add(item.Url);
                 }
