@@ -5,9 +5,20 @@ namespace CMA.ISMAI.Trello.API.Mapper
 {
     public static class Map
     {
-        public static AddCardCommand ConverToModel(CardDto card)
+        public static AddCardCommand ConvertToAddCardCommand(CardDto card)
         {
             return new AddCardCommand(card.Name, card.DueTime, card.Description, card.BoardId, card.FilesUrl);
         }
+
+        public static GetCardStatusCommand ConvertToGetCardStatusCommand(string id)
+        {
+            return new GetCardStatusCommand(id);
+        }
+
+        public static GetCardAttachmentsCommand ConvertToGetCardAttachmentsCommand(string id)
+        {
+            return new GetCardAttachmentsCommand(id);
+        }
+
     }
 }

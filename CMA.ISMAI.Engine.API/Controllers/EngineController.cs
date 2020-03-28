@@ -28,11 +28,11 @@ namespace CMA.ISMAI.Engine.API.Controllers
         {
             model = new DeployDto("ISMAI",new Dictionary<string, object>()
             {
-                {"cet" ,false },
-                {"cardId","5e7cfead2f191351440c167c" },
+                {"cet" ,true },
+                {"cardId","5e7f9cbb414bc74aabdc7a00" },
                 {"courseName","Informática" },
                 {"studentName","Carlos Campos" },
-                {"courseInstitute","ISMAI" }
+                {"courseInstitute","ISEP" }
             });
             if (model == null)
             {

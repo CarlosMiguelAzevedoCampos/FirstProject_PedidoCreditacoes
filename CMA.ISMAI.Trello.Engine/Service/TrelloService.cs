@@ -89,7 +89,7 @@ namespace CMA.ISMAI.Trello.Engine.Service
             return 3;
         }
 
-        public async Task<List<string>> ReturnCardAttachmenets(string cardId, int boardId)
+        public async Task<List<string>> ReturnCardAttachmenets(string cardId)
         {
             List<string> filesUrl = new List<string>();
             var card = _factory.Card(cardId);

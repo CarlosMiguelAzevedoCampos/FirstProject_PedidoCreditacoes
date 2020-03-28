@@ -3,6 +3,8 @@ using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
 using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
+using CMA.ISMAI.Sagas.Creditacoes;
+using CMA.ISMAI.Sagas.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -38,8 +40,10 @@ namespace CMA.ISMAI.Sagas
 
             services.AddLogging();
             services.AddScoped<ILog, LoggingService>();
-            services.AddTransient<ICreditacoesService, CreditacoesService>();
-            services.AddTransient<IHttpRequest, HttpRequest>();
+            services.AddScoped<ICreditacoesService, CreditacoesService>();
+            services.AddScoped<IHttpRequest, HttpRequest>();
+            services.AddScoped<ISagaCreditacoesWorker, CreditacoesSaga>();
+            services.AddScoped<ICreditacoesNotification, CreditacoesNotification>();
             services.AddTransient<ConsoleApplication>();
             return services;
         }       

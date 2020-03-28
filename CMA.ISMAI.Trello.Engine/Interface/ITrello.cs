@@ -9,6 +9,6 @@ namespace CMA.ISMAI.Trello.Engine.Interface
         Task<string> AddCard(string name, string description, DateTime dueDate, int boardId, List<string> filesUrl);
 
         Task<int> IsTheProcessFinished(string cardId);
-        Task<List<string>> ReturnCardAttachmenets(string cardId, int boardId);
+        Task<List<string>> ReturnCardAttachmenets(string cardId);
     }
 }

@@ -90,20 +90,20 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
         }
 
         [Theory]
-        [InlineData("44454a2sda3s562a", 1)]
-        [InlineData("44454a34sda3s562a", 2)]
-        [InlineData("444513a2sda3s562a", 0)]
-        public void TrelloService_GetCardAttachments_ShouldReturnTheAttachments(string cardId, int boardId)
+        [InlineData("44454a2sda3s562a")]
+        [InlineData("44454a34sda3s562a")]
+        [InlineData("444513a2sda3s562a")]
+        public void TrelloService_GetCardAttachments_ShouldReturnTheAttachments(string cardId)
         {
             var logMock = new Mock<ILog>();
             var engineMock = new Mock<ITrello>();
             var notificaitionMock = new Mock<ICardEventHandler>();
             var urls = new List<string>();
             urls.Add("google.pt");
-            engineMock.Setup(x => x.ReturnCardAttachmenets(It.IsAny<string>(), It.IsAny<int>()))
+            engineMock.Setup(x => x.ReturnCardAttachmenets(It.IsAny<string>()))
                .Returns(Task.FromResult(urls));
 
-            GetCardAttachmentsCommand getCardAttachmentsCommand = new GetCardAttachmentsCommand(cardId, boardId);
+            GetCardAttachmentsCommand getCardAttachmentsCommand = new GetCardAttachmentsCommand(cardId);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, engineMock.Object, notificaitionMock.Object);
 
             Event result = cardCommandHandler.Handler(getCardAttachmentsCommand);
