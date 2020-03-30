@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CMA.ISMAI.Solutions.Creditacoes.UI.Services;
+using CMA.ISMAI.Solutions.Creditacoes.UI.Services.Interface;
+using CMA.ISMAI.Solutions.Creditacoes.UI.Services.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +22,9 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddScoped<IHttpRequest, HttpRequest>();
+            services.AddScoped<ITrelloService, TrelloService>();
+            services.AddScoped<IWorkFlowService, WorkFlowService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,7 +36,7 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI
             }
             else
             {
-                app.UseExceptionHandler("/Home/Index");
+                app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

@@ -16,10 +16,10 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             this._httpRequest = httpRequest;
         }
 
-        public List<string> GetCardAttachments(string cardId, int boardId)
+        public List<string> GetCardAttachments(string cardId)
         {
             _log.Info($"GetCardAttachments for card Id {cardId}... getting attachments");
-            List<string> cardAttachments = _httpRequest.GetCardAttachments(cardId, boardId).Result;
+            List<string> cardAttachments = _httpRequest.GetCardAttachments(cardId).Result;
             _log.Info($"GetCardAttachments for card Id {cardId} - the result was {cardAttachments.Count} files");
             return cardAttachments;
         }

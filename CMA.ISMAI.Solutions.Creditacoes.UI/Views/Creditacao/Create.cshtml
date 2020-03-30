@@ -1,0 +1,47 @@
+﻿@model CMA.ISMAI.Solutions.Creditacoes.UI.Models.CreditacaoDto
+
+@{
+    ViewData["Title"] = "Processo de Creditações";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Criação de processo de Creditações</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StudentName" class="control-label"></label>
+                <input asp-for="StudentName" class="form-control" />
+                <span asp-validation-for="StudentName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstituteName" class="control-label"></label>
+                <input asp-for="InstituteName" class="form-control" />
+                <span asp-validation-for="InstituteName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseName" class="control-label"></label>
+                <input asp-for="CourseName" class="form-control" />
+                <span asp-validation-for="CourseName" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsCet" /> @Html.DisplayNameFor(model => model.IsCet)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Documents" class="control-label"></label>
+                <input asp-for="Documents" class="form-control" />
+                <span asp-validation-for="Documents" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

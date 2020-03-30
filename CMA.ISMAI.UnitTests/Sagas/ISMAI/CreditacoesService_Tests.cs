@@ -81,10 +81,10 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             list.Add("google.pt");
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
-            httprequestMock.Setup(x => x.GetCardAttachments(It.IsAny<string>(), It.IsAny<int>()))
+            httprequestMock.Setup(x => x.GetCardAttachments(It.IsAny<string>()))
                 .Returns(Task.FromResult(list));
             ICreditacoesService creditacoesService = new CreditacoesService(logMock.Object, httprequestMock.Object);
-            List<string> result = creditacoesService.GetCardAttachments("12",1);
+            List<string> result = creditacoesService.GetCardAttachments("12");
             Assert.True(result.Count > 0);
         }
     }

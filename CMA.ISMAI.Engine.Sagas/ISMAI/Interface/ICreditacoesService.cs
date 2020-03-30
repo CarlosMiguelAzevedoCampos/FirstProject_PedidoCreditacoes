@@ -7,6 +7,6 @@ namespace CMA.ISMAI.Engine.Automation.Sagas
     {
         bool GetCardState(string cardId);
         string PostNewCard(CardDto card);
-        List<string> GetCardAttachments(string cardId, int boardId);
+        List<string> GetCardAttachments(string cardId);
     }
 }

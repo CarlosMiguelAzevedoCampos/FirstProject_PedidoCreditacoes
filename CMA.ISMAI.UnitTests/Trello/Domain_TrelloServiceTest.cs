@@ -108,6 +108,63 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
             Event result = cardCommandHandler.Handler(getCardAttachmentsCommand);
             Assert.True(result is ReturnCardAttachmentsEvent);
-        }     
+        }
+
+        [Theory]
+        [InlineData("44454a2sda3s562a")]
+        [InlineData("44454a34sda3s562a")]
+        [InlineData("444513a2sda3s562a")]
+        public void TrelloService_GetCardStatus_ShouldReturnCompleted(string cardId)
+        {
+            var logMock = new Mock<ILog>();
+            var engineMock = new Mock<ITrello>();
+            var notificaitionMock = new Mock<ICardEventHandler>();
+            engineMock.Setup(x => x.IsTheProcessFinished(It.IsAny<string>()))
+               .Returns(Task.FromResult(1));
+
+            GetCardStatusCommand getCardStatusCommand = new GetCardStatusCommand(cardId);
+            CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, engineMock.Object, notificaitionMock.Object);
+
+            Event result = cardCommandHandler.Handler(getCardStatusCommand);
+            Assert.True(result is CardStatusCompletedEvent);
+        }
+
+        [Theory]
+        [InlineData("44454a2sda3s562a")]
+        [InlineData("44454a34sda3s562a")]
+        [InlineData("444513a2sda3s562a")]
+        public void TrelloService_GetCardStatus_ShouldReturnInCompleted(string cardId)
+        {
+            var logMock = new Mock<ILog>();
+            var engineMock = new Mock<ITrello>();
+            var notificaitionMock = new Mock<ICardEventHandler>();
+            engineMock.Setup(x => x.IsTheProcessFinished(It.IsAny<string>()))
+               .Returns(Task.FromResult(0));
+
+            GetCardStatusCommand getCardStatusCommand = new GetCardStatusCommand(cardId);
+            CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, engineMock.Object, notificaitionMock.Object);
+
+            Event result = cardCommandHandler.Handler(getCardStatusCommand);
+            Assert.True(result is CardStatusIncompletedEvent);
+        }
+
+        [Theory]
+        [InlineData("44454a2sda3s562a")]
+        [InlineData("44454a34sda3s562a")]
+        [InlineData("444513a2sda3s562a")]
+        public void TrelloService_GetCardStatus_ShouldReturnUnableToFind(string cardId)
+        {
+            var logMock = new Mock<ILog>();
+            var engineMock = new Mock<ITrello>();
+            var notificaitionMock = new Mock<ICardEventHandler>();
+            engineMock.Setup(x => x.IsTheProcessFinished(It.IsAny<string>()))
+               .Returns(Task.FromResult(2));
+
+            GetCardStatusCommand getCardStatusCommand = new GetCardStatusCommand(cardId);
+            CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, engineMock.Object, notificaitionMock.Object);
+
+            Event result = cardCommandHandler.Handler(getCardStatusCommand);
+            Assert.True(result is CardStatusUnableToFindEvent);
+        }
     }
 }

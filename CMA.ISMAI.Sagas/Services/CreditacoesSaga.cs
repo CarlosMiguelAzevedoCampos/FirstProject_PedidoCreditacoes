@@ -104,7 +104,7 @@ namespace CMA.ISMAI.Sagas.Creditacoes
 
             if (!getCardStatus(cardId))
                 return;
-            List<string> filesUrl = getCardAttachments(cardId, boardId - 1);
+            List<string> filesUrl = getCardAttachments(cardId);
             string newCardId = _creditacoesService.PostNewCard(new CardDto($"{courseInstitute} - {courseName} - {studentName}",
                 dueTime, $"{courseInstitute} - {courseName} - {studentName} - A new card has been created. When this task is done, please check it has done",
                 boardId,
@@ -133,16 +133,16 @@ namespace CMA.ISMAI.Sagas.Creditacoes
         {
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - executing..");
             string cardId = ReturnValueFromExternalTask(externalTask, "cardId").ToString();
-            List<string> filesUrl = getCardAttachments(cardId, boardId - 1);
+            List<string> filesUrl = getCardAttachments(cardId);
             _creditacoesNotification.SendNotification(new MessageBody("", "Olá"));
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - card details obtained from camunda..");
             FinishTasks(processName, externalTask.Id);
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - completed!");
         }
 
-        private List<string> getCardAttachments(string cardId, int boardId)
+        private List<string> getCardAttachments(string cardId)
         {
-            return _creditacoesService.GetCardAttachments(cardId, boardId);
+            return _creditacoesService.GetCardAttachments(cardId);
         }
 
         private Dictionary<string, object> returnDictionary(string newCardId, string courseName, string studentName, string courseInstitute)

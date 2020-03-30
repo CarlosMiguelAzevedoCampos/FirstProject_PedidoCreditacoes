@@ -95,8 +95,8 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
 
 
             IActionResult result = trelloController.AddCard(null);
-            var resultCode = result as BadRequestObjectResult;
-            Assert.IsType<BadRequestObjectResult>(result);
+            var resultCode = result as BadRequestResult;
+            Assert.IsType<BadRequestResult>(result);
             Assert.True(resultCode.StatusCode == 400);
         }
 
@@ -164,7 +164,7 @@ namespace CMA.ISMAI.UnitTests.Engine.Domain
             var eventMock = new Mock<ICardCommandHandler>();
             TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
 
-            IActionResult result = trelloController.GetCardAttachments(cardId);
+            IActionResult result = trelloController.GetCardStatus(cardId);
             var resultCode = result as BadRequestResult;
             Assert.IsType<BadRequestResult>(result);
             Assert.True(resultCode.StatusCode == 400);

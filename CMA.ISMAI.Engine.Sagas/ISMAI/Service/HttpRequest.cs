@@ -81,14 +81,14 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             }
         }
 
-        public async Task<List<string>> GetCardAttachments(string cardId, int boardId)
+        public async Task<List<string>> GetCardAttachments(string cardId)
         {
             try
             {
                 _log.Info($"GetCardAttachments is being executed!, card Information - Id {cardId}");
 
-                var response = await client.GetAsync(string.Format("https://localhost:5001/Trello/GetCardAttachments?cardId={0}&boardId={1}"
-                    , cardId,boardId));
+                var response = await client.GetAsync(string.Format("https://localhost:5001/Trello/GetCardAttachments?cardId={0}"
+                    , cardId));
                 _log.Info($"GetCardAttachments is getting information!, card Information - Id {cardId}");
 
                 if (response.IsSuccessStatusCode)
