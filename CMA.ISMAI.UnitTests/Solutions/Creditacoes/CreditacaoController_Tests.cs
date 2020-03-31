@@ -1,4 +1,5 @@
-﻿using CMA.ISMAI.Solutions.Creditacoes.UI.Controllers;
+﻿using CMA.ISMAI.Logging.Interface;
+using CMA.ISMAI.Solutions.Creditacoes.UI.Controllers;
 using CMA.ISMAI.Solutions.Creditacoes.UI.Models;
 using CMA.ISMAI.Solutions.Creditacoes.UI.Services;
 using CMA.ISMAI.Solutions.Creditacoes.UI.Services.Interface;
@@ -16,10 +17,11 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
         {
             var trelloService = new Mock<ITrelloService>();
             var workFlowService = new Mock<IWorkFlowService>();
+            var logMock = new Mock<ILog>();
             trelloService.Setup(x => x.CreateTrelloCard(It.IsAny<CreditacaoDto>())).Returns(Guid.NewGuid().ToString());
             workFlowService.Setup(x => x.CreateWorkFlowProcess(It.IsAny<CreditacaoDto>(), It.IsAny<string>()))
                 .Returns(true);
-            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, workFlowService.Object);
+            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, workFlowService.Object, logMock.Object);
             var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             IActionResult action = creditacaoController.Create(creditacaoDto);
             var resultCode = action as OkObjectResult;
@@ -31,8 +33,9 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
         {
             var trelloService = new Mock<ITrelloService>();
             var workFlowService = new Mock<IWorkFlowService>();
+            var logMock = new Mock<ILog>();
             trelloService.Setup(x => x.CreateTrelloCard(It.IsAny<CreditacaoDto>())).Returns("");
-            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, workFlowService.Object);
+            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, workFlowService.Object, logMock.Object);
             var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             IActionResult action = creditacaoController.Create(creditacaoDto);
             var resultCode = action as BadRequestObjectResult;
@@ -44,10 +47,11 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
         {
             var trelloService = new Mock<ITrelloService>();
             var workFlowService = new Mock<IWorkFlowService>();
+            var logMock = new Mock<ILog>();
             workFlowService.Setup(x => x.CreateWorkFlowProcess(It.IsAny<CreditacaoDto>(), It.IsAny<string>()))
                 .Returns(false);
             trelloService.Setup(x => x.CreateTrelloCard(It.IsAny<CreditacaoDto>())).Returns(Guid.NewGuid().ToString());
-            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, workFlowService.Object);
+            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, workFlowService.Object, logMock.Object);
             var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             IActionResult action = creditacaoController.Create(creditacaoDto);
             var resultCode = action as BadRequestObjectResult;
