@@ -27,7 +27,7 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Services.Service
                 var json = JsonConvert.SerializeObject(card);
 
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage request = await client.PostAsync("https://localhost:5001/Trello", stringContent);
+                HttpResponseMessage request = await client.PostAsync("https://localhost:5001/Trello/AddCardAndProcess", stringContent);
                 return request.IsSuccessStatusCode;
             }
             catch (Exception ex)

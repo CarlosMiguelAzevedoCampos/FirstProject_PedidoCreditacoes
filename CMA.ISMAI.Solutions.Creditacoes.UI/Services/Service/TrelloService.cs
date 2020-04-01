@@ -20,7 +20,7 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Services.Service
             string cardName = $"{creditacaoDto.InstituteName} - {creditacaoDto.CourseName} - {creditacaoDto.StudentName}";
             string cardDescription = $"{creditacaoDto.InstituteName} - {creditacaoDto.CourseName} - {creditacaoDto.StudentName} - A new card has been created. When this task is done, please check it has done";
             var card = new CardDto(cardName, DateTime.Now.AddDays(1), cardDescription, 0, new List<string>() { creditacaoDto.Documents },
-                creditacaoDto.InstituteName, creditacaoDto.CourseName, creditacaoDto.StudentName, creditacaoDto.IsCet, true);
+                creditacaoDto.InstituteName, creditacaoDto.CourseName, creditacaoDto.StudentName, creditacaoDto.IsCet);
             _log.Info("Posting a new card to trello...");
             bool value = _request.PostNewCardAsync(card).Result;
             return value;

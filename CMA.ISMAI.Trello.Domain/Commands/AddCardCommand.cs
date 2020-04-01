@@ -6,7 +6,7 @@ namespace CMA.ISMAI.Trello.Domain.Commands
 {
     public class AddCardCommand : CardCommand
     {
-        public AddCardCommand(string name, DateTime dueTime, string description, int boardId, List<string> filesUrl, string instituteName, string courseName, string studentName, bool isCet, bool workFlowStart = false)
+        public AddCardCommand(string name, DateTime dueTime, string description, int boardId, List<string> filesUrl, string instituteName, string courseName, string studentName, bool isCet)
         {
             Id = Guid.NewGuid();
             Name = name;
@@ -14,7 +14,6 @@ namespace CMA.ISMAI.Trello.Domain.Commands
             DueTime = dueTime;
             BoardId = boardId;
             FilesUrl = filesUrl;
-            WorkFlowStart = workFlowStart;
             CourseName = courseName;
             InstituteName = instituteName;
             StudentName = studentName;

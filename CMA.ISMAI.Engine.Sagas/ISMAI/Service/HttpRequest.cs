@@ -32,7 +32,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
 
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-                HttpResponseMessage request = await client.PostAsync("https://localhost:5001/Trello", stringContent);
+                HttpResponseMessage request = await client.PostAsync("https://localhost:5001/Trello/AddCard", stringContent);
                 _log.Info($"CardPostAsync post request - Board - {card.BoardId} - Description - {card.Description} - Name {card.Name}");
 
                 if (request.IsSuccessStatusCode)

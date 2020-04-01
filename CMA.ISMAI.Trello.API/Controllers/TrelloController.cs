@@ -21,7 +21,7 @@ namespace CMA.ISMAI.Trello.API.Controllers
             _cardHandler = cardHandler;
         }
 
-        [HttpPost]
+        [HttpPost("AddCard")]
         public IActionResult AddCard([FromBody]CardDto card)
         {
             if (card == null)
@@ -34,6 +34,24 @@ namespace CMA.ISMAI.Trello.API.Controllers
             if (@event is AddCardCompletedEvent)
                 return Response(true, @event as AddCardCompletedEvent);
             return Response(false, @event as AddCardFailedEvent);
+        }
+
+        [HttpPost("AddCardAndProcess")]
+        public IActionResult AddCardAndProcess([FromBody]CardDto card)
+        {
+            if (card == null)
+            {
+                _logger.Fatal("Card Dto is null!");
+                return BadRequest();
+            }
+
+            Event @event = _cardHandler.Handler(Map.ConvertToAddCardCommand(card));
+            if (@event is AddCardCompletedEvent)
+                return Response(true, @event as AddCardCompletedEvent);
+            else if (@event is WorkFlowStartFailedEvent)
+                return Response(false, @event as WorkFlowStartFailedEvent);
+            else
+                return Response(false, @event as AddCardFailedEvent);
         }
 
         [HttpGet]

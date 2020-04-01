@@ -39,37 +39,8 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 return @event;
             }
             string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
-            if (IsAWorkFlowDeploy(request))
-            {
-                if (string.IsNullOrEmpty(cardId))
-                    return ReturnEventBasedOnCardId(request, cardId);
-                Event result = DeployProccess(cardId, request.CourseName, request.StudentName, request.InstituteName, request.IsCet);
-                if (result is WorkFlowStartFailedEvent)
-                    return result;
-            }
+           
             return ReturnEventBasedOnCardId(request, cardId);
-        }
-
-        private Event DeployProccess(string cardId, string courseName, string studentName, string instituteName, bool isCet)
-        {
-            Event @event;
-            string proccess = _engine.StartWorkFlow(cardId, courseName, studentName, instituteName, isCet);
-            if (string.IsNullOrEmpty(proccess))
-            {
-                _log.Fatal("Proccess Engine couldn't start!");
-                @event = new WorkFlowStartFailedEvent("The process engine couldn't start!");
-                _workFlowEventHandler.Handler(@event as WorkFlowStartFailedEvent);
-                _trello.DeleteCard(cardId);
-                return @event;
-            }
-            @event = new WorkFlowStartCompletedEvent(proccess, "Creditações");
-            _workFlowEventHandler.Handler(@event as WorkFlowStartCompletedEvent);
-            return @event;
-        }
-
-        private bool IsAWorkFlowDeploy(AddCardCommand request)
-        {
-            return request.WorkFlowStart;
         }
 
         private Event ReturnEventBasedOnCardId(AddCardCommand request, string cardId)
@@ -115,6 +86,38 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
         {
             List<string> filesUrl = _trello.ReturnCardAttachmenets(request.CardId).Result;
             return new ReturnCardAttachmentsEvent(filesUrl);
+        }
+
+        public Event HandlerProcess(AddCardCommand request)
+        {
+            Event @event;
+            if (!request.IsValid())
+            {
+                _log.Fatal("A invalid card was been submited in the Domain");
+                @event = new AddCardFailedEvent(NotifyValidationErrors(request));
+                _cardEventHandler.Handler(@event as AddCardFailedEvent);
+                return @event;
+            }
+            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
+            DeployProccess(cardId, request.CourseName, request.StudentName, request.InstituteName, request.IsCet);
+            return ReturnEventBasedOnCardId(request, cardId);
+        }
+
+        private Event DeployProccess(string cardId, string courseName, string studentName, string instituteName, bool isCet)
+        {
+            Event @event;
+            string proccess = _engine.StartWorkFlow(cardId, courseName, studentName, instituteName, isCet);
+            if (string.IsNullOrEmpty(proccess))
+            {
+                _log.Fatal("Proccess Engine couldn't start!");
+                @event = new WorkFlowStartFailedEvent("The process engine couldn't start!");
+                _workFlowEventHandler.Handler(@event as WorkFlowStartFailedEvent);
+                _trello.DeleteCard(cardId);
+                return @event;
+            }
+            @event = new WorkFlowStartCompletedEvent(proccess, "Creditações");
+            _workFlowEventHandler.Handler(@event as WorkFlowStartCompletedEvent);
+            return @event;
         }
     }
 }
