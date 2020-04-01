@@ -5,13 +5,18 @@ namespace CMA.ISMAI.Trello.API.Model
 {
     public class CardDto
     {
-        public CardDto(string name, DateTime dueTime, string description, int boardId, List<string> filesUrl)
+        public CardDto(string name, DateTime dueTime, string description, int boardId, List<string> filesUrl, string instituteName, string courseName, string studentName, bool isCet, bool workFlowStart = false)
         {
             Name = name;
             DueTime = dueTime;
             Description = description;
             BoardId = boardId;
             FilesUrl = filesUrl;
+            WorkFlowStart = workFlowStart;
+            CourseName = courseName;
+            InstituteName = instituteName;
+            StudentName = studentName;
+            IsCet = isCet;
         }
         protected CardDto()
         {
@@ -23,5 +28,10 @@ namespace CMA.ISMAI.Trello.API.Model
         public string Description { get; set; }
         public int BoardId { get; set; }
         public List<string> FilesUrl { get; set; }
+        public bool WorkFlowStart { get; set; }
+        public string StudentName { get; set; }
+        public string InstituteName { get; set; }
+        public string CourseName { get; set; }
+        public bool IsCet { get; set; }
     }
 }

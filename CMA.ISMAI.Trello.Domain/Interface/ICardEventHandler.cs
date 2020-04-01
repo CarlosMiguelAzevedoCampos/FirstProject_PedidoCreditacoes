@@ -9,6 +9,5 @@ namespace CMA.ISMAI.Trello.Domain.Interface
         void Handler(CardStatusCompletedEvent request);
         void Handler(CardStatusIncompletedEvent request);
         void Handler(CardStatusUnableToFindEvent request);
-
     }
 }

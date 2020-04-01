@@ -7,7 +7,7 @@ namespace CMA.ISMAI.Trello.API.Mapper
     {
         public static AddCardCommand ConvertToAddCardCommand(CardDto card)
         {
-            return new AddCardCommand(card.Name, card.DueTime, card.Description, card.BoardId, card.FilesUrl);
+            return new AddCardCommand(card.Name, card.DueTime, card.Description, card.BoardId, card.FilesUrl, card.InstituteName, card.CourseName, card.StudentName, card.IsCet, card.WorkFlowStart);
         }
 
         public static GetCardStatusCommand ConvertToGetCardStatusCommand(string id)

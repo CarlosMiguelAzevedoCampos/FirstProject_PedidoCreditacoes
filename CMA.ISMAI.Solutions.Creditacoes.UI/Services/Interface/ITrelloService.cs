@@ -4,6 +4,6 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Services
 {
     public interface ITrelloService
     {
-        string CreateTrelloCard(CreditacaoDto creditacaoDto);
+        bool CreateTrelloCard(CreditacaoDto creditacaoDto);
     }
 }

@@ -11,6 +11,9 @@ namespace CMA.ISMAI.Trello.Domain.Validations
             ValidateDueDate();
             ValidateBoardId();
             ValidateFilesUrl();
+            ValidateCourseName();
+            ValidateInstituteName();
+            ValidateStudentName();
         }
     }
 }

@@ -53,14 +53,14 @@ namespace CMA.ISMAI.Sagas.Creditacoes
             {
                 Console.WriteLine($"Course coordinator CET task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Course coordinator CET task is running..{externalTask.Id} -{DateTime.Now}");
-                creditacoesSaga("CreditacaoISMAI", externalTask, 0, DateTime.Now.AddDays(2));
+                creditacoesSaga("CreditacaoISMAI", externalTask, 0, DateTime.Now.AddDays(2), true);
             });
 
             registerWorker("jury-delibers", externalTask =>
             {
                 Console.WriteLine($"Jury delibers task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Jury delibers task is running..{externalTask.Id} -{DateTime.Now}");
-                creditacoesSaga("CreditacaoISMAI", externalTask, 2, DateTime.Now.AddDays(2));
+                creditacoesSaga("CreditacaoISMAI", externalTask, 2, DateTime.Now.AddDays(2), true);
             });
 
             registerWorker("presidentcouncil-evaluates", externalTask =>
@@ -93,7 +93,7 @@ namespace CMA.ISMAI.Sagas.Creditacoes
             workers.Add(topicName, action);
         }
 
-        private void creditacoesSaga(string processName, ExternalTask externalTask, int boardId, DateTime dueTime)
+        private void creditacoesSaga(string processName, ExternalTask externalTask, int boardId, DateTime dueTime, bool isCet = false)
         {
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - executing..");
             string cardId = ReturnValueFromExternalTask(externalTask, "cardId").ToString();
@@ -108,7 +108,7 @@ namespace CMA.ISMAI.Sagas.Creditacoes
             string newCardId = _creditacoesService.PostNewCard(new CardDto($"{courseInstitute} - {courseName} - {studentName}",
                 dueTime, $"{courseInstitute} - {courseName} - {studentName} - A new card has been created. When this task is done, please check it has done",
                 boardId,
-                filesUrl));
+                filesUrl, courseInstitute, courseName, studentName, isCet));
             if (string.IsNullOrEmpty(newCardId))
                 return;
             FinishTasks(processName, externalTask.Id, returnDictionary(newCardId, courseName, studentName, courseInstitute));

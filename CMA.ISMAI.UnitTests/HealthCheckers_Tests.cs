@@ -1,6 +1,4 @@
-﻿using CMA.ISMAI.Engine.API.HealthCheck;
-using CMA.ISMAI.Engine.API.HealthCheck.Interface;
-using CMA.ISMAI.Logging.Interface;
+﻿using CMA.ISMAI.Logging.Interface;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Moq;
 using System.Net;

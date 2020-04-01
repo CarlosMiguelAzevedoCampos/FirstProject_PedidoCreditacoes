@@ -1,11 +1,7 @@
-﻿using CamundaClient.Dto;
-using System.Collections.Generic;
-using System.Reflection;
-
-namespace CMA.ISMAI.Automation.Interface
+﻿namespace CMA.ISMAI.Trello.Engine.Automation
 {
     public interface IEngine
     {
-        string StartWorkFlow(string filePath, Assembly assemblyInformation, string processName, Dictionary<string, object> parameters);
+        string StartWorkFlow(string newCardId, string courseName, string studentName, string courseInstitute, bool isCet);
     }
 }

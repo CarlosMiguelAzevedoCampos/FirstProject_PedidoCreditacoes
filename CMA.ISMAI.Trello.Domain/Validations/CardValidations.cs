@@ -40,6 +40,25 @@ namespace CMA.ISMAI.Trello.Domain.Validations
                 .NotNull().WithMessage("Please ensure you have entered the files url list");
         }
 
+        protected void ValidateInstituteName()
+        {
+            RuleFor(c => c.InstituteName)
+                .NotNull().WithMessage("Please ensure you have entered the Institute Name").
+                    NotEmpty().WithMessage("Please ensure you have entered the Institute Name");
+        }
+        protected void ValidateCourseName()
+        {
+            RuleFor(c => c.CourseName)
+                .NotNull().WithMessage("Please ensure you have entered the Course Name").
+                    NotEmpty().WithMessage("Please ensure you have entered the Course Name");
+        }
+        protected void ValidateStudentName()
+        {
+            RuleFor(c => c.StudentName)
+                .NotNull().WithMessage("Please ensure you have entered the Student Name").
+                    NotEmpty().WithMessage("Please ensure you have entered the Student Name");
+        }
+
         private bool TimeToFinishIt(DateTime arg)
         {
             return arg > DateTime.Now;

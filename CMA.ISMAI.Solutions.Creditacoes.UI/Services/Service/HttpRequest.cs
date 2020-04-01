@@ -18,27 +18,7 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Services.Service
             _log = log;
         }
 
-        public async Task<bool> CreateNewWorkFlow(DeployDto deploy)
-        {
-            try
-            {
-                HttpClient client = new HttpClient();
-
-                var json = JsonConvert.SerializeObject(deploy);
-
-                var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-
-                HttpResponseMessage request = await client.PostAsync("https://localhost:5002/Engine", stringContent);
-                return request.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                _log.Fatal(ex.ToString());
-            }
-            return false;
-        }
-
-        public async Task<string> PostNewCardAsync(CardDto card)
+        public async Task<bool> PostNewCardAsync(CardDto card)
         {
             try
             {
@@ -48,18 +28,13 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Services.Service
 
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
                 HttpResponseMessage request = await client.PostAsync("https://localhost:5001/Trello", stringContent);
-                if (request.IsSuccessStatusCode)
-                {
-                    var response = request.Content.ReadAsStringAsync();
-                    Response<AddCardCompletedEvent> addCardCompletedEvent = JsonConvert.DeserializeObject<Response<AddCardCompletedEvent>>(response.Result);
-                    return addCardCompletedEvent.Data.Id;
-                }
+                return request.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
                 _log.Fatal(ex.ToString());
             }
-            return string.Empty;
+            return false;
         }
     }
 }

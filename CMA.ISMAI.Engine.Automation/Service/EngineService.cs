@@ -1,56 +1,57 @@
 ﻿using CamundaClient;
 using CamundaClient.Dto;
-using CMA.ISMAI.Automation.Interface;
 using CMA.ISMAI.Logging.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace CMA.ISMAI.Automation.Service
+namespace CMA.ISMAI.Trello.Engine.Automation
 {
     public class EngineService : IEngine
     {
         private readonly CamundaEngineClient camundaEngineClient;
         private readonly ILog _log;
+        private readonly string filePath;
 
         public EngineService(ILog log)
         {
             this._log = log;
             camundaEngineClient = new CamundaEngineClient(new Uri("http://localhost:8080/engine-rest/engine/default/"), null, null);
+            filePath = $"CMA.ISMAI.Trello.Engine.Automation.WorkFlow.creditacaoISMAI.bpmn";
         }
-        public List<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, IEnumerable<string> topicNames, long lockDurationInMilliseconds, IEnumerable<string> variablesToFetch = null)
+       
+        public string StartWorkFlow(string newCardId, string courseName, string studentName, string courseInstitute, bool isCet)
         {
             try
             {
-                _log.Info($"Fetching tasks for saga worker {workerId}");
-                return camundaEngineClient.ExternalTaskService.FetchAndLockTasks(workerId, maxTasks, topicNames, lockDurationInMilliseconds, variablesToFetch).ToList();
-            }
-            catch
-            {
-                _log.Fatal($"Ups.., fetching and lock tasks failed!!!, for the worker {workerId}");
-            }
-            return new List<ExternalTask>();
-        }
+                Dictionary<string, object> parameters = CreateParameters(newCardId, courseName, studentName, courseInstitute, isCet);
 
-        public string StartWorkFlow(string filePath, Assembly assemblyInformation, string processName, Dictionary<string, object> parameters)
-        {
-            try
-            {
-                FileParameter file = FileParameter.FromManifestResource(assemblyInformation, filePath);
-                _log.Info(string.Format("{0} process workflow will be deployed to the workflow platform", processName));
-                string deployId = camundaEngineClient.RepositoryService.Deploy(processName, new List<object> { file });
-                if (TheDeployWasDone(deployId, processName))
+                FileParameter file = FileParameter.FromManifestResource(Assembly.GetExecutingAssembly(), filePath);
+                _log.Info(string.Format("{0} process workflow will be deployed to the workflow platform", "CreditacaoISMAI"));
+                string deployId = camundaEngineClient.RepositoryService.Deploy("CreditacaoISMAI", new List<object> { file });
+                if (TheDeployWasDone(deployId, "CreditacaoISMAI"))
                 {
-                   return camundaEngineClient.BpmnWorkflowService.StartProcessInstance(processName, parameters);
+                    return camundaEngineClient.BpmnWorkflowService.StartProcessInstance("CreditacaoISMAI", parameters);
                 }
-                _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! No DeployId returned!", processName));
+                _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! No DeployId returned!", "CreditacaoISMAI"));
             }
             catch
             {
-                _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! Aborting.. {1}", filePath, processName));
+                _log.Fatal(string.Format("{0} process workflow deployed to the workflow platform had an Error! Aborting.. {1}", filePath, "CreditacaoISMAI"));
             }
             return string.Empty;
+        }
+
+        private static Dictionary<string, object> CreateParameters(string newCardId, string courseName, string studentName, string courseInstitute, bool isCet)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("cardId", newCardId);
+            parameters.Add("courseName", courseName);
+            parameters.Add("studentName", studentName);
+            parameters.Add("courseInstitute", courseInstitute);
+            parameters.Add("cet", isCet);
+            return parameters;
         }
 
         private bool TheDeployWasDone(string deployId, string processName)

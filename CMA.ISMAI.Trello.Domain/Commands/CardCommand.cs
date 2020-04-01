@@ -12,5 +12,11 @@ namespace CMA.ISMAI.Trello.Domain.Commands
         public string Description { get; set; }
         public List<string> FilesUrl { get; set; }
         public int BoardId { get; set; }
+        public bool WorkFlowStart { get; set; }
+        public string StudentName { get; set; }
+        public string InstituteName { get; set; }
+        public string CourseName { get; set; }
+        public bool IsCet { get; set; }
+
     }
 }

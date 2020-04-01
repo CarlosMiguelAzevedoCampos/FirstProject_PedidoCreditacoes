@@ -57,7 +57,6 @@ namespace CMA.ISMAI.Trello.Engine.Service
         {
             return string.IsNullOrEmpty(id);
         }
-
         private string GetBoardId(int boardId)
         {
             switch (boardId)
@@ -102,6 +101,23 @@ namespace CMA.ISMAI.Trello.Engine.Service
                 }
             }
             return filesUrl;
+        }
+
+        public async Task<bool> DeleteCard(string id)
+        {
+            try
+            {
+                var card = _factory.Card(id);
+                await card.Refresh();
+                await card.Delete();
+                await card.Refresh();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                this._log.Fatal(ex.ToString());
+            }
+            return false;
         }
     }
 }

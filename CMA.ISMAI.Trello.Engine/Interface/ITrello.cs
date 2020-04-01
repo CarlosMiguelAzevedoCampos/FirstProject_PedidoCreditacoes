@@ -10,5 +10,6 @@ namespace CMA.ISMAI.Trello.Engine.Interface
 
         Task<int> IsTheProcessFinished(string cardId);
         Task<List<string>> ReturnCardAttachmenets(string cardId);
+        Task<bool> DeleteCard(string id);
     }
 }

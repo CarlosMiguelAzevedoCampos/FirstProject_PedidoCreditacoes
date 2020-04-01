@@ -45,7 +45,6 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI
             services.AddControllersWithViews();
             services.AddScoped<IHttpRequest, HttpRequest>();
             services.AddScoped<ITrelloService, TrelloService>();
-            services.AddScoped<IWorkFlowService, WorkFlowService>();
             services.AddScoped<ILog, LoggingService>();
         }
 

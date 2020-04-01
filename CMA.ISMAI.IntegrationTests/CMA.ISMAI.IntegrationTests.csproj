@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CMA.ISMAI.Engine.API\CMA.ISMAI.Engine.API.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.API\CMA.ISMAI.Trello.API.csproj" />
   </ItemGroup>
 
