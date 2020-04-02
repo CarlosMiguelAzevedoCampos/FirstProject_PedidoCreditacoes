@@ -47,13 +47,12 @@ namespace CMA.ISMAI.Trello.API
                })
             .CreateLogger();
         }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             InitializeDependecyInjection(services);
-            services.AddHealthChecks().AddRabbitMQ("amqp://admin:admin@localhost:5672/", null, "RabbitMQ")
+            services.AddHealthChecks().AddRabbitMQ(Configuration["RabbitMq:Uri"], null, "RabbitMQ")
             .AddCheck<CamundaHealthCheck>("Camunda BPM").AddCheck<TrelloHealthCheck>("Trello");
             services.AddHealthChecksUI();
         }

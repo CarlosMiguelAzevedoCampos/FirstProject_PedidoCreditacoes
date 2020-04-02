@@ -33,14 +33,14 @@ namespace CMA.ISMAI.Sagas.Creditacoes
             {
                 _log.Info($"Course coordinator task non-cet is running..{externalTask.Id} -{DateTime.Now}");
                 Console.WriteLine($"Course coordinator  non-cet task is running..{externalTask.Id} -{DateTime.Now}");
-                creditacoesSaga("CreditacaoISMAI", externalTask, 1, DateTime.Now.AddDays(2));
+                creditacoesSaga("CreditacaoISMAI", externalTask, 1, DateTime.Now.AddDays(20));
             });
 
             registerWorker("department-director", externalTask =>
             {
                 Console.WriteLine($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
-                creditacoesSaga("CreditacaoISMAI", externalTask, 2, DateTime.Now.AddDays(2));
+                creditacoesSaga("CreditacaoISMAI", externalTask, 2, DateTime.Now.AddDays(5));
             });
             registerWorker("scientific-council", externalTask =>
             {

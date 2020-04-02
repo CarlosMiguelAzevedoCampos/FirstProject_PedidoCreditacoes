@@ -19,6 +19,13 @@ services:
     - elasticsearch
    networks:
     - docker-network
+  eventsourcing:
+   image: eventstore/eventstore
+   container_name: eventstore
+   ports:
+    - "5603:5603"
+   networks:
+    - docker-network
   rabbitmq:
    image: rabbitmq:management
    environment:

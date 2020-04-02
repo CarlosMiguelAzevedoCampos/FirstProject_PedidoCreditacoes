@@ -1,8 +1,10 @@
 ﻿using CMA.ISMAI.Trello.Engine.Enum;
 using CMA.ISMAI.Trello.Engine.Interface;
 using Manatee.Trello;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,13 +14,22 @@ namespace CMA.ISMAI.Trello.Engine.Service
     {
         private readonly Logging.Interface.ILog _log;
         private readonly TrelloFactory _factory;
-
+        private IConfiguration configuration;
         public TrelloService(Logging.Interface.ILog log)
         {
             _log = log;
             _factory = new TrelloFactory();
-            TrelloAuthorization.Default.AppKey = "b9ef9c087e54b015072af32ee9678bbe";
-            TrelloAuthorization.Default.UserToken = "0aa0946c32a9925cbcbf5125c4a6db676061502adde9b8213fc0e9059f59f9e9";
+            BuildConfigurations();
+            TrelloAuthorization.Default.AppKey = GetAppKey();
+            TrelloAuthorization.Default.UserToken = GetUserToken();
+        }
+
+        private void BuildConfigurations()
+        {
+            configuration = new ConfigurationBuilder()
+               .SetBasePath(Directory.GetCurrentDirectory()) // Directory where the json files are located
+               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+               .Build();
         }
 
         public async Task<string> AddCard(string name, string description, DateTime dueDate, int boardId, List<string> filesUrl)
@@ -62,15 +73,23 @@ namespace CMA.ISMAI.Trello.Engine.Service
             switch (boardId)
             {
                 case (int)BoardType.Course_coordinator:
-                    return "5e7a615492c8e839429fd13b";
+                    return GetCoordinatorBoardId();
                 case (int)BoardType.Department_director:
-                    return "5e7a61697c32d815f76c71ce";
+                    return GetDepartmentDirectorBoardId();
                 case (int)BoardType.Scientific_council:
-                    return "5e7a617c1c87ae276116c00f";
+                    return GetScientificCouncilBoardId();
                 default:
                     return string.Empty;
             }
         }
+
+        private string GetAppKey() => configuration.GetSection("TrelloKey").GetSection("AppKey").Value;
+        private string GetUserToken() => configuration.GetSection("TrelloKey").GetSection("UserToken").Value;
+        private string GetCoordinatorBoardId() => configuration.GetSection("BoardIds").GetSection("Course_coordinator").Value;
+        private string GetDepartmentDirectorBoardId() => configuration.GetSection("BoardIds").GetSection("Department_director").Value;
+        private string GetScientificCouncilBoardId() => configuration.GetSection("BoardIds").GetSection("Scientific_council").Value;
+
+
 
         public async Task<int> IsTheProcessFinished(string cardId)
         {
