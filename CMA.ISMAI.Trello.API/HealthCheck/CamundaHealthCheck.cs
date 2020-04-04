@@ -23,7 +23,7 @@ namespace CMA.ISMAI.Trello.API.HealthCheck
         {
             try
             {
-                var result = await _httpRequest.MakeAnHttpRequest(SettingsReader.ReturnKey("Camunda", "Uri"));
+                var result = await _httpRequest.MakeAnHttpRequest(SettingsReader.ReturnKey("CamundaHealth", "Uri"));
                 return result.IsSuccessStatusCode ? HealthCheckResult.Healthy("The API is working fine!") :
                                                         HealthCheckResult.Unhealthy("The API is DOWN!");
             }

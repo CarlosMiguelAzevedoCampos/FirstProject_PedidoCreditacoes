@@ -33,12 +33,15 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Controllers
                 if (!value)
                 {
                     _log.Fatal("Card or proccess has not created in trello while creating a new credition!");
-                    return View(BadRequest(Create()));
+                    TempData["Process_status"] = "An error happend while creating the process!, please contact the IT!";
+                    return RedirectToAction("Create", "Creditacao");
                 }
-                return View(Ok(Create()));
+                TempData["Process_status"] = "Process deployed!";
+                return RedirectToAction("Create", "Creditacao");
             }
             _log.Fatal("WorkFlow has not deployed!, an error happend!");
-            return View(BadRequest(Create()));
+            TempData["Process_status"] = "An error happend while creating the process!, invalid model!";
+            return RedirectToAction("Create", "Creditacao");
         }
     }
 }

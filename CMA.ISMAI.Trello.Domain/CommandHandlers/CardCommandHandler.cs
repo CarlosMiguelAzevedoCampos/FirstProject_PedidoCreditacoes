@@ -34,7 +34,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             if (!request.IsValid())
             {
                 _log.Fatal("A invalid card was been submited in the Domain");
-                @event = new AddCardFailedEvent(NotifyValidationErrors(request));
+                @event = new AddCardFailedEvent(NotifyValidationErrors(request), "", request.Name, request.Description, request.DueTime);
                 _cardEventHandler.Handler(@event as AddCardFailedEvent);
                 return @event;
             }
@@ -49,7 +49,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             if (string.IsNullOrEmpty(cardId))
             {
                 _log.Fatal($"The creation of an card failed! - TimeStamp {request.Timestamp} - AggregateId - {request.AggregateId}");
-                @event = new AddCardFailedEvent(NotifyDomainErrors("CardId", "CardId is null or empty!"));
+                @event = new AddCardFailedEvent(NotifyDomainErrors("CardId", "CardId is null or empty!"), cardId, request.Name, request.Description, request.DueTime);
                 _cardEventHandler.Handler(@event as AddCardFailedEvent);
                 return @event;
             }
@@ -85,7 +85,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
         public Event Handler(GetCardAttachmentsCommand request)
         {
             List<string> filesUrl = _trello.ReturnCardAttachmenets(request.CardId).Result;
-            return new ReturnCardAttachmentsEvent(filesUrl);
+            return new ReturnCardAttachmentsEvent(request.CardId, filesUrl);
         }
 
         public Event HandlerProcess(AddCardCommand request)
@@ -94,7 +94,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             if (!request.IsValid())
             {
                 _log.Fatal("A invalid card was been submited in the Domain");
-                @event = new AddCardFailedEvent(NotifyValidationErrors(request));
+                @event = new AddCardFailedEvent(NotifyValidationErrors(request), "", request.Name, request.Description, request.DueTime);
                 _cardEventHandler.Handler(@event as AddCardFailedEvent);
                 return @event;
             }

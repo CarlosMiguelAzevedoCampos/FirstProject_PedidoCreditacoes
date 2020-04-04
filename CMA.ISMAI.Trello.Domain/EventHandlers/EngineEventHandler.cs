@@ -13,12 +13,12 @@ namespace CMA.ISMAI.Trello.Domain.EventHandlers
         public void Handler(WorkFlowStartFailedEvent notification)
         {
             SaveEvent(notification);
-            SendNotification(new MessageBody("", $"An new deploy failed!!, {notification.Motive} - {notification.Timestamp} - {notification.MessageType}"));
+            SendNotification(new MessageBody("trelloismai@gmail.com", $"An new deploy failed!!, {notification.Motive} - {notification.Timestamp} - {notification.MessageType}"));
         }
         public void Handler(WorkFlowStartCompletedEvent notification)
         {
             SaveEvent(notification);
-            SendNotification(new MessageBody("", $"An new deploy was submited!, {notification.Id} - {notification.Timestamp} - {notification.MessageType}"));
+            SendNotification(new MessageBody("trelloismai@gmail.com", $"An new deploy was submited!, {notification.Id} - {notification.Timestamp} - {notification.MessageType}"));
         }
     }
 }

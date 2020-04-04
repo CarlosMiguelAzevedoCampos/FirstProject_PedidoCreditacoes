@@ -1,5 +1,6 @@
 ﻿using CMA.ISMAI.Core.Events.Store.Interface;
 using EventStore.ClientAPI;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Text;
@@ -8,19 +9,11 @@ namespace CMA.ISMAI.Core.Events.Store.Service
 {
     public class StoreEvent : IEventStore { 
 
-        private readonly IEventStoreConnection _connection;
-        public StoreEvent()
-        {
-            var settings = ConnectionSettings.Create().KeepReconnecting();
-            _connection = EventStoreConnection.Create(settings,
-                new IPEndPoint(
-                    IPAddress.Parse("127.0.0.1"),
-                    2113));
-            _connection.ConnectAsync().Wait(); 
-        }
-
+        private IEventStoreConnection _connection;
+        
         public void SaveToEventStore(Event @event)
         {
+            BuildConnection();
             _connection.AppendToStreamAsync(
                      @event.GetType().FullName,
                     ExpectedVersion.Any,
@@ -28,10 +21,18 @@ namespace CMA.ISMAI.Core.Events.Store.Service
                         Guid.NewGuid(),
                         @event.GetType().FullName,
                         false,
-                        Encoding.UTF8.GetBytes(@event.ToString()),
+                        Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event)),
                         new byte[] { }
                     )
                 ).Wait();
+        }
+         
+        private void BuildConnection()
+        {
+            if (_connection != null)
+                return;
+            _connection = EventStoreConnection.Create(new Uri("tcp://admin:changeit@localhost:1113"));
+            _connection.ConnectAsync().Wait();
         }
     }
 }
