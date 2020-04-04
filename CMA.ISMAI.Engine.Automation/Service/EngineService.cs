@@ -1,6 +1,7 @@
 ﻿using CamundaClient;
 using CamundaClient.Dto;
 using CMA.ISMAI.Logging.Interface;
+using CMA.ISMAI.Trello.Settings;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -14,26 +15,16 @@ namespace CMA.ISMAI.Trello.Engine.Automation
         private readonly CamundaEngineClient camundaEngineClient;
         private readonly ILog _log;
         private readonly string filePath;
-        private IConfiguration configuration;
-        public EngineService(ILog log)
+        public EngineService(ILog log) 
         {
             this._log = log;
-            BuildConfigurations();
             camundaEngineClient = new CamundaEngineClient(new Uri(GetCamundaUrl()), null, null);
             filePath = $"CMA.ISMAI.Trello.Engine.Automation.WorkFlow.creditacaoISMAI.bpmn";
         }
 
-        private void BuildConfigurations()
-        {
-            configuration = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory()) // Directory where the json files are located
-               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-               .Build();
-        }
-
         private string GetCamundaUrl()
         {
-            return configuration.GetSection("CamundaBPM").GetSection("Url").Value;
+            return SettingsReader.ReturnKey("Camunda", "Uri");
         }
        
         public string StartWorkFlow(string newCardId, string courseName, string studentName, string courseInstitute, bool isCet)

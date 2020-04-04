@@ -1,3 +1,5 @@
+using CMA.ISMAI.Core.Events.Store.Interface;
+using CMA.ISMAI.Core.Events.Store.Service;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
 using CMA.ISMAI.Trello.API.HealthCheck;
@@ -8,6 +10,7 @@ using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Automation;
 using CMA.ISMAI.Trello.Engine.Interface;
 using CMA.ISMAI.Trello.Engine.Service;
+using CMA.ISMAI.Trello.Settings;
 using HealthChecks.UI.Client;
 using HealthChecks.UI.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -25,23 +28,11 @@ namespace CMA.ISMAI.Trello.API
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-
-        public Startup(IWebHostEnvironment hostingEnvironment)
+        public Startup()
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", reloadOnChange: true, optional: true)
-                .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
-
-            var elasticUri = Configuration["ElasticConfiguration:Uri"];
-
             Log.Logger = new LoggerConfiguration()
                .Enrich.FromLogContext()
-               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
+               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(SettingsReader.ReturnKey("ElasticConfiguration", "Uri")))
                {
                    AutoRegisterTemplate = true,
                })
@@ -52,7 +43,7 @@ namespace CMA.ISMAI.Trello.API
         {
             services.AddControllers();
             InitializeDependecyInjection(services);
-            services.AddHealthChecks().AddRabbitMQ(Configuration["RabbitMq:Uri"], null, "RabbitMQ")
+            services.AddHealthChecks().AddRabbitMQ(SettingsReader.ReturnKey("RabbitMq", "Uri"), null, "RabbitMQ")
             .AddCheck<CamundaHealthCheck>("Camunda BPM").AddCheck<TrelloHealthCheck>("Trello");
             services.AddHealthChecksUI();
         }
@@ -63,6 +54,7 @@ namespace CMA.ISMAI.Trello.API
             services.AddScoped<ITrello, TrelloService>();
             services.AddScoped<IEngine, EngineService>();
             services.AddScoped<IHttpRequest, HttpRequest>();
+            services.AddScoped<IEventStore, StoreEvent>();
             // Domain - Commands
             services.AddScoped<ICardCommandHandler, CardCommandHandler>();
             // Domain - Events

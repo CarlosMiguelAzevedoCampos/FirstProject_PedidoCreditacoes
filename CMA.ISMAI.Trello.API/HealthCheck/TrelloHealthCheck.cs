@@ -1,9 +1,8 @@
 ﻿using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Trello.API.HealthCheck.Interface;
-using Microsoft.Extensions.Configuration;
+using CMA.ISMAI.Trello.Settings;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,7 +23,7 @@ namespace CMA.ISMAI.Trello.API.HealthCheck
         {
             try
             {
-                var result = await _httpRequest.MakeAnHttpRequest(ReturnTrelloUrl());
+                var result = await _httpRequest.MakeAnHttpRequest(SettingsReader.ReturnKey("Trello", "Uri"));
                 return result.IsSuccessStatusCode ? HealthCheckResult.Healthy("The API is working fine!") :
                                                         HealthCheckResult.Unhealthy("The API is DOWN!");
             }
@@ -33,16 +32,6 @@ namespace CMA.ISMAI.Trello.API.HealthCheck
                 _log.Fatal(ex.ToString());
                 return HealthCheckResult.Unhealthy("The API is DOWN!");
             }
-        }
-
-        private string ReturnTrelloUrl()
-        {
-            var configuration = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory()) // Directory where the json files are located
-               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-               .Build();
-
-            return configuration.GetSection("Trello").GetSection("Uri").Value;
         }
     }
 }

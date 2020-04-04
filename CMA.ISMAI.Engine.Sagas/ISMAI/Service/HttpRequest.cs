@@ -1,10 +1,11 @@
 ﻿using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +16,23 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
     {
         private readonly HttpClient client;
         private readonly ILog _log;
+        private IConfiguration _configuration;
+        private string _apiUrl;
 
         public HttpRequest(ILog log)
         {
             client = new HttpClient();
+            BuildConfiguration();
             this._log = log;
+        }
+
+        private void BuildConfiguration()
+        {
+            _configuration = new ConfigurationBuilder()
+                          .SetBasePath(Directory.GetCurrentDirectory()) // Directory where the json files are located
+                          .AddJsonFile("sagasengine_appsettings.json", optional: false, reloadOnChange: true)
+                          .Build();
+            _apiUrl = _configuration.GetSection("TrelloApi").GetSection("Uri").Value;
         }
 
         public async Task<string> CardPostAsync(CardDto card)
@@ -32,7 +45,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
 
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-                HttpResponseMessage request = await client.PostAsync("https://localhost:5001/Trello/AddCard", stringContent);
+                HttpResponseMessage request = await client.PostAsync(_apiUrl, stringContent);
                 _log.Info($"CardPostAsync post request - Board - {card.BoardId} - Description - {card.Description} - Name {card.Name}");
 
                 if (request.IsSuccessStatusCode)
@@ -59,7 +72,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             {
                 _log.Info($"CardStateAsync is being executed!, card Information - Id {cardId}");
 
-                var response = await client.GetAsync(string.Format("https://localhost:5001/Trello/GetCardStatus?cardId={0}", cardId));
+                var response = await client.GetAsync(string.Format(_apiUrl, cardId));
                 _log.Info($"CardStateAsync is getting information!, card Information - Id {cardId}");
 
                 if (response.IsSuccessStatusCode)
@@ -87,7 +100,7 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             {
                 _log.Info($"GetCardAttachments is being executed!, card Information - Id {cardId}");
 
-                var response = await client.GetAsync(string.Format("https://localhost:5001/Trello/GetCardAttachments?cardId={0}"
+                var response = await client.GetAsync(string.Format(_apiUrl
                     , cardId));
                 _log.Info($"GetCardAttachments is getting information!, card Information - Id {cardId}");
 

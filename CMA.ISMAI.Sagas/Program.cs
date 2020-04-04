@@ -4,6 +4,7 @@ using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
 using CMA.ISMAI.Sagas.Creditacoes;
+using CMA.ISMAI.Sagas.Services;
 using CMA.ISMAI.Sagas.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -13,7 +14,7 @@ using System;
 
 namespace CMA.ISMAI.Sagas
 {
-    class Program
+    class Program : BaseConfiguration
     {
         static void Main(string[] args)
         {
@@ -26,13 +27,13 @@ namespace CMA.ISMAI.Sagas
             serviceProvider.GetRequiredService<ConsoleApplication>().Run();
             Console.ReadKey();
         }
-
+         
         private static IServiceCollection ConfigureServices()
         {
-            IServiceCollection services = new ServiceCollection();
+            IServiceCollection  services = new ServiceCollection();
             Log.Logger = new LoggerConfiguration()
-               .Enrich.FromLogContext()
-               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200/"))
+               .Enrich.FromLogContext() 
+               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(ReturnSettingsValue("ElasticConfiguration", "Uri")))
                {
                    AutoRegisterTemplate = true,
                })
@@ -46,6 +47,6 @@ namespace CMA.ISMAI.Sagas
             services.AddScoped<ICreditacoesNotification, CreditacoesNotification>();
             services.AddTransient<ConsoleApplication>();
             return services;
-        }       
+        }
     }
 }

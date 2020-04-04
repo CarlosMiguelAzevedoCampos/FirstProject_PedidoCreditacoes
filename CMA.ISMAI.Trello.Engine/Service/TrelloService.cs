@@ -1,5 +1,6 @@
 ﻿using CMA.ISMAI.Trello.Engine.Enum;
 using CMA.ISMAI.Trello.Engine.Interface;
+using CMA.ISMAI.Trello.Settings;
 using Manatee.Trello;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -14,22 +15,12 @@ namespace CMA.ISMAI.Trello.Engine.Service
     {
         private readonly Logging.Interface.ILog _log;
         private readonly TrelloFactory _factory;
-        private IConfiguration configuration;
         public TrelloService(Logging.Interface.ILog log)
         {
             _log = log;
             _factory = new TrelloFactory();
-            BuildConfigurations();
             TrelloAuthorization.Default.AppKey = GetAppKey();
             TrelloAuthorization.Default.UserToken = GetUserToken();
-        }
-
-        private void BuildConfigurations()
-        {
-            configuration = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory()) // Directory where the json files are located
-               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-               .Build();
         }
 
         public async Task<string> AddCard(string name, string description, DateTime dueDate, int boardId, List<string> filesUrl)
@@ -83,11 +74,12 @@ namespace CMA.ISMAI.Trello.Engine.Service
             }
         }
 
-        private string GetAppKey() => configuration.GetSection("TrelloKey").GetSection("AppKey").Value;
-        private string GetUserToken() => configuration.GetSection("TrelloKey").GetSection("UserToken").Value;
-        private string GetCoordinatorBoardId() => configuration.GetSection("BoardIds").GetSection("Course_coordinator").Value;
-        private string GetDepartmentDirectorBoardId() => configuration.GetSection("BoardIds").GetSection("Department_director").Value;
-        private string GetScientificCouncilBoardId() => configuration.GetSection("BoardIds").GetSection("Scientific_council").Value;
+        private string GetAppKey() =>  SettingsReader.ReturnKey("TrelloKey", "AppKey");
+
+        private string GetUserToken() => SettingsReader.ReturnKey("TrelloKey", "UserToken");
+        private string GetCoordinatorBoardId() => SettingsReader.ReturnKey("BoardIds", "Course_coordinator");
+        private string GetDepartmentDirectorBoardId() => SettingsReader.ReturnKey("BoardIds", "Department_director");
+        private string GetScientificCouncilBoardId() => SettingsReader.ReturnKey("BoardIds", "Scientific_council");
 
 
 

@@ -33,11 +33,12 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Controllers
                 if (!value)
                 {
                     _log.Fatal("Card or proccess has not created in trello while creating a new credition!");
-                    return BadRequest(Create());
+                    return View(BadRequest(Create()));
                 }
+                return View(Ok(Create()));
             }
             _log.Fatal("WorkFlow has not deployed!, an error happend!");
-            return BadRequest(Create());
+            return View(BadRequest(Create()));
         }
     }
 }

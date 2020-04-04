@@ -1,0 +1,5 @@
+{
+  "TrelloApi": {
+    "Uri": "https://localhost:5001/Trello/AddCard"
+  }
+}

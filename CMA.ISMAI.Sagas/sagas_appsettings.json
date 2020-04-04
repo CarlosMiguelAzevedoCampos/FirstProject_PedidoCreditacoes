@@ -1,0 +1,8 @@
+{
+  "ElasticConfiguration": {
+    "Uri": "http://localhost:9200/"
+  },
+  "CamundaConfiguration": {
+    "Uri": "http://localhost:8080/engine-rest/engine/default/"
+  }
+}
