@@ -1,0 +1,16 @@
+{
+  "ElasticConfiguration": {
+    "Uri": "http://localhost:9200/"
+  },
+  "RabbitMq": {
+    "Uri": "localhost",
+    "Username": "admin",
+    "Password": "admin",
+    "Queue": "NotificationsQueue",
+    "Port": "5672"
+  },
+  "Notification": {
+    "Email": "trelloismai@gmail.com",
+    "Password": "latiascampos"
+  }
+}
