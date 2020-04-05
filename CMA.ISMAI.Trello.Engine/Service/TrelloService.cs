@@ -101,17 +101,25 @@ namespace CMA.ISMAI.Trello.Engine.Service
 
         public async Task<List<string>> ReturnCardAttachmenets(string cardId)
         {
-            List<string> filesUrl = new List<string>();
-            var card = _factory.Card(cardId);
-            await card.Refresh();
-            if (card != null)
+            try
             {
-                foreach (var item in card.Attachments)
+                List<string> filesUrl = new List<string>();
+                var card = _factory.Card(cardId);
+                await card.Refresh();
+                if (card != null)
                 {
-                    filesUrl.Add(item.Url);
+                    foreach (var item in card.Attachments)
+                    {
+                        filesUrl.Add(item.Url);
+                    }
                 }
+                return filesUrl;
             }
-            return filesUrl;
+            catch (Exception ex)
+            {
+                this._log.Fatal(ex.ToString());
+            }
+            return new List<string>();
         }
 
         public async Task<bool> DeleteCard(string id)

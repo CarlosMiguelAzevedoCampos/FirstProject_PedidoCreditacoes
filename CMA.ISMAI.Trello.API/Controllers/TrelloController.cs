@@ -48,10 +48,7 @@ namespace CMA.ISMAI.Trello.API.Controllers
             Event @event = _cardHandler.HandlerProcess(Map.ConvertToAddCardCommand(card));
             if (@event is AddCardCompletedEvent)
                 return Response(true, @event as AddCardCompletedEvent);
-            else if (@event is WorkFlowStartFailedEvent)
-                return Response(false, @event as WorkFlowStartFailedEvent);
-            else
-                return Response(false, @event as AddCardFailedEvent);
+            return Response(false, @event as AddCardFailedEvent);
         }
 
         [HttpGet]

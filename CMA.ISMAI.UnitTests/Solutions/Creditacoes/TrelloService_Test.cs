@@ -17,25 +17,25 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
         {
             var httpMock = new Mock<IHttpRequest>();
             var logMock = new Mock<ILog>();
-            httpMock.Setup(x => x.PostNewCardAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(Guid.NewGuid().ToString()));
+            httpMock.Setup(x => x.PostNewCardAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(true));
 
             ITrelloService trelloService = new TrelloService(httpMock.Object, logMock.Object);
             var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
-            string value = trelloService.CreateTrelloCard(creditacaoDto);
-            Assert.NotEmpty(value);
+            bool value = trelloService.CreateTrelloCard(creditacaoDto);
+            Assert.True(value);
         }
 
         [Fact]
-        private void TrelloService_CreateTrelloCard_ReturnAnEmptyCardId()
+        private void TrelloService_CreateTrelloCard_ReturnFalseOnNewCardCreation()
         {
             var httpMock = new Mock<IHttpRequest>();
             var logMock = new Mock<ILog>();
-            httpMock.Setup(x => x.PostNewCardAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(string.Empty));
+            httpMock.Setup(x => x.PostNewCardAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(false));
 
             ITrelloService trelloService = new TrelloService(httpMock.Object, logMock.Object);
             var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
-            string value = trelloService.CreateTrelloCard(creditacaoDto);
-            Assert.Empty(value);
+            bool value = trelloService.CreateTrelloCard(creditacaoDto);
+            Assert.False(value);
         }
     }
 }

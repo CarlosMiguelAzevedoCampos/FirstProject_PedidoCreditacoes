@@ -57,7 +57,8 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             var httprequestMock = new Mock<IHttpRequest>();
             httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(string.Empty));
             ICreditacoesService creditacoesService = new CreditacoesService(logMock.Object, httprequestMock.Object);
-            string result = creditacoesService.PostNewCard(new CardDto("Carlos Campos", DateTime.Now.AddDays(1), "Carlos Campos", 1, list));
+            string result = creditacoesService.PostNewCard(new CardDto("Carlos Campos", DateTime.Now.AddDays(1), "Carlos Campos", 1, list,
+                "ISMAI", "Informática", "Carlos Campos", false));
             Assert.Empty(result);
         }
 
@@ -70,7 +71,8 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             var httprequestMock = new Mock<IHttpRequest>();
             httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(Guid.NewGuid().ToString()));
             ICreditacoesService creditacoesService = new CreditacoesService(logMock.Object, httprequestMock.Object);
-            string result = creditacoesService.PostNewCard(new CardDto("Carlos Campos", DateTime.Now.AddDays(1), "Carlos Campos", 1, list));
+            string result = creditacoesService.PostNewCard(new CardDto("Carlos Campos", DateTime.Now.AddDays(1), "Carlos Campos", 1, list,
+                "ISMAI", "Informática", "Carlos Campos", false));
             Assert.NotEmpty(result);
         }
 

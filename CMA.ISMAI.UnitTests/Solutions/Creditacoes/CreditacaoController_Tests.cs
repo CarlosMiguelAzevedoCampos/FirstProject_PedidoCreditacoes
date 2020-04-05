@@ -3,7 +3,9 @@ using CMA.ISMAI.Solutions.Creditacoes.UI.Controllers;
 using CMA.ISMAI.Solutions.Creditacoes.UI.Models;
 using CMA.ISMAI.Solutions.Creditacoes.UI.Services;
 using CMA.ISMAI.Solutions.Creditacoes.UI.Services.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using System;
 using Xunit;
@@ -13,49 +15,69 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
     public class CreditacaoController_Tests
     {
         [Fact]
-        private void CreditacaoController_NewCreditacaoPost_CreateNewCardOnTrelloAndOnCamunda()
+        private void CreditacaoController_NewCreditacaoPost_CreateNewCardOnTrello_AndStartsTheProcess()
         {
             var trelloService = new Mock<ITrelloService>();
-            var workFlowService = new Mock<IWorkFlowService>();
             var logMock = new Mock<ILog>();
-            trelloService.Setup(x => x.CreateTrelloCard(It.IsAny<CreditacaoDto>())).Returns(Guid.NewGuid().ToString());
-            workFlowService.Setup(x => x.CreateWorkFlowProcess(It.IsAny<CreditacaoDto>(), It.IsAny<string>()))
-                .Returns(true);
-            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, workFlowService.Object, logMock.Object);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+
+            trelloService.Setup(x => x.CreateTrelloCard(It.IsAny<CreditacaoDto>())).Returns(true);
+
+            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, logMock.Object)
+            {
+                TempData = tempData
+            };
             var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             IActionResult action = creditacaoController.Create(creditacaoDto);
-            var resultCode = action as OkObjectResult;
-            Assert.True(resultCode is OkObjectResult);
+
+            string result = tempData["Process_status"].ToString();
+            Assert.True(result == "Process deployed!");
+        }
+  
+        [Fact]
+        private void CreditacaoController_NewCreditacaoPost_FailOnCardAndProcessCreation()
+        {
+            var trelloService = new Mock<ITrelloService>();
+            var logMock = new Mock<ILog>();
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+
+            trelloService.Setup(x => x.CreateTrelloCard(It.IsAny<CreditacaoDto>())).Returns(false);
+          
+            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, logMock.Object)
+            {
+                TempData = tempData
+            };
+            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
+            IActionResult action = creditacaoController.Create(creditacaoDto);
+
+            string result = tempData["Process_status"].ToString(); 
+            Assert.True(result == "An error happend while creating the process!, please contact the IT!");
         }
 
-        [Fact]
-        private void CreditacaoController_NewCreditacaoPost_FailOnCardCreation()
-        {
-            var trelloService = new Mock<ITrelloService>();
-            var workFlowService = new Mock<IWorkFlowService>();
-            var logMock = new Mock<ILog>();
-            trelloService.Setup(x => x.CreateTrelloCard(It.IsAny<CreditacaoDto>())).Returns("");
-            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, workFlowService.Object, logMock.Object);
-            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
-            IActionResult action = creditacaoController.Create(creditacaoDto);
-            var resultCode = action as BadRequestObjectResult;
-            Assert.True(resultCode is BadRequestObjectResult);
-        }
 
         [Fact]
-        private void CreditacaoController_NewCreditacaoPost_FailOnWorkFlowDeploy()
+        private void CreditacaoController_NewCreditacaoPost_InvalidModel()
         {
             var trelloService = new Mock<ITrelloService>();
-            var workFlowService = new Mock<IWorkFlowService>();
             var logMock = new Mock<ILog>();
-            workFlowService.Setup(x => x.CreateWorkFlowProcess(It.IsAny<CreditacaoDto>(), It.IsAny<string>()))
-                .Returns(false);
-            trelloService.Setup(x => x.CreateTrelloCard(It.IsAny<CreditacaoDto>())).Returns(Guid.NewGuid().ToString());
-            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, workFlowService.Object, logMock.Object);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+
+            trelloService.Setup(x => x.CreateTrelloCard(It.IsAny<CreditacaoDto>())).Returns(false);
+
+            CreditacaoController creditacaoController = new CreditacaoController(trelloService.Object, logMock.Object)
+            {
+                TempData = tempData
+                
+            };
+            creditacaoController.ModelState.AddModelError("Invalid Request", "Invalid request");
             var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             IActionResult action = creditacaoController.Create(creditacaoDto);
-            var resultCode = action as BadRequestObjectResult;
-            Assert.True(resultCode is BadRequestObjectResult);
+
+            string result = tempData["Process_status"].ToString();
+            Assert.True(result == "An error happend while creating the process!, invalid model!");
         }
     }
 }

@@ -2,12 +2,11 @@
 using EventStore.ClientAPI;
 using Newtonsoft.Json;
 using System;
-using System.Net;
 using System.Text;
 
 namespace CMA.ISMAI.Core.Events.Store.Service
 {
-    public class StoreEvent : IEventStore { 
+    public class StoreEvent : BaseConfiguration, IEventStore { 
 
         private IEventStoreConnection _connection;
         
@@ -31,7 +30,7 @@ namespace CMA.ISMAI.Core.Events.Store.Service
         {
             if (_connection != null)
                 return;
-            _connection = EventStoreConnection.Create(new Uri("tcp://admin:changeit@localhost:1113"));
+            _connection = EventStoreConnection.Create(new Uri(ReturnSettingsValue("EventStore", "IPAddress")));
             _connection.ConnectAsync().Wait();
         }
     }

@@ -1,13 +1,14 @@
 ﻿using CMA.ISMAI.Trello.Domain.Events;
+using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Trello.Domain.Interface
 {
     public interface ICardEventHandler
     {
-        void Handler(AddCardCompletedEvent request);
-        void Handler(AddCardFailedEvent request);
-        void Handler(CardStatusCompletedEvent request);
-        void Handler(CardStatusIncompletedEvent request);
-        void Handler(CardStatusUnableToFindEvent request);
+        Task Handler(AddCardCompletedEvent request);
+        Task Handler(AddCardFailedEvent request);
+        Task Handler(CardStatusCompletedEvent request);
+        Task Handler(CardStatusIncompletedEvent request);
+        Task Handler(CardStatusUnableToFindEvent request);
     }
 }

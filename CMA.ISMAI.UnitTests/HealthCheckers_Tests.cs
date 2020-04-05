@@ -1,4 +1,6 @@
 ﻿using CMA.ISMAI.Logging.Interface;
+using CMA.ISMAI.Trello.API.HealthCheck;
+using CMA.ISMAI.Trello.API.HealthCheck.Interface;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Moq;
 using System.Net;
@@ -34,6 +36,32 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             httpMock.Setup(x => x.MakeAnHttpRequest(It.IsAny<string>())).Returns(Task.FromResult(response));
             CamundaHealthCheck camundaHealthCheck = new CamundaHealthCheck(logMock.Object, httpMock.Object);
             var result = camundaHealthCheck.CheckHealthAsync(It.IsAny<HealthCheckContext>(), new CancellationToken()).Result;
+            Assert.True(result.Status == HealthStatus.Unhealthy);
+        }
+
+        [Fact]
+        private void TrelloHealthCheck_ApiStatus_ReturnHealthy()
+        {
+            var httpMock = new Mock<IHttpRequest>();
+            var logMock = new Mock<ILog>();
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+
+            httpMock.Setup(x => x.MakeAnHttpRequest(It.IsAny<string>())).Returns(Task.FromResult(response));
+            TrelloHealthCheck trelloHealthCheck = new TrelloHealthCheck(logMock.Object, httpMock.Object);
+            var result = trelloHealthCheck.CheckHealthAsync(It.IsAny<HealthCheckContext>(), new CancellationToken()).Result;
+            Assert.True(result.Status == HealthStatus.Healthy);
+        }
+
+        [Fact]
+        private void TrelloHealthCheck_ApiStatus_ReturnUnhealthy()
+        {
+            var httpMock = new Mock<IHttpRequest>();
+            var logMock = new Mock<ILog>();
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+            httpMock.Setup(x => x.MakeAnHttpRequest(It.IsAny<string>())).Returns(Task.FromResult(response));
+            TrelloHealthCheck trelloHealthCheck = new TrelloHealthCheck(logMock.Object, httpMock.Object);
+            var result = trelloHealthCheck.CheckHealthAsync(It.IsAny<HealthCheckContext>(), new CancellationToken()).Result;
             Assert.True(result.Status == HealthStatus.Unhealthy);
         }
     }
