@@ -18,6 +18,7 @@
     <ProjectReference Include="..\CMA.ISMAI.Engine.Automation\CMA.ISMAI.Trello.Engine.Automation.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Engine.Sagas\CMA.ISMAI.Sagas.Engine.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Logging\CMA.ISMAI.Logging.csproj" />
+    <ProjectReference Include="..\CMA.ISMAI.Sagas\CMA.ISMAI.Sagas.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Solutions.Creditacoes.UI\CMA.ISMAI.Solutions.Creditacoes.UI.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.API\CMA.ISMAI.Trello.API.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.Domain\CMA.ISMAI.Trello.Domain.csproj" />

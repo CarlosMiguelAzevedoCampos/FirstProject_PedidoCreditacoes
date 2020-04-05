@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CMA.ISMAI.Engine.Automation.Sagas
 {
-    public interface ICreditacoesService
+    public interface ISagaService
     {
         bool GetCardState(string cardId);
         string PostNewCard(CardDto card);

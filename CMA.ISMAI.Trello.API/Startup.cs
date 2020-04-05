@@ -28,6 +28,7 @@ namespace CMA.ISMAI.Trello.API
 {
     public class Startup
     {
+
         public Startup()
         {
             Log.Logger = new LoggerConfiguration()
@@ -43,9 +44,10 @@ namespace CMA.ISMAI.Trello.API
         {
             services.AddControllers();
             InitializeDependecyInjection(services);
-            services.AddHealthChecks().AddRabbitMQ(SettingsReader.ReturnKey("RabbitMq", "Uri"), null, "RabbitMQ")
-            .AddCheck<CamundaHealthCheck>("Camunda BPM").AddCheck<TrelloHealthCheck>("Trello");
-            services.AddHealthChecksUI();
+
+            //services.AddHealthChecks().AddRabbitMQ(SettingsReader.ReturnKey("RabbitMq", "Uri"), null, "RabbitMQ")
+            //.AddCheck<CamundaHealthCheck>("Camunda BPM").AddCheck<TrelloHealthCheck>("Trello");
+            //services.AddHealthChecksUI();
         }
 
         private void InitializeDependecyInjection(IServiceCollection services)
@@ -78,16 +80,16 @@ namespace CMA.ISMAI.Trello.API
 
             loggerFactory.AddSerilog();
 
-            app.UseHealthChecks("/hc", new HealthCheckOptions()
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
+            //app.UseHealthChecks("/hc", new HealthCheckOptions()
+            //{
+            //    Predicate = _ => true,
+            //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            //});
 
-            app.UseHealthChecksUI(delegate (Options options)
-            {
-                options.UIPath = "/hc-ui";
-            });
+            //app.UseHealthChecksUI(delegate (Options options)
+            //{
+            //    options.UIPath = "/hc-ui";
+            //});
 
             app.UseEndpoints(endpoints =>
             {

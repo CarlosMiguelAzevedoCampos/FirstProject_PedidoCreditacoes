@@ -42,6 +42,53 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result is ReturnCardAttachmentsEvent);
         }
 
+        [Theory]
+        [InlineData("44454a2sda3s562a")]
+        [InlineData("44454a34sda3s562a")]
+        [InlineData("444513a2sda3s562a")]
+        public void TrelloService_GetCardAttachments_ShouldReturn_EmptyAttachments(string cardId)
+        {
+            var logMock = new Mock<ILog>();
+            var trelloMock = new Mock<ITrello>();
+            var cardnotificationMock = new Mock<ICardEventHandler>();
+            var engineMock = new Mock<IEngine>();
+            var engineEventMock = new Mock<IEngineEventHandler>();
+
+            var urls = new List<string>();
+
+            trelloMock.Setup(x => x.ReturnCardAttachmenets(It.IsAny<string>()))
+               .Returns(Task.FromResult(urls));
+
+            GetCardAttachmentsCommand getCardAttachmentsCommand = new GetCardAttachmentsCommand(cardId);
+            CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
+                 engineMock.Object, engineEventMock.Object);
+
+            Event result = cardCommandHandler.Handler(getCardAttachmentsCommand);
+            trelloMock.Verify(x => x.ReturnCardAttachmenets(It.IsAny<string>()), Times.Once);
+            Assert.True(result is CardDosentHaveAttchmentsEvent);
+        }
+
+        [Theory]
+        [InlineData("44454a2sda3s562a")]
+        [InlineData("44454a34sda3s562a")]
+        [InlineData("444513a2sda3s562a")]
+        public void TrelloService_GetCardAttachments_ShouldReturn_UnableToFind(string cardId)
+        {
+            var logMock = new Mock<ILog>();
+            var trelloMock = new Mock<ITrello>();
+            var cardnotificationMock = new Mock<ICardEventHandler>();
+            var engineMock = new Mock<IEngine>();
+            var engineEventMock = new Mock<IEngineEventHandler>();
+
+            GetCardAttachmentsCommand getCardAttachmentsCommand = new GetCardAttachmentsCommand(cardId);
+            CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
+                 engineMock.Object, engineEventMock.Object);
+
+            Event result = cardCommandHandler.Handler(getCardAttachmentsCommand);
+            trelloMock.Verify(x => x.ReturnCardAttachmenets(It.IsAny<string>()), Times.Once);
+            Assert.True(result is UnableToFindCardAttachmentsEvent);
+        }
+
 
 
         [Theory]
@@ -113,5 +160,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Event result = cardCommandHandler.Handler(getCardStatusCommand);
             Assert.True(result is CardStatusUnableToFindEvent);
         }
+
     }
 }

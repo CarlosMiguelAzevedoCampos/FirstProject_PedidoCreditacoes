@@ -2,10 +2,8 @@
 using CMA.ISMAI.Trello.Engine.Interface;
 using CMA.ISMAI.Trello.Settings;
 using Manatee.Trello;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -69,6 +67,8 @@ namespace CMA.ISMAI.Trello.Engine.Service
                     return GetDepartmentDirectorBoardId();
                 case (int)BoardType.Scientific_council:
                     return GetScientificCouncilBoardId();
+                case (int)BoardType.Testing_board:
+                    return GetTestingBoardId();
                 default:
                     return string.Empty;
             }
@@ -80,6 +80,7 @@ namespace CMA.ISMAI.Trello.Engine.Service
         private string GetCoordinatorBoardId() => SettingsReader.ReturnKey("BoardIds", "Course_coordinator");
         private string GetDepartmentDirectorBoardId() => SettingsReader.ReturnKey("BoardIds", "Department_director");
         private string GetScientificCouncilBoardId() => SettingsReader.ReturnKey("BoardIds", "Scientific_council");
+        private string GetTestingBoardId() => SettingsReader.ReturnKey("BoardIds", "Testing_board");
 
 
 
@@ -119,7 +120,7 @@ namespace CMA.ISMAI.Trello.Engine.Service
             {
                 this._log.Fatal(ex.ToString());
             }
-            return new List<string>();
+            return null;
         }
 
         public async Task<bool> DeleteCard(string id)

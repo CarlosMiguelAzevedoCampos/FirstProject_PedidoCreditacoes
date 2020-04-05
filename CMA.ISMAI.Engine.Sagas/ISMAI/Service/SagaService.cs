@@ -6,11 +6,11 @@ using System.Collections.Generic;
 
 namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
 {
-    public class CreditacoesService : ICreditacoesService
+    public class SagaService : ISagaService
     {
         private readonly ILog _log;
         private readonly IHttpRequest _httpRequest;
-        public CreditacoesService(ILog log, IHttpRequest httpRequest)
+        public SagaService(ILog log, IHttpRequest httpRequest)
         {
             this._log = log;
             this._httpRequest = httpRequest;

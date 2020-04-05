@@ -36,10 +36,10 @@ namespace CMA.ISMAI.Core.Notifications
             {
                 var factory = new ConnectionFactory()
                 {
-                    HostName = ReturnSettingsValue("RabbitMq", "Uri"),
-                    Port = Convert.ToInt32(ReturnSettingsValue("RabbitMq", "Port")),
-                    UserName = ReturnSettingsValue("RabbitMq", "Username"),
-                    Password = ReturnSettingsValue("RabbitMq", "Password")
+                    HostName = ReturnSettingsValue("RabbitMqCore", "Uri"),
+                    Port = Convert.ToInt32(ReturnSettingsValue("RabbitMqCore", "Port")),
+                    UserName = ReturnSettingsValue("RabbitMqCore", "Username"),
+                    Password = ReturnSettingsValue("RabbitMqCore", "Password")
                 };
 
                 using (var connection = factory.CreateConnection())

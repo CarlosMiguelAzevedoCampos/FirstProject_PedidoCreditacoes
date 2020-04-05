@@ -80,7 +80,13 @@ namespace CMA.ISMAI.Trello.API.Controllers
                 return BadRequest();
             }
             Event @event = _cardHandler.Handler(Map.ConvertToGetCardAttachmentsCommand(cardId));
-            return Response(true, @event as ReturnCardAttachmentsEvent);
+            if (@event is CardDosentHaveAttchmentsEvent)
+                return Response(true, @event as CardDosentHaveAttchmentsEvent);
+            else if (@event is ReturnCardAttachmentsEvent)
+                return Response(true, @event as ReturnCardAttachmentsEvent);
+            else
+                return Response(false, @event as UnableToFindCardAttachmentsEvent);
+
         }
     }
 }

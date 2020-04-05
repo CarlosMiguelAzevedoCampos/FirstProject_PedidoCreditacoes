@@ -8,7 +8,7 @@ namespace CMA.ISMAI.Core.Events.Store.Service
 {
     public class StoreEvent : BaseConfiguration, IEventStore { 
 
-        private IEventStoreConnection _connection;
+        private IEventStoreConnection _connection = null;
         
         public void SaveToEventStore(Event @event)
         {

@@ -39,7 +39,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 return @event;
             }
             string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
-           
+
             return ReturnEventBasedOnCardId(request, cardId);
         }
 
@@ -84,8 +84,13 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
 
         public Event Handler(GetCardAttachmentsCommand request)
         {
-            List<string> filesUrl = _trello.ReturnCardAttachmenets(request.CardId).Result;
-            return new ReturnCardAttachmentsEvent(request.CardId, filesUrl);
+            var filesUrl = _trello.ReturnCardAttachmenets(request.CardId).Result;
+            if (filesUrl == null)
+                return new UnableToFindCardAttachmentsEvent(request.CardId);
+            else if (filesUrl.Count == 0)
+                return new CardDosentHaveAttchmentsEvent(request.CardId);
+            else
+                return new ReturnCardAttachmentsEvent(request.CardId, filesUrl);
         }
 
         public Event HandlerProcess(AddCardCommand request)
