@@ -12,8 +12,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
 {
     public class ControllerGetCardDetails_Test
     {
-
-        [Fact]
+        [Trait("TrelloController API", "Get card details")]
+        [Fact(DisplayName = "Get card status should fail because of null parameters")]
         public void TrelloController_GetCardStatus_ShouldReturnBadRequest_BecauseOfEmptyOrNullParameters()
         {
             var logMock = new Mock<ILog>();
@@ -26,7 +26,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
             Assert.True(resultCode.StatusCode == 400);
         }
 
-        [Theory]
+        [Trait("TrelloController API", "Get card details")]
+        [Theory(DisplayName = "Get card status should return active card.")]
         [InlineData("ifh2i992h2b-asfa-1w")]
         [InlineData("cjckamrb222-we-1w")]
         public void TrelloController_GetCardStatus_ShouldReturnOkStatus_ActiveCard(string id)
@@ -44,7 +45,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
             Assert.True(resultCode.StatusCode == 200);
         }
 
-        [Theory]
+        [Trait("TrelloController API", "Get card details")]
+        [Theory(DisplayName = "Get card status should return completed card.")]
         [InlineData("ifh2i992h2b-asfa-1w")]
         [InlineData("cjckamrb222-we-1w")]
         public void TrelloController_GetCardStatus_ShouldReturnOkStatus_CompletedCard(string id)
@@ -63,7 +65,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
         }
 
 
-        [Theory]
+        [Trait("TrelloController API", "Get card details")]
+        [Theory(DisplayName = "Get card status should return unknown card.")]
         [InlineData("ifh2i992h2b-asfa-1w")]
         [InlineData("cjckamrb222-we-1w")]
         public void TrelloController_GetCardStatus_ShouldReturnOkStatus_UnknownCard(string id)
@@ -81,7 +84,9 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
             Assert.True(resultCode.StatusCode == 400);
         }
 
-        [Theory]
+
+        [Trait("TrelloController API", "Get card details")]
+        [Theory(DisplayName = "Get card status should return bad request because of empty cardId.")]
         [InlineData("")]
         public void TrelloController_GetCardStatus_ShouldReturnBadRequest_BecauseOfEmptyCardIdAndBadBoardId(string cardId)
         {
@@ -95,7 +100,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
             Assert.True(resultCode.StatusCode == 400);
         }
 
-        [Theory]
+        [Trait("TrelloController API", "Get card details")]
+        [Theory(DisplayName = "Get card attachmenets should Ok status")]
         [InlineData("ifh2i992h2b-asfa-1w")]
         [InlineData("cjckamrb222-we-1w")]
         public void TrelloController_GetCardAttachments_ShouldReturnOkStatus(string cardId)
@@ -115,7 +121,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
             Assert.True(resultCode.StatusCode == 200);
         }
 
-        [Fact]
+        [Trait("TrelloController API", "Get card details")]
+        [Fact(DisplayName = "Get card attachmenets should fail because of empty cardid")]
         public void TrelloController_GetCardAttachments_ShouldReturnBadStatus_EmptyCardId()
         {
             List<string> urls = new List<string>();

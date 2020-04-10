@@ -7,7 +7,7 @@ namespace CMA.ISMAI.Sagas.Services.Interface
     {
         string CreditacaoWithNewCardCreation(string cardId, string courseName, string studentName, string courseInstitute,
             DateTime dueTime, bool isCet, int boardId);
-        bool CreditacaoWithNoCardCreation(string cardId);
+        bool GetCardStatus(string cardId);
         List<string> GetCardAttachments(string cardId);
     }
 }

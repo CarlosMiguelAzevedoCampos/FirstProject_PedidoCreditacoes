@@ -13,8 +13,9 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
 {
     public class SagaService_Tests
     {
-        [Fact]
-        public void CreditacoesService_GetCardStatus_ShouldGetCardStatusAndCreateOneCard()
+        [Fact(DisplayName = "Get Card Status. Should return card completed.")]
+        [Trait("SagaService", "Get Card Status")]
+        public void CreditacoesService_GetCardStatus_ShouldGetCardStatus_ReturnCardCompleted()
         {
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
@@ -24,21 +25,9 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             Assert.True(result);
         }
 
-        [Fact]
-        public void CreditacoesService_GetCardStatus_ShouldGetCardStatusAndFailCreatingaCard()
-        {
-            var logMock = new Mock<ILog>();
-            var httprequestMock = new Mock<IHttpRequest>();
-            httprequestMock.Setup(x => x.CardStateAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-            httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(""));
-            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
-            bool result = creditacoesService.GetCardState("12");
-            Assert.False(result);
-        }
-
-
-        [Fact]
-        public void CreditacoesService_GetCardStatus_ShouldGetCardStatusAndFail()
+        [Fact(DisplayName = "Get Card Status. Should return card incompleted.")]
+        [Trait("SagaService", "Get Card Status")]
+        public void CreditacoesService_GetCardStatus_ShouldGetCardStatus_ReturnCardIncompleted()
         {
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
@@ -48,7 +37,8 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             Assert.False(result);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Post new Card. Should Fail.")]
+        [Trait("SagaService", "Post new Card")]
         public void CreditacoesService_PostCard_ShouldFailToPostTheCard()
         {
             var list = new List<string>();
@@ -62,7 +52,8 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             Assert.Empty(result);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Post new Card. Should Pass.")]
+        [Trait("SagaService", "Post new Card")]
         public void CreditacoesService_PostCard_ShouldPostTheCard()
         {
             var list = new List<string>();
@@ -76,7 +67,8 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             Assert.NotEmpty(result);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Get card attchments.")]
+        [Trait("SagaService", "Get card attachements")]
         public void CreditacoesService_GetCardAttchments_ShouldGetCardAttachments()
         {
             var list = new List<string>();

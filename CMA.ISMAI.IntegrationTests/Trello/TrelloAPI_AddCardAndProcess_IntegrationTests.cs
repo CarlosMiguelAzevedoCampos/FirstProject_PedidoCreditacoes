@@ -15,7 +15,8 @@ namespace CMA.ISMAI.IntegrationTests.Trello
 {
     public class TrelloAPI_AddCardAndProcess_IntegrationTests
     {
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Add Card and Process")]
+        [Theory(DisplayName = "Card shouldn't be added because of null parameters")]
         [InlineData("", "Carlos Miguel Campos", -1, "ISMAI", "Informática", "", true)]
         [InlineData(null, "Carlos Miguel Campos", 1, "ISMAI", "Informática", "", false)]
         [InlineData(null, null, 2, "ISMAI", "Informática", "Description", true)]
@@ -45,7 +46,8 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             Assert.False(response.IsSuccessStatusCode);
         }
 
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Add Card and Process")]
+        [Theory(DisplayName = "Card shouldn't be added because of bad attachments list")]
         [InlineData("Card And Process - Carlos Miguel Campos- Informática - ISMAI", "Carlos Miguel Campos", 1, "ISMAI", "Informática", "Carlos Campos", true)]
         [InlineData("Card And Process - Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", 1, "ISMAI", "Informática", "Carlos Campos", false)]
         public async Task TrelloController_IntegrationTest_AddCardAndProcess_ShouldFailTheCreation_DueToNullFilesUrl(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
@@ -69,7 +71,8 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             Assert.False(response.IsSuccessStatusCode);
         }
 
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Add Card and Process")]
+        [Theory(DisplayName = "Card shouldn't be added because of non existing board Id")]
         [InlineData("Card And Process - Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", -1, "ISMAI", "Informática", "Carlos Campos", false)]
         [InlineData("Card And Process - Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", -1, "ISMAI", "Informática", "Carlos Campos", true)]
         public async Task TrelloController_IntegrationTest_AddCardAndProcess_ShouldFailBecauseOfNone_ExistingBoardId(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
@@ -95,7 +98,8 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             Assert.Equal("AddCardFailedEvent", addCardFailedEvent.Errors.MessageType);
         }
 
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Add Card and Process")]
+        [Theory(DisplayName = "Card should be created")]
         [InlineData("Card And Process - Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", 3, "ISMAI", "Informática", "Carlos Campos", true)]
         [InlineData("Card And Process - Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", 3, "ISMAI", "Informática", "Carlos Campos", false)]
         public async Task TrelloController_IntegrationTest_AddCardAndProcess_ShouldCreateANewCard(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)

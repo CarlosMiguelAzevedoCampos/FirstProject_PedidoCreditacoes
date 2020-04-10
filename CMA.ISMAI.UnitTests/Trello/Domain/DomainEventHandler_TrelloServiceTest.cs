@@ -13,8 +13,9 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
 {
     public class DomainEventHandler_TrelloServiceTest
     {
-        [Fact]
-        public void TrelloService_CardEventHandler_AddCardCompletedEventNotification()
+        [Trait("CardEventHandler", "Add Card")]
+        [Fact(DisplayName = "New card creation should generate this event")]
+        public void CardEventHandler_CardEventHandler_AddCardCompletedEventNotification()
         {
             var logMock = new Mock<ILog>();
             var eventStoreMock = new Mock<IEventStore>();
@@ -26,8 +27,9 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result.IsCompleted);
         }
 
-        [Fact]
-        public void TrelloService_CardEventHandler_AddCardFailedEventNotification()
+        [Trait("CardEventHandler", "Add Card")]
+        [Fact(DisplayName = "Card creation error should generate this event")]
+        public void CardEventHandler_CardEventHandler_AddCardFailedEventNotification()
         {
             var logMock = new Mock<ILog>();
             var eventStoreMock = new Mock<IEventStore>();
@@ -39,8 +41,9 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result.IsCompleted);
         }
 
-        [Fact]
-        public void TrelloService_CardEventHandler_CardStatusCompletedEventNotification()
+        [Trait("CardEventHandler", "Card Status")]
+        [Fact(DisplayName = "Card completed should generate this event")]
+        public void CardEventHandler_CardEventHandler_CardStatusCompletedEventNotification()
         {
             var logMock = new Mock<ILog>();
             var eventStoreMock = new Mock<IEventStore>();
@@ -51,8 +54,9 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result.IsCompleted);
         }
 
-        [Fact]
-        public void TrelloService_CardEventHandler_CardStatusIncompletedEventNotification()
+        [Trait("CardEventHandler", "Card Status")]
+        [Fact(DisplayName = "Card Incompleted should generate this event")]
+        public void CardEventHandler_CardEventHandler_CardStatusIncompletedEventNotification()
         {
             var logMock = new Mock<ILog>();
             var eventStoreMock = new Mock<IEventStore>();
@@ -63,8 +67,9 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result.IsCompleted);
         }
 
-        [Fact]
-        public void TrelloService_CardEventHandler_CardStatusUnableToFindEventNotification()
+        [Trait("CardEventHandler", "Card Status")]
+        [Fact(DisplayName = "Card unable to find should generate this event")]
+        public void CardEventHandler_CardEventHandler_CardStatusUnableToFindEventNotification()
         {
             var logMock = new Mock<ILog>();
             var eventStoreMock = new Mock<IEventStore>();
@@ -75,8 +80,9 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result.IsCompleted);
         }
 
-        [Fact]
-        public void TrelloService_EngineEventHandler_WorkFlowStartFailedEventNotification()
+        [Trait("CardEventHandler", "Card Status")]
+        [Fact(DisplayName = "Workflow engine fail should generate this event")]
+        public void CardEventHandler_EngineEventHandler_WorkFlowStartFailedEventNotification()
         {
             var logMock = new Mock<ILog>();
             var eventStoreMock = new Mock<IEventStore>();
@@ -87,8 +93,9 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result.IsCompleted);
         }
 
-        [Fact]
-        public void TrelloService_EngineEventHandler_CardStatusUnableToFindEventNotification()
+        [Trait("CardEventHandler", "Card Status")]
+        [Fact(DisplayName = "Workflow engine start should generate this event")]
+        public void CardEventHandler_EngineEventHandler_WorkFlowStartCompletedEventNotification()
         {
             var logMock = new Mock<ILog>();
             var eventStoreMock = new Mock<IEventStore>();

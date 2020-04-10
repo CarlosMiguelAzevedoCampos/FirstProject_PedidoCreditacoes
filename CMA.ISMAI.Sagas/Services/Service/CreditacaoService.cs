@@ -15,11 +15,6 @@ namespace CMA.ISMAI.Sagas.Services.Service
             _creditacoesService = creditacoesService;
         }
 
-        public bool CreditacaoWithNoCardCreation(string cardId)
-        {
-            return getCardStatus(cardId);
-        }
-
         public string CreditacaoWithNewCardCreation(string cardId, string courseName, string studentName, string courseInstitute, DateTime dueTime, bool isCet, int boardId)
         {
             if (!getCardStatus(cardId))
@@ -47,6 +42,11 @@ namespace CMA.ISMAI.Sagas.Services.Service
         public List<string> GetCardAttachments(string cardId)
         {
             return _creditacoesService.GetCardAttachments(cardId);
+        }
+
+        public bool GetCardStatus(string cardId)
+        {
+            return _creditacoesService.GetCardState(cardId);
         }
     }
 }

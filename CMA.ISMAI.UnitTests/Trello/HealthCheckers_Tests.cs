@@ -13,7 +13,8 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
 {
     public class HealthCheckers_Tests
     {
-        [Fact]
+        [Fact(DisplayName ="Health Check the Camunda. Should return Healthy")]
+        [Trait("HealthCheck", "Solution HealthCheck")]
         private void CamundaHealthCheck_ApiStatus_ReturnHealthy()
         {
             var httpMock = new Mock<IHttpRequest>();
@@ -26,7 +27,8 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             Assert.True(result.Status == HealthStatus.Healthy);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Health Check the Camunda. Should return Unhealthy")]
+        [Trait("HealthCheck", "Solution HealthCheck")]
         private void CamundaHealthCheck_ApiStatus_ReturnUnhealthy()
         {
             var httpMock = new Mock<IHttpRequest>();
@@ -39,7 +41,8 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             Assert.True(result.Status == HealthStatus.Unhealthy);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Health Check the Trello Api. Should return Healthy")]
+        [Trait("HealthCheck", "Solution HealthCheck")]
         private void TrelloHealthCheck_ApiStatus_ReturnHealthy()
         {
             var httpMock = new Mock<IHttpRequest>();
@@ -52,7 +55,8 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             Assert.True(result.Status == HealthStatus.Healthy);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Health Check the Trello Api. Should return Unhealthy")]
+        [Trait("HealthCheck", "Solution HealthCheck")]
         private void TrelloHealthCheck_ApiStatus_ReturnUnhealthy()
         {
             var httpMock = new Mock<IHttpRequest>();

@@ -120,7 +120,7 @@ namespace CMA.ISMAI.Sagas.Creditacoes
             string courseInstitute = ReturnValueFromExternalTask(externalTask, "courseInstitute").ToString();
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - card details obtained from camunda..");
            
-            if (!_creditacaoService.CreditacaoWithNoCardCreation(cardId))
+            if (!_creditacaoService.GetCardStatus(cardId))
                 return;
             
             FinishTasks(processName, externalTask.Id, returnDictionary(cardId, courseName, studentName, courseInstitute));

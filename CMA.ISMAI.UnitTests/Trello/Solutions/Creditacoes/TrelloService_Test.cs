@@ -12,7 +12,8 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
 {
     public class TrelloService_Test
     {
-        [Fact]
+        [Fact(DisplayName = "Create a new card and return is Id")]
+        [Trait("Creditação Solutions", "Trello Service")]
         private void TrelloService_CreateTrelloCard_CreateCardAndReturnId()
         {
             var httpMock = new Mock<IHttpRequest>();
@@ -25,7 +26,8 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             Assert.True(value);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Creditação Solution - Trello Service - Return error on creating a new Card")]
+        [Trait("Creditação Solutions", "Trello Service")]
         private void TrelloService_CreateTrelloCard_ReturnFalseOnNewCardCreation()
         {
             var httpMock = new Mock<IHttpRequest>();

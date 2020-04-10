@@ -2,19 +2,19 @@
 using CMA.ISMAI.Solutions.Creditacoes.UI.Controllers;
 using CMA.ISMAI.Solutions.Creditacoes.UI.Models;
 using CMA.ISMAI.Solutions.Creditacoes.UI.Services;
-using CMA.ISMAI.Solutions.Creditacoes.UI.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
-using System;
+using System.ComponentModel;
 using Xunit;
 
 namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
 {
     public class CreditacaoController_Tests
     {
-        [Fact]
+        [Fact(DisplayName ="Create a new card and starts a new Process")]
+        [Trait("Creditação Solutions", "Controller")]
         private void CreditacaoController_NewCreditacaoPost_CreateNewCardOnTrello_AndStartsTheProcess()
         {
             var trelloService = new Mock<ITrelloService>();
@@ -34,8 +34,9 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             string result = tempData["Process_status"].ToString();
             Assert.True(result == "Process deployed!");
         }
-  
-        [Fact]
+
+        [Fact(DisplayName = "Fail on creating a new card and on creating Process")]
+        [Trait("Creditação Solutions", "Controller")]
         private void CreditacaoController_NewCreditacaoPost_FailOnCardAndProcessCreation()
         {
             var trelloService = new Mock<ITrelloService>();
@@ -57,7 +58,8 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
         }
 
 
-        [Fact]
+        [Fact(DisplayName = "Creditação Controller - Invalid Model")]
+        [Trait("Creditação Solutions", "Controller")]
         private void CreditacaoController_NewCreditacaoPost_InvalidModel()
         {
             var trelloService = new Mock<ITrelloService>();

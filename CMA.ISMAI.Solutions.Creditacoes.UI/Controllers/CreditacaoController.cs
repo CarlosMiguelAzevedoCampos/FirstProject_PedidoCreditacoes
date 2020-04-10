@@ -23,8 +23,7 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(CreditacaoDto creditacaoDto)
+        public IActionResult Create([FromBody] CreditacaoDto creditacaoDto)
         {
             _log.Info("New creditation process has submited");
             if (ModelState.IsValid)

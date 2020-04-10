@@ -15,11 +15,12 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
 {
     public class DomainGetCardDetails_TrelloServiceTest
     {
-        [Theory]
+        [Trait("CardCommandHandler", "Get Card Details")]
+        [Theory(DisplayName = "Obtain card attachments")]
         [InlineData("44454a2sda3s562a")]
         [InlineData("44454a34sda3s562a")]
         [InlineData("444513a2sda3s562a")]
-        public void TrelloService_GetCardAttachments_ShouldReturn_TheAttachments(string cardId)
+        public void CardCommandHandler_GetCardAttachments_ShouldReturn_TheAttachments(string cardId)
         {
             var logMock = new Mock<ILog>();
             var trelloMock = new Mock<ITrello>();
@@ -42,7 +43,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result is ReturnCardAttachmentsEvent);
         }
 
-        [Theory]
+        [Trait("CardCommandHandler", "Get Card Details")]
+        [Theory(DisplayName = "Card dosen't have attachments")]
         [InlineData("44454a2sda3s562a")]
         [InlineData("44454a34sda3s562a")]
         [InlineData("444513a2sda3s562a")]
@@ -68,7 +70,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result is CardDosentHaveAttchmentsEvent);
         }
 
-        [Theory]
+        [Trait("CardCommandHandler", "Get Card Details")]
+        [Theory(DisplayName = "Couldn't find the attachments")]
         [InlineData("44454a2sda3s562a")]
         [InlineData("44454a34sda3s562a")]
         [InlineData("444513a2sda3s562a")]
@@ -88,10 +91,9 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             trelloMock.Verify(x => x.ReturnCardAttachmenets(It.IsAny<string>()), Times.Once);
             Assert.True(result is UnableToFindCardAttachmentsEvent);
         }
-
-
-
-        [Theory]
+        
+        [Trait("CardCommandHandler", "Get Card Details")]
+        [Theory(DisplayName = "Obtain card status. Should return completed")]
         [InlineData("44454a2sda3s562a")]
         [InlineData("44454a34sda3s562a")]
         [InlineData("444513a2sda3s562a")]
@@ -115,7 +117,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result is CardStatusCompletedEvent);
         }
 
-        [Theory]
+        [Trait("CardCommandHandler", "Get Card Details")]
+        [Theory(DisplayName = "Obtain card status. Should return incompleted")]
         [InlineData("44454a2sda3s562a")]
         [InlineData("44454a34sda3s562a")]
         [InlineData("444513a2sda3s562a")]
@@ -138,7 +141,8 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             Assert.True(result is CardStatusIncompletedEvent);
         }
 
-        [Theory]
+        [Trait("CardCommandHandler", "Get Card Details")]
+        [Theory(DisplayName = "Obtain card status. Should return unable to find")]
         [InlineData("44454a2sda3s562a")]
         [InlineData("44454a34sda3s562a")]
         [InlineData("444513a2sda3s562a")]

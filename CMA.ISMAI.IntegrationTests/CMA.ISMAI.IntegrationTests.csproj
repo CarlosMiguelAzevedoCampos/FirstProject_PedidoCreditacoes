@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CMA.ISMAI.Solutions.Creditacoes.UI\CMA.ISMAI.Solutions.Creditacoes.UI.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.API\CMA.ISMAI.Trello.API.csproj" />
   </ItemGroup>
 

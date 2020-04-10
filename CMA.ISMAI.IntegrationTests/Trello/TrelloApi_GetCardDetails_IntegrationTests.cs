@@ -11,9 +11,10 @@ namespace CMA.ISMAI.IntegrationTests.Trello
 {
     public class TrelloApi_GetCardDetails_IntegrationTests
     {
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Get card Details")]
+        [Theory(DisplayName = "Get card status should fail because of empty card Id")]
         [InlineData("")]
-        public async Task TrelloController_IntegrationTest_GetCardStatus_ShouldReturnFailOnCardValidation(string id)
+        public async Task TrelloController_IntegrationTest_GetCardStatus_ShouldFail_EmptyCardId(string id)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -25,7 +26,8 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             Assert.False(response.IsSuccessStatusCode);
         }
 
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Get card Details")]
+        [Theory(DisplayName = "Get card status should return card status incompleted")]
         [InlineData("5e8a3eb3a6ef1f3eed24b319")]
         public async Task TrelloController_IntegrationTest_GetCardStatus__ShouldReturnOkRequest_ActiveCard(string id)
         {
@@ -45,7 +47,8 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             Assert.True(response.IsSuccessStatusCode);
         }
 
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Get card Details")]
+        [Theory(DisplayName = "Get card status should return card status completed")]
         [InlineData("5e8a3eb3a6ef1f3eed24b319")]
         public async Task TrelloController_IntegrationTest_GetCardStatus__ShouldReturnOkStatus_CompletedCard(string id)
         {
@@ -65,7 +68,8 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             Assert.True(response.IsSuccessStatusCode);
         }
 
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Get card Details")]
+        [Theory(DisplayName = "Get card status should return unable to find")]
         [InlineData("12")]
         public async Task TrelloController_IntegrationTest_GetCardStatus__ShouldReturnBadRequest_UnknowCard(string id)
         {
@@ -84,8 +88,9 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             Assert.NotEmpty(cardStatusUnkwon.Errors.Id);
             Assert.False(response.IsSuccessStatusCode);
         }
-        
-        [Theory]
+
+        [Trait("TrelloController API - Integration Tests", "Get card Details")]
+        [Theory(DisplayName = "Get card status should return the card attachments")]
         [InlineData("5e8a3eb3a6ef1f3eed24b319")]
         public async Task TrelloController_IntegrationTest_GetCardAttachments__ShouldReturnOkRequest_CardHasAttachments(string cardId)
         {
@@ -104,7 +109,8 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             Assert.True(response.IsSuccessStatusCode);
         }
 
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Get card Details")]
+        [Theory(DisplayName = "Get card status should return card dosen't have attachments")]
         [InlineData("5e8a3eb3a6ef1f3eed24b319")]
         public async Task TrelloController_IntegrationTest_GetCardAttachments__ShouldReturnOkRequest_CardDosentHaveAttachments(string cardId)
         {
@@ -123,7 +129,8 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             Assert.True(response.IsSuccessStatusCode);
         }
 
-        [Theory]
+        [Trait("TrelloController API - Integration Tests", "Get card Details")]
+        [Theory(DisplayName = "Get card status should return unable to find attachments")]
         [InlineData("2212")]
         public async Task TrelloController_IntegrationTest_GetCardAttachments__ShouldReturnBadRequest_InvalidBoardOrCardId(string cardId)
         {
