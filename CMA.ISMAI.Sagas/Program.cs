@@ -1,4 +1,5 @@
-﻿using CMA.ISMAI.Engine.Automation.Sagas;
+﻿using CMA.ISMAI.Core;
+using CMA.ISMAI.Engine.Automation.Sagas;
 using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
 using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service;
 using CMA.ISMAI.Logging.Interface;
@@ -16,7 +17,7 @@ using System;
 
 namespace CMA.ISMAI.Sagas
 {
-    class Program : BaseConfiguration
+    class Program
     {
         static void Main(string[] args)
         {
@@ -35,7 +36,7 @@ namespace CMA.ISMAI.Sagas
             IServiceCollection  services = new ServiceCollection();
             Log.Logger = new LoggerConfiguration()
                .Enrich.FromLogContext() 
-               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(ReturnSettingsValue("ElasticConfiguration", "Uri")))
+               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(BaseConfiguration.ReturnSettingsValue("ElasticConfiguration", "Uri")))
                {
                    AutoRegisterTemplate = true,
                })

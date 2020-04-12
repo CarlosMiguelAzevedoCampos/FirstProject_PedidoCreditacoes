@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Core.Notifications
 {
-    public abstract class NotificationsHandler : BaseConfiguration
+    public abstract class NotificationsHandler
     {
         private readonly IEventStore _eventStore;
         private readonly ILog _log;
@@ -36,10 +36,10 @@ namespace CMA.ISMAI.Core.Notifications
             {
                 var factory = new ConnectionFactory()
                 {
-                    HostName = ReturnSettingsValue("RabbitMqCore", "Uri"),
-                    Port = Convert.ToInt32(ReturnSettingsValue("RabbitMqCore", "Port")),
-                    UserName = ReturnSettingsValue("RabbitMqCore", "Username"),
-                    Password = ReturnSettingsValue("RabbitMqCore", "Password")
+                    HostName = BaseConfiguration.ReturnSettingsValue("RabbitMqCore", "Uri"),
+                    Port = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("RabbitMqCore", "Port")),
+                    UserName = BaseConfiguration.ReturnSettingsValue("RabbitMqCore", "Username"),
+                    Password = BaseConfiguration.ReturnSettingsValue("RabbitMqCore", "Password")
                 };
 
                 using (var connection = factory.CreateConnection())

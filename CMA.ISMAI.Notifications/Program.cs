@@ -1,4 +1,5 @@
-﻿using CMA.ISMAI.Logging.Interface;
+﻿using CMA.ISMAI.Core;
+using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,7 +9,7 @@ using System;
 
 namespace CMA.ISMAI.Notifications
 {
-    class Program : BaseConfiguration
+    class Program
     {
 
         static void Main(string[] args)
@@ -28,7 +29,7 @@ namespace CMA.ISMAI.Notifications
             IServiceCollection services = new ServiceCollection();
             Log.Logger = new LoggerConfiguration()
                .Enrich.FromLogContext()
-               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(ReturnSettingsValue("ElasticConfiguration", "Uri")))
+               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(BaseConfiguration.ReturnSettingsValue("ElasticConfiguration", "Uri")))
                {
                    AutoRegisterTemplate = true,
                })

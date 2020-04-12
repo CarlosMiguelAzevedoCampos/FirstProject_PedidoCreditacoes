@@ -3,10 +3,10 @@ using System.IO;
 
 namespace CMA.ISMAI.Core
 {
-    public abstract class BaseConfiguration
+    public static class BaseConfiguration
     {
         private static IConfiguration _configuration = null;
-        public static void InitiateConfiguration()
+        private static void InitiateConfiguration()
         {
             if (_configuration != null)
                 return;

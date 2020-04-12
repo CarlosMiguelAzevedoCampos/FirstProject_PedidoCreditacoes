@@ -1,11 +1,9 @@
 ﻿using CamundaClient;
 using CamundaClient.Dto;
+using CMA.ISMAI.Core;
 using CMA.ISMAI.Logging.Interface;
-using CMA.ISMAI.Trello.Settings;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 
 namespace CMA.ISMAI.Trello.Engine.Automation
@@ -24,7 +22,7 @@ namespace CMA.ISMAI.Trello.Engine.Automation
 
         private string GetCamundaUrl()
         {
-            return SettingsReader.ReturnKey("Camunda", "Uri");
+            return BaseConfiguration.ReturnSettingsValue("Camunda", "Uri");
         }
        
         public string StartWorkFlow(string newCardId, string courseName, string studentName, string courseInstitute, bool isCet)

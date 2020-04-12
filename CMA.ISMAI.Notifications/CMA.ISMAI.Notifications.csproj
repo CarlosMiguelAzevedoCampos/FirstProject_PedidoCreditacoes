@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
     <None Remove="emplwjkq.4qs~" />
-    <None Remove="notifications_appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="notifications_appsettings.json">
+    <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

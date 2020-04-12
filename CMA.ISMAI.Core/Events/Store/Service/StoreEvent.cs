@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CMA.ISMAI.Core.Events.Store.Service
 {
-    public class StoreEvent : BaseConfiguration, IEventStore { 
+    public class StoreEvent : IEventStore { 
 
         private IEventStoreConnection _connection = null;
         
@@ -30,7 +30,7 @@ namespace CMA.ISMAI.Core.Events.Store.Service
         {
             if (_connection != null)
                 return;
-            _connection = EventStoreConnection.Create(new Uri(ReturnSettingsValue("EventStore", "IPAddress")));
+            _connection = EventStoreConnection.Create(new Uri(BaseConfiguration.ReturnSettingsValue("EventStore", "IPAddress")));
             _connection.ConnectAsync().Wait();
         }
     }

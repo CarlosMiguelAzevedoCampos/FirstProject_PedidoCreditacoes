@@ -1,6 +1,6 @@
-﻿using CMA.ISMAI.Trello.Engine.Enum;
+﻿using CMA.ISMAI.Core;
+using CMA.ISMAI.Trello.Engine.Enum;
 using CMA.ISMAI.Trello.Engine.Interface;
-using CMA.ISMAI.Trello.Settings;
 using Manatee.Trello;
 using System;
 using System.Collections.Generic;
@@ -74,13 +74,13 @@ namespace CMA.ISMAI.Trello.Engine.Service
             }
         }
 
-        private string GetAppKey() =>  SettingsReader.ReturnKey("TrelloKey", "AppKey");
+        private string GetAppKey() => BaseConfiguration.ReturnSettingsValue("TrelloKey", "AppKey");
 
-        private string GetUserToken() => SettingsReader.ReturnKey("TrelloKey", "UserToken");
-        private string GetCoordinatorBoardId() => SettingsReader.ReturnKey("BoardIds", "Course_coordinator");
-        private string GetDepartmentDirectorBoardId() => SettingsReader.ReturnKey("BoardIds", "Department_director");
-        private string GetScientificCouncilBoardId() => SettingsReader.ReturnKey("BoardIds", "Scientific_council");
-        private string GetTestingBoardId() => SettingsReader.ReturnKey("BoardIds", "Testing_board");
+        private string GetUserToken() => BaseConfiguration.ReturnSettingsValue("TrelloKey", "UserToken");
+        private string GetCoordinatorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Course_coordinator");
+        private string GetDepartmentDirectorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Department_director");
+        private string GetScientificCouncilBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Scientific_council");
+        private string GetTestingBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Testing_board");
 
 
 

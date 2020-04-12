@@ -1,5 +1,6 @@
 ﻿using CamundaClient;
 using CamundaClient.Dto;
+using CMA.ISMAI.Core;
 using CMA.ISMAI.Logging.Interface;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Sagas.Services.Base
 {
-    public abstract class Saga : BaseConfiguration
+    public abstract class Saga
     {
         private readonly CamundaEngineClient camundaEngineClient;
         private readonly ILog _log;
@@ -15,7 +16,7 @@ namespace CMA.ISMAI.Sagas.Services.Base
         public Saga(ILog log)
         {
             _log = log;
-            camundaEngineClient = new CamundaEngineClient(new Uri(ReturnSettingsValue("CamundaConfiguration", "Uri")), null, null);
+            camundaEngineClient = new CamundaEngineClient(new Uri(BaseConfiguration.ReturnSettingsValue("CamundaConfiguration", "Uri")), null, null);
         }
 
         protected void PollTasks(string workerId, IDictionary<string, Action<ExternalTask>> workers)

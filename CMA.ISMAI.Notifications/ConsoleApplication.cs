@@ -1,4 +1,5 @@
-﻿using CMA.ISMAI.Core.Notifications;
+﻿using CMA.ISMAI.Core;
+using CMA.ISMAI.Core.Notifications;
 using CMA.ISMAI.Logging.Interface;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace CMA.ISMAI.Notifications
 {
-    public class ConsoleApplication : BaseConfiguration
+    public class ConsoleApplication
     {
         private readonly ILog _log;
 
@@ -24,10 +25,10 @@ namespace CMA.ISMAI.Notifications
             {
                 var factory = new ConnectionFactory()
                 {
-                    HostName = ReturnSettingsValue("RabbitMq", "Uri"),
-                    Port = Convert.ToInt32(ReturnSettingsValue("RabbitMq", "Port")),
-                    UserName = ReturnSettingsValue("RabbitMq", "Username"),
-                    Password = ReturnSettingsValue("RabbitMq", "Password")
+                    HostName = BaseConfiguration.ReturnSettingsValue("RabbitMq", "Uri"),
+                    Port = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("RabbitMq", "Port")),
+                    UserName = BaseConfiguration.ReturnSettingsValue("RabbitMq", "Username"),
+                    Password = BaseConfiguration.ReturnSettingsValue("RabbitMq", "Password")
                 };
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
@@ -58,7 +59,7 @@ namespace CMA.ISMAI.Notifications
         {
             try
             {
-                string email = ReturnSettingsValue("Notification", "Email");
+                string email = BaseConfiguration.ReturnSettingsValue("Notification", "Email");
                 MessageBody notification = JsonConvert.DeserializeObject<MessageBody>
                     (Encoding.UTF8.GetString(e.Body));
                 Console.WriteLine($"New notification recived! Message Body {notification.Message}");
@@ -74,7 +75,7 @@ namespace CMA.ISMAI.Notifications
                 smtp.EnableSsl = true;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(email,
-                    ReturnSettingsValue("Notification", "Password"));
+                    BaseConfiguration.ReturnSettingsValue("Notification", "Password"));
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Send(message);
             }

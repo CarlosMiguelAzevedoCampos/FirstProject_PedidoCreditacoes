@@ -1,3 +1,4 @@
+using CMA.ISMAI.Core;
 using CMA.ISMAI.Core.Events.Store.Interface;
 using CMA.ISMAI.Core.Events.Store.Service;
 using CMA.ISMAI.Logging.Interface;
@@ -10,13 +11,11 @@ using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Automation;
 using CMA.ISMAI.Trello.Engine.Interface;
 using CMA.ISMAI.Trello.Engine.Service;
-using CMA.ISMAI.Trello.Settings;
 using HealthChecks.UI.Client;
 using HealthChecks.UI.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -28,12 +27,13 @@ namespace CMA.ISMAI.Trello.API
 {
     public class Startup
     {
-
-        public Startup()
+        private readonly IWebHostEnvironment _currentEnvironment;
+        public Startup(IWebHostEnvironment env)
         {
+            _currentEnvironment = env;
             Log.Logger = new LoggerConfiguration()
                .Enrich.FromLogContext()
-               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(SettingsReader.ReturnKey("ElasticConfiguration", "Uri")))
+               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(BaseConfiguration.ReturnSettingsValue("ElasticConfiguration", "Uri")))
                {
                    AutoRegisterTemplate = true,
                })
@@ -45,9 +45,12 @@ namespace CMA.ISMAI.Trello.API
             services.AddControllers();
             InitializeDependecyInjection(services);
 
-            //services.AddHealthChecks().AddRabbitMQ(SettingsReader.ReturnKey("RabbitMq", "Uri"), null, "RabbitMQ")
-            //.AddCheck<CamundaHealthCheck>("Camunda BPM").AddCheck<TrelloHealthCheck>("Trello");
-            //services.AddHealthChecksUI();
+            if (!_currentEnvironment.IsDevelopment())
+            {
+                services.AddHealthChecks().AddRabbitMQ(BaseConfiguration.ReturnSettingsValue("RabbitMq", "Uri"), null, "RabbitMQ")
+                .AddCheck<CamundaHealthCheck>("Camunda BPM").AddCheck<TrelloHealthCheck>("Trello");
+                services.AddHealthChecksUI();
+            }
         }
 
         private void InitializeDependecyInjection(IServiceCollection services)
@@ -80,17 +83,19 @@ namespace CMA.ISMAI.Trello.API
 
             loggerFactory.AddSerilog();
 
-            //app.UseHealthChecks("/hc", new HealthCheckOptions()
-            //{
-            //    Predicate = _ => true,
-            //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            //});
+            if (!_currentEnvironment.IsDevelopment())
+            {
+                app.UseHealthChecks("/hc", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
 
-            //app.UseHealthChecksUI(delegate (Options options)
-            //{
-            //    options.UIPath = "/hc-ui";
-            //});
-
+                app.UseHealthChecksUI(delegate (Options options)
+                {
+                    options.UIPath = "/hc-ui";
+                });
+            }
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

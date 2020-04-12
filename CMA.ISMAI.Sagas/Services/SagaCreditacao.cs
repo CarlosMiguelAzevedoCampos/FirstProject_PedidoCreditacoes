@@ -1,8 +1,6 @@
 ﻿using CamundaClient.Dto;
 using CMA.ISMAI.Core.Notifications;
-using CMA.ISMAI.Engine.Automation.Sagas;
 using CMA.ISMAI.Logging.Interface;
-using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
 using CMA.ISMAI.Sagas.Services.Base;
 using CMA.ISMAI.Sagas.Services.Interface;
 using System;
