@@ -13,8 +13,8 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Models
         [Required]
         [Display(Name = "Nome do Curso")]
         public string CourseName { get; set; }
-        [Display(Name = "Creditação para CET?")]
-        public bool IsCet { get; set; }
+        [Display(Name = "Creditação obtida em CET, experiência Profissional ou outra Formação?")]
+        public bool IsCetOrOtherCondition { get; set; }
         [Required]
         [Display(Name = "Links com documentação necessária.")]
         public string Documents { get; set; }

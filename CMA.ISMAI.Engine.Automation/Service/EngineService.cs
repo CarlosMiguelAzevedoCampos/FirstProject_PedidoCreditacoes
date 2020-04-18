@@ -25,11 +25,11 @@ namespace CMA.ISMAI.Trello.Engine.Automation
             return BaseConfiguration.ReturnSettingsValue("Camunda", "Uri");
         }
        
-        public string StartWorkFlow(string newCardId, string courseName, string studentName, string courseInstitute, bool isCet)
+        public string StartWorkFlow(string newCardId, string courseName, string studentName, string courseInstitute, bool IsCetOrOtherCondition)
         {
             try
             {
-                Dictionary<string, object> parameters = CreateParameters(newCardId, courseName, studentName, courseInstitute, isCet);
+                Dictionary<string, object> parameters = CreateParameters(newCardId, courseName, studentName, courseInstitute, IsCetOrOtherCondition);
 
                 FileParameter file = FileParameter.FromManifestResource(Assembly.GetExecutingAssembly(), filePath);
                 _log.Info(string.Format("{0} process workflow will be deployed to the workflow platform", "CreditacaoISMAI"));
@@ -47,14 +47,14 @@ namespace CMA.ISMAI.Trello.Engine.Automation
             return string.Empty;
         }
 
-        private static Dictionary<string, object> CreateParameters(string newCardId, string courseName, string studentName, string courseInstitute, bool isCet)
+        private static Dictionary<string, object> CreateParameters(string newCardId, string courseName, string studentName, string courseInstitute, bool IsCetOrOtherCondition)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("cardId", newCardId);
             parameters.Add("courseName", courseName);
             parameters.Add("studentName", studentName);
             parameters.Add("courseInstitute", courseInstitute);
-            parameters.Add("cet", isCet);
+            parameters.Add("cet", IsCetOrOtherCondition);
             return parameters;
         }
 

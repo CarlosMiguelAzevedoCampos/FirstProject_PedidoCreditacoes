@@ -15,6 +15,6 @@ namespace CMA.ISMAI.Trello.Domain.Commands
         public string StudentName { get; set; }
         public string InstituteName { get; set; }
         public string CourseName { get; set; }
-        public bool IsCet { get; set; }
+        public bool IsCetOrOtherCondition { get; set; }
     }
 }

@@ -1,14 +1,11 @@
 ﻿using CMA.ISMAI.Core;
-using CMA.ISMAI.Engine.Automation.Sagas;
-using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
-using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
-using CMA.ISMAI.Sagas.Creditacoes;
-using CMA.ISMAI.Sagas.Services;
-using CMA.ISMAI.Sagas.Services.Base;
-using CMA.ISMAI.Sagas.Services.Interface;
-using CMA.ISMAI.Sagas.Services.Service;
+using CMA.ISMAI.Sagas.Domain;
+using CMA.ISMAI.Sagas.Domain.Interface;
+using CMA.ISMAI.Sagas.Domain.Service;
+using CMA.ISMAI.Sagas.Service;
+using CMA.ISMAI.Sagas.Service.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -44,11 +41,14 @@ namespace CMA.ISMAI.Sagas
 
             services.AddLogging();
             services.AddScoped<ILog, LoggingService>();
-            services.AddScoped<ICreditacaoService, CreditacaoService>();
+            services.AddScoped<ICreditacaoDomain, CreditacaoDomain>();
             services.AddScoped<ISagaService, SagaService>();
             services.AddScoped<IHttpRequest, HttpRequest>();
-            services.AddScoped<ISagaCreditacoesWorker, SagaCreditacao>();
-            services.AddScoped<ICreditacoesNotification, CreditacoesNotification>();
+            services.AddScoped<ISagaDomain, SagaDomain>();
+            services.AddScoped<ICreditacaoWithCardCreationDomain, CreditacaoWithCardCreationDomain>();
+            services.AddScoped<ICreditacaoWithNoCardCreationDomain, CreditacaoWithNoCardCreation>();
+            services.AddScoped<ICreditacaoFinalStepDomain, CreditacaoFinalStepDomain>();
+            services.AddScoped<ISagaNotification, SagaNotificationService>();
             services.AddTransient<ConsoleApplication>();
             return services;
         }

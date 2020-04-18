@@ -1,5 +1,5 @@
 ﻿using CMA.ISMAI.Logging.Interface;
-using CMA.ISMAI.Sagas.Services.Base;
+using CMA.ISMAI.Sagas.Domain.Interface;
 using System;
 using System.Threading;
 
@@ -8,9 +8,9 @@ namespace CMA.ISMAI.Sagas
     public class ConsoleApplication
     {
         private readonly ILog _log;
-        private readonly ISagaCreditacoesWorker _sagaCreditacoesWorker;
+        private readonly ISagaDomain _sagaCreditacoesWorker;
 
-        public ConsoleApplication(ILog log, ISagaCreditacoesWorker sagaCreditacoesWorker)
+        public ConsoleApplication(ILog log, ISagaDomain sagaCreditacoesWorker)
         {
             _log = log;
             _sagaCreditacoesWorker = sagaCreditacoesWorker;

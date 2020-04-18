@@ -1,17 +1,15 @@
 ﻿using CMA.ISMAI.Core;
-using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
 using CMA.ISMAI.Logging.Interface;
-using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
-using Microsoft.Extensions.Configuration;
+using CMA.ISMAI.Sagas.Service.Interface;
+using CMA.ISMAI.Sagas.Service.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
+namespace CMA.ISMAI.Sagas.Service
 {
     public class HttpRequest : IHttpRequest
     {

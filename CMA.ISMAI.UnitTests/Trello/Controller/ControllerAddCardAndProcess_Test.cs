@@ -34,7 +34,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
         [Theory(DisplayName = "Card should add the card and return Ok Result")]
         [InlineData("ISMAI - Informatica - Carlos Campos", "Informática", 0, "ISMAI", "Informática", "Carlos Campos", true)]
         [InlineData("ISMAI - Informatica - Carlos Campos", "Informática", 0, "ISMAI", "Informática", "Carlos Campos", false)]
-        public void TrelloController_AddCardAndProcess_ShouldReturnOkStatus(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
+        public void TrelloController_AddCardAndProcess_ShouldReturnOkStatus(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool IsCetOrOtherCondition)
         {
             var logMock = new Mock<ILog>();
             var eventMock = new Mock<ICardCommandHandler>();
@@ -42,7 +42,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()));
             TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
 
-            IActionResult result = trelloController.AddCardAndProcess(new CardDto(name, DateTime.Now.AddDays(1), description, boardId, new List<string>(), instituteName, courseName, studentName, isCet));
+            IActionResult result = trelloController.AddCardAndProcess(new CardDto(name, DateTime.Now.AddDays(1), description, boardId, new List<string>(), instituteName, courseName, studentName, IsCetOrOtherCondition));
             var resultCode = result as OkObjectResult;
             Assert.IsType<OkObjectResult>(result);
             Assert.True(resultCode.StatusCode == 200);
@@ -52,7 +52,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
         [Theory(DisplayName = "Card shouldn't be added because it contains domain notifications")]
         [InlineData("ISMAI - Informatica - Carlos Campos", "Informática", -1, "ISMAI", "Informática", "Carlos Campos", true)]
         [InlineData("ISMAI - Informatica - Carlos Campos", "Informática", 0, "", "Informática", "Carlos Campos", false)]
-        public void TrelloController_AddCardAndProcess_ShouldReturnBadStatusBasedDomainExceptions(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
+        public void TrelloController_AddCardAndProcess_ShouldReturnBadStatusBasedDomainExceptions(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool IsCetOrOtherCondition)
         {
             var logMock = new Mock<ILog>();
             var eventMock = new Mock<ICardCommandHandler>();
@@ -61,7 +61,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
             eventMock.Setup(x => x.HandlerProcess(It.IsAny<AddCardCommand>())).Returns(new AddCardFailedEvent(domainNotifications, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()));
             TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
 
-            IActionResult result = trelloController.AddCardAndProcess(new CardDto(name, DateTime.Now.AddDays(1), description, boardId, new List<string>(), instituteName, courseName, studentName, isCet));
+            IActionResult result = trelloController.AddCardAndProcess(new CardDto(name, DateTime.Now.AddDays(1), description, boardId, new List<string>(), instituteName, courseName, studentName, IsCetOrOtherCondition));
             var resultCode = result as BadRequestObjectResult;
             Assert.IsType<BadRequestObjectResult>(result);
             Assert.True(resultCode.StatusCode == 400);

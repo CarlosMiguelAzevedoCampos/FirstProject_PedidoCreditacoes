@@ -1,8 +1,8 @@
 ﻿using CMA.ISMAI.Core.Notifications;
 
-namespace CMA.ISMAI.Sagas.Services.Base
+namespace CMA.ISMAI.Sagas.Service.Interface
 {
-    public interface ICreditacoesNotification
+    public interface ISagaNotification
     {
         void SendNotification(MessageBody notifications);
     }

@@ -2,6 +2,6 @@
 {
     public interface IEngine
     {
-        string StartWorkFlow(string newCardId, string courseName, string studentName, string courseInstitute, bool isCet);
+        string StartWorkFlow(string newCardId, string courseName, string studentName, string courseInstitute, bool IsCetOrOtherCondition);
     }
 }

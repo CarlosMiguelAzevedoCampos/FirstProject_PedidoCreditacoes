@@ -5,7 +5,7 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Models
 {
     public class CardDto
     {
-        public CardDto(string name, DateTime dueTime, string description, int boardId, List<string> filesUrl, string instituteName, string courseName, string studentName, bool isCet)
+        public CardDto(string name, DateTime dueTime, string description, int boardId, List<string> filesUrl, string instituteName, string courseName, string studentName, bool isCetOrOtherCondition)
         {
             Name = name;
             DueTime = dueTime;
@@ -15,7 +15,7 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Models
             CourseName = courseName;
             InstituteName = instituteName;
             StudentName = studentName;
-            IsCet = isCet;
+            IsCetOrOtherCondition = isCetOrOtherCondition;
         }
 
         public string Name { get; set; }
@@ -26,7 +26,7 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Models
         public string StudentName { get; set; }
         public string InstituteName { get; set; }
         public string CourseName { get; set; }
-        public bool IsCet { get; set; }
+        public bool IsCetOrOtherCondition { get; set; }
     }
 
 }

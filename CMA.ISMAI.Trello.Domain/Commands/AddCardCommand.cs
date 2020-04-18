@@ -6,7 +6,7 @@ namespace CMA.ISMAI.Trello.Domain.Commands
 {
     public class AddCardCommand : CardCommand
     {
-        public AddCardCommand(string name, DateTime dueTime, string description, int boardId, List<string> filesUrl, string instituteName, string courseName, string studentName, bool isCet)
+        public AddCardCommand(string name, DateTime dueTime, string description, int boardId, List<string> filesUrl, string instituteName, string courseName, string studentName, bool isCetOrOtherCondition)
         {
             Id = Guid.NewGuid();
             Name = name;
@@ -17,7 +17,7 @@ namespace CMA.ISMAI.Trello.Domain.Commands
             CourseName = courseName;
             InstituteName = instituteName;
             StudentName = studentName;
-            IsCet = isCet;
+            IsCetOrOtherCondition = isCetOrOtherCondition;
         }
 
         public override bool IsValid()

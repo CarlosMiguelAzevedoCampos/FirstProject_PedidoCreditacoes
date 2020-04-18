@@ -23,7 +23,7 @@ namespace CMA.ISMAI.IntegrationTests.Trello
         [InlineData("", "", 7, "ISMAI", "", "", true)]
         [InlineData("ISEP - Engenharia informática", "", 5, "ISMAI", "Informática", "", false)]
         [InlineData("ISEP - Engenharia informática", null, -1, "ISMAI", "Informática", "", false)]
-        public async Task TrelloController_IntegrationTest_AddCard_ShouldFailTheCreation_DueToNullOrEmtpyParameters(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
+        public async Task TrelloController_IntegrationTest_AddCard_ShouldFailTheCreation_DueToNullOrEmtpyParameters(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool IsCetOrOtherCondition)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -32,7 +32,7 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             TestServer testServer = new TestServer(builder);
 
             HttpClient client = testServer.CreateClient();
-            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description, boardId, new List<string>(), instituteName, courseName, studentName, isCet);
+            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description, boardId, new List<string>(), instituteName, courseName, studentName, IsCetOrOtherCondition);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -50,7 +50,7 @@ namespace CMA.ISMAI.IntegrationTests.Trello
         [Theory(DisplayName = "Card shouldn't be added because of bad attachments list")]
         [InlineData("Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", 3, "ISMAI", "Informática", "Carlos Campos", true)]
         [InlineData("Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", 3, "ISMAI", "Informática", "Carlos Campos", false)]
-        public async Task TrelloController_IntegrationTest_AddCard_ShouldFailTheCreation_DueToNullFilesUrl(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
+        public async Task TrelloController_IntegrationTest_AddCard_ShouldFailTheCreation_DueToNullFilesUrl(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool IsCetOrOtherCondition)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -58,7 +58,7 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             TestServer testServer = new TestServer(builder);
             HttpClient client = testServer.CreateClient();
 
-            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description, boardId, null, instituteName, courseName, studentName, isCet);
+            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description, boardId, null, instituteName, courseName, studentName, IsCetOrOtherCondition);
             var json = JsonConvert.SerializeObject(myContent);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
             var response = await client.PostAsync("Trello/AddCard", stringContent);
@@ -75,7 +75,7 @@ namespace CMA.ISMAI.IntegrationTests.Trello
         [Theory(DisplayName = "Card shouldn't be added because of non existing board Id")]
         [InlineData("Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", -1, "ISMAI", "Informática", "Carlos Campos", false)]
         [InlineData("Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", -1, "ISMAI", "Informática", "Carlos Campos", true)]
-        public async Task TrelloController_IntegrationTest_AddCard_ShouldFailBecauseOfNone_ExistingBoardId(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
+        public async Task TrelloController_IntegrationTest_AddCard_ShouldFailBecauseOfNone_ExistingBoardId(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool IsCetOrOtherCondition)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -83,7 +83,7 @@ namespace CMA.ISMAI.IntegrationTests.Trello
 
             TestServer testServer = new TestServer(builder);
             HttpClient client = testServer.CreateClient();
-            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description, boardId, new List<string>() { "https://www.google.pt/?gws_rd=ssl" }, instituteName, courseName, studentName, isCet);
+            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description, boardId, new List<string>() { "https://www.google.pt/?gws_rd=ssl" }, instituteName, courseName, studentName, IsCetOrOtherCondition);
             var json = JsonConvert.SerializeObject(myContent);
 
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
@@ -101,7 +101,7 @@ namespace CMA.ISMAI.IntegrationTests.Trello
         [Theory(DisplayName = "Card should be created")]
         [InlineData("Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", 3, "ISMAI", "Informática", "Carlos Campos", true)]
         [InlineData("Carlos Miguel Campos - Informática - ISMAI", "Carlos Miguel Campos", 3, "ISMAI", "Informática", "Carlos Campos", false)]
-        public async Task TrelloController_IntegrationTest_AddCard_ShouldCreateANewCard(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
+        public async Task TrelloController_IntegrationTest_AddCard_ShouldCreateANewCard(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool IsCetOrOtherCondition)
         {
             var builder = new WebHostBuilder()
                           .UseEnvironment("Development")
@@ -110,7 +110,7 @@ namespace CMA.ISMAI.IntegrationTests.Trello
             TestServer testServer = new TestServer(builder);
             HttpClient client = testServer.CreateClient();
 
-            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description, boardId, new List<string>() { "https://www.google.pt/?gws_rd=ssl" }, instituteName, courseName, studentName, isCet);
+            var myContent = new CardDto(name, DateTime.Now.AddDays(2), description, boardId, new List<string>() { "https://www.google.pt/?gws_rd=ssl" }, instituteName, courseName, studentName, IsCetOrOtherCondition);
             var json = JsonConvert.SerializeObject(myContent);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
             var response = await client.PostAsync("Trello/AddCard", stringContent);

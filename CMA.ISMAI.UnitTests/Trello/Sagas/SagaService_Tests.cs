@@ -1,15 +1,14 @@
-﻿using CMA.ISMAI.Engine.Automation.Sagas;
-using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
-using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service;
-using CMA.ISMAI.Logging.Interface;
-using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
+﻿using CMA.ISMAI.Logging.Interface;
+using CMA.ISMAI.Sagas.Service;
+using CMA.ISMAI.Sagas.Service.Interface;
+using CMA.ISMAI.Sagas.Service.Model;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
+namespace CMA.ISMAI.UnitTests.Sagas
 {
     public class SagaService_Tests
     {
@@ -80,6 +79,17 @@ namespace CMA.ISMAI.UnitTests.Sagas.ISMAI
             ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
             List<string> result = creditacoesService.GetCardAttachments("12");
             Assert.True(result.Count > 0);
+        }
+
+        [Fact(DisplayName = "Summer break is activated and it's time to delay activities")]
+        [Trait("SagaService", "Summer break condition")]
+        public void CreditacoesService_ISummerBreakActivated_ShouldReturnTheOptionState()
+        {
+            var logMock = new Mock<ILog>();
+            var httprequestMock = new Mock<IHttpRequest>();
+            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            bool result = creditacoesService.IsSummerBreakTime();
+            Assert.True(result);
         }
     }
 }

@@ -1,14 +1,16 @@
 ﻿using CMA.ISMAI.Core.Notifications;
+using CMA.ISMAI.Sagas.Service.Interface;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
 
-namespace CMA.ISMAI.Sagas.Services.Base
+namespace CMA.ISMAI.Sagas.Service
 {
-    public class CreditacoesNotification : ICreditacoesNotification
+    public class SagaNotificationService : ISagaNotification
     {
         public void SendNotification(MessageBody notifications)
         {
+
             var factory = new ConnectionFactory()
             {
                 HostName = "localhost",

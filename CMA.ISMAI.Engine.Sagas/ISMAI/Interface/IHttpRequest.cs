@@ -1,8 +1,8 @@
-﻿using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
+﻿using CMA.ISMAI.Sagas.Service.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface
+namespace CMA.ISMAI.Sagas.Service.Interface
 {
     public interface IHttpRequest
     {

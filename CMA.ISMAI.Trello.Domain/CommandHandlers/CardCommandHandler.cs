@@ -104,14 +104,14 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 return @event;
             }
             string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
-            cardId = DeployProccess(cardId, request.CourseName, request.StudentName, request.InstituteName, request.IsCet);
+            cardId = DeployProccess(cardId, request.CourseName, request.StudentName, request.InstituteName, request.IsCetOrOtherCondition);
             return ReturnEventBasedOnCardId(request, cardId);
         }
 
-        private string DeployProccess(string cardId, string courseName, string studentName, string instituteName, bool isCet)
+        private string DeployProccess(string cardId, string courseName, string studentName, string instituteName, bool IsCetOrOtherCondition)
         {
             Event @event;
-            string proccess = _engine.StartWorkFlow(cardId, courseName, studentName, instituteName, isCet);
+            string proccess = _engine.StartWorkFlow(cardId, courseName, studentName, instituteName, IsCetOrOtherCondition);
             if (string.IsNullOrEmpty(proccess))
             {
                 _log.Fatal("Proccess Engine couldn't start!");

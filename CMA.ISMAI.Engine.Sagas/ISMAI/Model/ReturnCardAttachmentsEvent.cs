@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CMA.ISMAI.Sagas.Engine.ISMAI.Model
+namespace CMA.ISMAI.Sagas.Service.Model
 {
     public class ReturnCardAttachmentsEvent
     {

@@ -22,7 +22,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
         [InlineData("", "Carlos Campos", 1, "ISMAI", "", "Carlos Campos", true)]
         [InlineData("", "", 2, "ISMAI", "Informática", "Carlos Campos", false)]
         [InlineData(null, null, 1, "", "Informática", "Carlos Campos", true)]
-        public void CardCommandHandler_AddCard_ShouldFail_BecauseOfNullOrEmptyParameters(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
+        public void CardCommandHandler_AddCard_ShouldFail_BecauseOfNullOrEmptyParameters(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool IsCetOrOtherCondition)
         {
             var logMock = new Mock<ILog>();
             var trelloMock = new Mock<ITrello>();
@@ -31,7 +31,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var engineEventMock = new Mock<IEngineEventHandler>();
 
             AddCardCommand addCard = new AddCardCommand(name, DateTime.Now, description, boardId, new List<string>(),
-                instituteName, courseName, studentName, isCet);
+                instituteName, courseName, studentName, IsCetOrOtherCondition);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
                 engineMock.Object, engineEventMock.Object);
 
@@ -45,7 +45,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
         [Theory(DisplayName = "New card creation, but should fail because of invalid attachments")]
         [InlineData("ISMAI - Informatica - Carlos Campos", "Informática", 0, "ISMAI", "Informática", "Carlos Campos", true)]
         [InlineData("ISMAI - Informatica - Carlos Campos", "Informática", 0, "ISMAI", "Informática", "Carlos Campos", false)]
-        public void CardCommandHandler_AddCard_ShouldFail_BecauseOfNullUrlAttachments(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
+        public void CardCommandHandler_AddCard_ShouldFail_BecauseOfNullUrlAttachments(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool IsCetOrOtherCondition)
         {
             var logMock = new Mock<ILog>();
             var trelloMock = new Mock<ITrello>();
@@ -55,7 +55,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
 
 
             AddCardCommand addCard = new AddCardCommand(name, DateTime.Now, description, boardId, null,
-               instituteName, courseName, studentName, isCet);
+               instituteName, courseName, studentName, IsCetOrOtherCondition);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
                 engineMock.Object, engineEventMock.Object);
 
@@ -71,7 +71,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
         [InlineData("ISMAI - Informática - Carlos Campos", "Informática", 2, "ISMAI", "Informática", "Carlos Campos", false)]
         [InlineData("ISMAI - Informática - Carlos Campos", "Informática", 3, "ISMAI", "Informática", "Carlos Campos", false)]
 
-        public void CardCommandHandler_AddCard_ShouldReturn_AddCardCompletedEvent(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool isCet)
+        public void CardCommandHandler_AddCard_ShouldReturn_AddCardCompletedEvent(string name, string description, int boardId, string instituteName, string courseName, string studentName, bool IsCetOrOtherCondition)
         {
             var logMock = new Mock<ILog>();
             var trelloMock = new Mock<ITrello>();
@@ -83,7 +83,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
                 .Returns(Task.FromResult(Guid.NewGuid().ToString()));
 
             AddCardCommand addCard = new AddCardCommand(name, DateTime.Now.AddDays(20), description, boardId, new List<string>(),
-               instituteName, courseName, studentName, isCet);
+               instituteName, courseName, studentName, IsCetOrOtherCondition);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
                 engineMock.Object, engineEventMock.Object);
 

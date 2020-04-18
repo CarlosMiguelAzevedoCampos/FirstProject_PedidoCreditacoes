@@ -1,10 +1,11 @@
-﻿using CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Interface;
+﻿using CMA.ISMAI.Core;
 using CMA.ISMAI.Logging.Interface;
-using CMA.ISMAI.Sagas.Engine.ISMAI.Model;
+using CMA.ISMAI.Sagas.Service.Interface;
+using CMA.ISMAI.Sagas.Service.Model;
 using System;
 using System.Collections.Generic;
 
-namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
+namespace CMA.ISMAI.Sagas.Service
 {
     public class SagaService : ISagaService
     {
@@ -30,6 +31,19 @@ namespace CMA.ISMAI.Engine.Automation.Sagas.ISMAI.Service
             bool getCardState = _httpRequest.CardStateAsync(cardId).Result;
             _log.Info($"CoordenatorExcelAction for card Id {cardId} - the result was {getCardState.ToString()}");
             return getCardState;
+        }
+
+        public bool IsSummerBreakTime()
+        {
+            try
+            {
+                return Convert.ToBoolean(BaseConfiguration.ReturnSettingsValue("SummerDealy", "Activate-delay"));
+            }
+            catch (Exception ex)
+            {
+                _log.Fatal(ex.ToString());
+            }
+            return false;
         }
 
         public string PostNewCard(CardDto card)

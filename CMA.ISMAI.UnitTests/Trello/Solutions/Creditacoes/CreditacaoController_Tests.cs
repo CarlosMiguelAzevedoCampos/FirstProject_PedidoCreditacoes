@@ -28,7 +28,7 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             {
                 TempData = tempData
             };
-            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
+            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCetOrOtherCondition = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             IActionResult action = creditacaoController.Create(creditacaoDto);
 
             string result = tempData["Process_status"].ToString();
@@ -50,7 +50,7 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             {
                 TempData = tempData
             };
-            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
+            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCetOrOtherCondition = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             IActionResult action = creditacaoController.Create(creditacaoDto);
 
             string result = tempData["Process_status"].ToString(); 
@@ -75,7 +75,7 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
                 
             };
             creditacaoController.ModelState.AddModelError("Invalid Request", "Invalid request");
-            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
+            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCetOrOtherCondition = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             IActionResult action = creditacaoController.Create(creditacaoDto);
 
             string result = tempData["Process_status"].ToString();

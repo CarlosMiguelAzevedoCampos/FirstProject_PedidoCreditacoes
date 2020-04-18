@@ -1,4 +1,4 @@
-﻿namespace CMA.ISMAI.Sagas.Engine.ISMAI.Model
+﻿namespace CMA.ISMAI.Sagas.Service.Model
 {
     internal class Response<T> where T : class
     {

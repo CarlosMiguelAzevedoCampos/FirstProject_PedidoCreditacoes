@@ -21,7 +21,7 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             httpMock.Setup(x => x.PostNewCardAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(true));
 
             ITrelloService trelloService = new TrelloService(httpMock.Object, logMock.Object);
-            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
+            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCetOrOtherCondition = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             bool value = trelloService.CreateTrelloCard(creditacaoDto);
             Assert.True(value);
         }
@@ -35,7 +35,7 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             httpMock.Setup(x => x.PostNewCardAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(false));
 
             ITrelloService trelloService = new TrelloService(httpMock.Object, logMock.Object);
-            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCet = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
+            var creditacaoDto = new CreditacaoDto() { CourseName = "Informática", IsCetOrOtherCondition = false, Documents = "", InstituteName = "ISMAI", StudentName = "Carlos Campos" };
             bool value = trelloService.CreateTrelloCard(creditacaoDto);
             Assert.False(value);
         }
