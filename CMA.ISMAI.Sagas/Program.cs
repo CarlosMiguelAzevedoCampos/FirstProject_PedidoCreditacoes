@@ -41,13 +41,13 @@ namespace CMA.ISMAI.Sagas
 
             services.AddLogging();
             services.AddScoped<ILog, LoggingService>();
-            services.AddScoped<ICreditacaoDomain, CreditacaoDomain>();
+            services.AddScoped<ICreditacaoDomainService, CreditacaoDomainService>();
             services.AddScoped<ISagaService, SagaService>();
             services.AddScoped<IHttpRequest, HttpRequest>();
-            services.AddScoped<ISagaDomain, SagaDomain>();
-            services.AddScoped<ICreditacaoWithCardCreationDomain, CreditacaoWithCardCreationDomain>();
-            services.AddScoped<ICreditacaoWithNoCardCreationDomain, CreditacaoWithNoCardCreation>();
-            services.AddScoped<ICreditacaoFinalStepDomain, CreditacaoFinalStepDomain>();
+            services.AddScoped<ISagaDomainService, SagaDomainService>();
+            services.AddScoped<ICreditacaoWithCardCreationDomainService, CreditacaoWithCardCreationDomainService>();
+            services.AddScoped<ICreditacaoWithNoCardCreationDomainService, CreditacaoWithNoCardCreationService>();
+            services.AddScoped<ICreditacaoFinalStepDomainService, CreditacaoFinalStepDomainService>();
             services.AddScoped<ISagaNotification, SagaNotificationService>();
             services.AddTransient<ConsoleApplication>();
             return services;

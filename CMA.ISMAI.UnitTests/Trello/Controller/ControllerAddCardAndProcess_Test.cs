@@ -38,7 +38,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
         {
             var logMock = new Mock<ILog>();
             var eventMock = new Mock<ICardCommandHandler>();
-            eventMock.Setup(x => x.HandlerProcess(It.IsAny<AddCardCommand>())).Returns(new AddCardCompletedEvent(It.IsAny<string>(),
+            eventMock.Setup(x => x.Handler(It.IsAny<AddCardCommandAndProcess>())).Returns(new AddCardCompletedEvent(It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()));
             TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
 
@@ -58,7 +58,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Controller
             var eventMock = new Mock<ICardCommandHandler>();
             List<DomainNotification> domainNotifications = new List<DomainNotification>();
 
-            eventMock.Setup(x => x.HandlerProcess(It.IsAny<AddCardCommand>())).Returns(new AddCardFailedEvent(domainNotifications, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()));
+            eventMock.Setup(x => x.Handler(It.IsAny<AddCardCommandAndProcess>())).Returns(new AddCardFailedEvent(domainNotifications, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()));
             TrelloController trelloController = new TrelloController(logMock.Object, eventMock.Object);
 
             IActionResult result = trelloController.AddCardAndProcess(new CardDto(name, DateTime.Now.AddDays(1), description, boardId, new List<string>(), instituteName, courseName, studentName, IsCetOrOtherCondition));

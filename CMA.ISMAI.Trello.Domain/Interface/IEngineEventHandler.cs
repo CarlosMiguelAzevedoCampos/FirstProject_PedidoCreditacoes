@@ -5,7 +5,7 @@ namespace CMA.ISMAI.Trello.Domain.Interface
 {
     public interface IEngineEventHandler
     {
-        Task Handler(WorkFlowStartFailedEvent request);
-        Task Handler(WorkFlowStartCompletedEvent request);
+        void Handler(WorkFlowStartFailedEvent request);
+        void Handler(WorkFlowStartCompletedEvent request);
     }
 }

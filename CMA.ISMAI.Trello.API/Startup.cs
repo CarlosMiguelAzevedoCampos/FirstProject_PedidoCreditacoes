@@ -11,6 +11,8 @@ using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Automation;
 using CMA.ISMAI.Trello.Engine.Interface;
 using CMA.ISMAI.Trello.Engine.Service;
+using CMA.ISMAI.Trello.MessageBroker.Interface;
+using CMA.ISMAI.Trello.MessageBroker.Service;
 using HealthChecks.UI.Client;
 using HealthChecks.UI.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -60,6 +62,7 @@ namespace CMA.ISMAI.Trello.API
             services.AddScoped<IEngine, EngineService>();
             services.AddScoped<IHttpRequest, HttpRequest>();
             services.AddScoped<IEventStore, StoreEvent>();
+            services.AddScoped<ISendNotificationService, SendNotificationService>();
             // Domain - Commands
             services.AddScoped<ICardCommandHandler, CardCommandHandler>();
             // Domain - Events

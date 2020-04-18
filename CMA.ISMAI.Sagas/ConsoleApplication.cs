@@ -8,9 +8,9 @@ namespace CMA.ISMAI.Sagas
     public class ConsoleApplication
     {
         private readonly ILog _log;
-        private readonly ISagaDomain _sagaCreditacoesWorker;
+        private readonly ISagaDomainService _sagaCreditacoesWorker;
 
-        public ConsoleApplication(ILog log, ISagaDomain sagaCreditacoesWorker)
+        public ConsoleApplication(ILog log, ISagaDomainService sagaCreditacoesWorker)
         {
             _log = log;
             _sagaCreditacoesWorker = sagaCreditacoesWorker;

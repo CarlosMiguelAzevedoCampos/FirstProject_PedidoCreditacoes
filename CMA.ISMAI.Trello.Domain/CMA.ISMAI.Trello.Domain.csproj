@@ -8,6 +8,7 @@
     <ProjectReference Include="..\CMA.ISMAI.Core\CMA.ISMAI.Core.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Engine.Automation\CMA.ISMAI.Trello.Engine.Automation.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.Engine\CMA.ISMAI.Trello.Engine.csproj" />
+    <ProjectReference Include="..\CMA.ISMAI.Trello.MessageBroker\CMA.ISMAI.Trello.MessageBroker.csproj" />
   </ItemGroup>
 
 </Project>

@@ -45,7 +45,7 @@ namespace CMA.ISMAI.Trello.API.Controllers
                 return BadRequest();
             }
 
-            Event @event = _cardHandler.HandlerProcess(Map.ConvertToAddCardCommand(card));
+            Event @event = _cardHandler.Handler(Map.ConvertToAddCardCommandAndProcess(card));
             if (@event is AddCardCompletedEvent)
                 return Response(true, @event as AddCardCompletedEvent);
             return Response(false, @event as AddCardFailedEvent);
@@ -86,7 +86,21 @@ namespace CMA.ISMAI.Trello.API.Controllers
                 return Response(true, @event as ReturnCardAttachmentsEvent);
             else
                 return Response(false, @event as UnableToFindCardAttachmentsEvent);
+        }
 
+        [HttpDelete]
+        [Route("DeleteCard")]
+        public IActionResult DeleteCard(string cardId)
+        {
+            if (string.IsNullOrEmpty(cardId))
+            {
+                _logger.Fatal("Card ID is null or empty!");
+                return BadRequest();
+            }
+            Event @event = _cardHandler.Handler(Map.ConvertToDeleteCardCommand(cardId));
+            if (@event is CardHasBeenDeletedEvent)
+                return Response(true, @event as CardHasBeenDeletedEvent);
+            return Response(false, @event as CardHasNotBeenDeletedEvent);
         }
     }
 }

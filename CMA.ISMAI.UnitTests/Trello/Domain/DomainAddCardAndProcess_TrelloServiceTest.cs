@@ -30,12 +30,12 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
 
-            AddCardCommand addCard = new AddCardCommand(name, DateTime.Now, description, boardId, new List<string>(),
+            AddCardCommandAndProcess addCard = new AddCardCommandAndProcess(name, DateTime.Now, description, boardId, new List<string>(),
                 instituteName, courseName, studentName, IsCetOrOtherCondition);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
                 engineMock.Object, engineEventMock.Object);
 
-            Event result = cardCommandHandler.HandlerProcess(addCard);
+            Event result = cardCommandHandler.Handler(addCard);
             cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardFailedEvent>()), Times.Once);
             Assert.True(result is AddCardFailedEvent);
         }
@@ -53,12 +53,12 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
 
-            AddCardCommand addCard = new AddCardCommand(name, DateTime.Now, description, boardId, null,
+            AddCardCommandAndProcess addCard = new AddCardCommandAndProcess(name, DateTime.Now, description, boardId, null,
                instituteName, courseName, studentName, IsCetOrOtherCondition);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
                 engineMock.Object, engineEventMock.Object);
 
-            Event result = cardCommandHandler.HandlerProcess(addCard);
+            Event result = cardCommandHandler.Handler(addCard);
             cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardFailedEvent>()), Times.Once);
             Assert.True(result is AddCardFailedEvent);
         }
@@ -84,13 +84,13 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<bool>())).Returns(string.Empty);
 
-            AddCardCommand addCard = new AddCardCommand(name, DateTime.Now.AddDays(20), description, boardId, new List<string>(),
+            AddCardCommandAndProcess addCard = new AddCardCommandAndProcess(name, DateTime.Now.AddDays(20), description, boardId, new List<string>(),
                instituteName, courseName, studentName, IsCetOrOtherCondition);
 
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
                 engineMock.Object, engineEventMock.Object);
 
-            Event result = cardCommandHandler.HandlerProcess(addCard);
+            Event result = cardCommandHandler.Handler(addCard);
             trelloMock.Verify(x => x.DeleteCard(It.IsAny<string>()), Times.Once);
             engineEventMock.Verify(x => x.Handler(It.IsAny<WorkFlowStartFailedEvent>()), Times.Once);
             cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardFailedEvent>()), Times.Once);
@@ -120,13 +120,13 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             engineMock.Setup(x => x.StartWorkFlow(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<bool>())).Returns(Guid.NewGuid().ToString());
 
-            AddCardCommand addCard = new AddCardCommand(name, DateTime.Now.AddDays(20), description, boardId, new List<string>(),
+            AddCardCommandAndProcess addCard = new AddCardCommandAndProcess(name, DateTime.Now.AddDays(20), description, boardId, new List<string>(),
                instituteName, courseName, studentName, IsCetOrOtherCondition);
 
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
                 engineMock.Object, engineEventMock.Object);
 
-            Event result = cardCommandHandler.HandlerProcess(addCard);
+            Event result = cardCommandHandler.Handler(addCard);
             engineEventMock.Verify(x => x.Handler(It.IsAny<WorkFlowStartCompletedEvent>()), Times.Once);
             cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardCompletedEvent>()), Times.Once);
             Assert.True(result is AddCardCompletedEvent);

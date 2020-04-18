@@ -91,5 +91,29 @@ namespace CMA.ISMAI.UnitTests.Sagas
             bool result = creditacoesService.IsSummerBreakTime();
             Assert.True(result);
         }
+
+        [Fact(DisplayName = "Delete Card. Should Fail.")]
+        [Trait("SagaService", "Delete Card")]
+        public void CreditacoesService_DeleteCCard_ShouldFailToDeleteTheCard()
+        {
+            var logMock = new Mock<ILog>();
+            var httprequestMock = new Mock<IHttpRequest>();
+            httprequestMock.Setup(x => x.DeleteCard(It.IsAny<string>())).Returns(Task.FromResult(false));
+            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            bool result = creditacoesService.DeleteCard(Guid.NewGuid().ToString());
+            Assert.False(result);
+        }
+
+        [Fact(DisplayName = "Delete Card. Should Pass.")]
+        [Trait("SagaService", "Delete Card")]
+        public void CreditacoesService_DeleteCard_ShouldDeleteTheCard()
+        {
+            var logMock = new Mock<ILog>();
+            var httprequestMock = new Mock<IHttpRequest>();
+            httprequestMock.Setup(x => x.DeleteCard(It.IsAny<string>())).Returns(Task.FromResult(true));
+            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            bool result = creditacoesService.DeleteCard(Guid.NewGuid().ToString());
+            Assert.True(result);
+        }
     }
 }

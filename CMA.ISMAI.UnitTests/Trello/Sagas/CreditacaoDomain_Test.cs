@@ -24,8 +24,8 @@ namespace CMA.ISMAI.UnitTests.Sagas
             sagaMock.Setup(x => x.PostNewCard(It.IsAny<CardDto>())).Returns(Guid.NewGuid().ToString());
             sagaMock.Setup(x => x.GetCardState(It.IsAny<string>())).Returns(true);
 
-            CreditacaoDomain creditacaoDomain = new CreditacaoDomain(sagaMock.Object);
-            string value = creditacaoDomain.CreditacaoWithNewCardCreation(cardId, courseName, studentName, courseInstitute, DateTime.Now.AddDays(2), IsCetOrOtherCondition, boardId);
+            CreditacaoDomainService creditacaoDomain = new CreditacaoDomainService(sagaMock.Object);
+            string value = creditacaoDomain.CreateNewCard(cardId, courseName, studentName, courseInstitute, DateTime.Now.AddDays(2), IsCetOrOtherCondition, boardId);
             Assert.NotEmpty(value);
         }
 
@@ -42,8 +42,8 @@ namespace CMA.ISMAI.UnitTests.Sagas
             sagaMock.Setup(x => x.PostNewCard(It.IsAny<CardDto>())).Returns(string.Empty);
             sagaMock.Setup(x => x.GetCardState(It.IsAny<string>())).Returns(false);
 
-            CreditacaoDomain creditacaoDomain = new CreditacaoDomain(sagaMock.Object);
-            string value = creditacaoDomain.CreditacaoWithNewCardCreation(cardId, courseName, studentName, courseInstitute, DateTime.Now.AddDays(2), IsCetOrOtherCondition, boardId);
+            CreditacaoDomainService creditacaoDomain = new CreditacaoDomainService(sagaMock.Object);
+            string value = creditacaoDomain.CreateNewCard(cardId, courseName, studentName, courseInstitute, DateTime.Now.AddDays(2), IsCetOrOtherCondition, boardId);
             Assert.Empty(value);
         }
 
@@ -55,7 +55,7 @@ namespace CMA.ISMAI.UnitTests.Sagas
             var sagaMock = new Mock<ISagaService>();
 
             sagaMock.Setup(x => x.GetCardState(It.IsAny<string>())).Returns(false);
-            CreditacaoDomain creditacaoDomain = new CreditacaoDomain(sagaMock.Object);
+            CreditacaoDomainService creditacaoDomain = new CreditacaoDomainService(sagaMock.Object);
             bool value = creditacaoDomain.GetCardStatus("jffh8ywnnnojsob");
 
             Assert.False(value);
@@ -69,7 +69,7 @@ namespace CMA.ISMAI.UnitTests.Sagas
             var sagaMock = new Mock<ISagaService>();
 
             sagaMock.Setup(x => x.GetCardState(It.IsAny<string>())).Returns(true);
-            CreditacaoDomain creditacaoDomain = new CreditacaoDomain(sagaMock.Object);
+            CreditacaoDomainService creditacaoDomain = new CreditacaoDomainService(sagaMock.Object);
             bool value = creditacaoDomain.GetCardStatus("jffh8ywnnnojsob");
 
             Assert.True(value);
@@ -79,25 +79,44 @@ namespace CMA.ISMAI.UnitTests.Sagas
         [Trait("SagaService", "Summer break condition")]
         public void CreditacoesService_ISummerBreakActivated_ShouldReturnTheOptionState()
         {
-
-            var logMock = new Mock<ILog>();
             var sagaMock = new Mock<ISagaService>();
             sagaMock.Setup(x => x.IsSummerBreakTime()).Returns(true);
-            CreditacaoDomain creditacaoDomain = new CreditacaoDomain(sagaMock.Object);
+            CreditacaoDomainService creditacaoDomain = new CreditacaoDomainService(sagaMock.Object);
             bool result = creditacaoDomain.IsSummerBreakTime(8);
             Assert.True(result);
         }
 
         [Fact(DisplayName = "Summer break is activated and it's July. No delay will be activated")]
-        [Trait("SagaService", "Summer break condition")]
+        [Trait("Creditação Service", "Summer break condition")]
         public void CreditacoesService_IsTimeForSummerBreak_ShouldReturnFalse()
         {
-            var logMock = new Mock<ILog>();
             var sagaMock = new Mock<ISagaService>();
             sagaMock.Setup(x => x.IsSummerBreakTime()).Returns(true);
-            CreditacaoDomain creditacaoDomain = new CreditacaoDomain(sagaMock.Object);
+            CreditacaoDomainService creditacaoDomain = new CreditacaoDomainService(sagaMock.Object);
             bool result = creditacaoDomain.IsSummerBreakTime(7);
             Assert.False(result);
+        }
+
+        [Fact(DisplayName = "Delete Card. Should Fail.")]
+        [Trait("Creditação Service", "Delete Card")]
+        public void CreditacoesService_DeleteCCard_ShouldFailToDeleteTheCard()
+        {
+            var sagaMock = new Mock<ISagaService>();
+            sagaMock.Setup(x => x.DeleteCard(It.IsAny<string>())).Returns(false);
+            CreditacaoDomainService creditacoesService = new CreditacaoDomainService(sagaMock.Object);
+            bool result = creditacoesService.DeleteCard(Guid.NewGuid().ToString());
+            Assert.False(result);
+        }
+
+        [Fact(DisplayName = "Delete Card. Should Pass.")]
+        [Trait("Creditação Service", "Delete Card")]
+        public void CreditacoesService_DeleteCard_ShouldDeleteTheCard()
+        {
+            var sagaMock = new Mock<ISagaService>();
+            sagaMock.Setup(x => x.DeleteCard(It.IsAny<string>())).Returns(true);
+            CreditacaoDomainService creditacoesService = new CreditacaoDomainService(sagaMock.Object);
+            bool result = creditacoesService.DeleteCard(Guid.NewGuid().ToString());
+            Assert.True(result);
         }
     }
 }

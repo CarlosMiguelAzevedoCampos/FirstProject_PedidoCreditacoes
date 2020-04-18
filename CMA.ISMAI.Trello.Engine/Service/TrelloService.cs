@@ -73,17 +73,6 @@ namespace CMA.ISMAI.Trello.Engine.Service
                     return string.Empty;
             }
         }
-
-        private string GetAppKey() => BaseConfiguration.ReturnSettingsValue("TrelloKey", "AppKey");
-
-        private string GetUserToken() => BaseConfiguration.ReturnSettingsValue("TrelloKey", "UserToken");
-        private string GetCoordinatorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Course_coordinator");
-        private string GetDepartmentDirectorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Department_director");
-        private string GetScientificCouncilBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Scientific_council");
-        private string GetTestingBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Testing_board");
-
-
-
         public async Task<int> IsTheProcessFinished(string cardId)
         {
             try
@@ -139,5 +128,12 @@ namespace CMA.ISMAI.Trello.Engine.Service
             }
             return false;
         }
+
+        private string GetAppKey() => BaseConfiguration.ReturnSettingsValue("TrelloKey", "AppKey");
+        private string GetUserToken() => BaseConfiguration.ReturnSettingsValue("TrelloKey", "UserToken");
+        private string GetCoordinatorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Course_coordinator");
+        private string GetDepartmentDirectorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Department_director");
+        private string GetScientificCouncilBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Scientific_council");
+        private string GetTestingBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Testing_board");
     }
 }

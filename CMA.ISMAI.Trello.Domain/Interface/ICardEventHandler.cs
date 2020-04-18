@@ -5,10 +5,15 @@ namespace CMA.ISMAI.Trello.Domain.Interface
 {
     public interface ICardEventHandler
     {
-        Task Handler(AddCardCompletedEvent request);
-        Task Handler(AddCardFailedEvent request);
-        Task Handler(CardStatusCompletedEvent request);
-        Task Handler(CardStatusIncompletedEvent request);
-        Task Handler(CardStatusUnableToFindEvent request);
+        void Handler(AddCardCompletedEvent request);
+        void Handler(AddCardFailedEvent request);
+        void Handler(CardStatusCompletedEvent request);
+        void Handler(CardStatusIncompletedEvent request);
+        void Handler(CardStatusUnableToFindEvent request);
+        void Handler(CardHasNotBeenDeletedEvent request);
+        void Handler(CardHasBeenDeletedEvent request);
+        void Handler(CardDosentHaveAttchmentsEvent request);
+        void Handler(ReturnCardAttachmentsEvent request);
+        void Handler(UnableToFindCardAttachmentsEvent request);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CMA.ISMAI.IntegrationTests.Trello.Model;
 using CMA.ISMAI.Trello.API;
 using CMA.ISMAI.Trello.API.Model;
+using CMA.ISMAI.Trello.Domain.Events;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;

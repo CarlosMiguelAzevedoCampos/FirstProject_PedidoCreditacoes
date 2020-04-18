@@ -1,6 +1,6 @@
 ﻿using CMA.ISMAI.Core;
-using CMA.ISMAI.Core.Notifications;
 using CMA.ISMAI.Logging.Interface;
+using CMA.ISMAI.Notifications.Model;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;

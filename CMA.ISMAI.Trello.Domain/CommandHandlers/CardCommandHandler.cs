@@ -43,6 +43,38 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             return ReturnEventBasedOnCardId(request, cardId);
         }
 
+        public Event Handler(AddCardCommandAndProcess request)
+        {
+            Event @event;
+            if (!request.IsValid())
+            {
+                _log.Fatal("A invalid card was been submited in the Domain");
+                @event = new AddCardFailedEvent(NotifyValidationErrors(request), "", request.Name, request.Description, request.DueTime);
+                _cardEventHandler.Handler(@event as AddCardFailedEvent);
+                return @event;
+            }
+            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
+            cardId = DeployProcess(cardId, request.CourseName, request.StudentName, request.InstituteName, request.IsCetOrOtherCondition);
+            return ReturnEventBasedOnCardId(request, cardId);
+        }
+
+        private string DeployProcess(string cardId, string courseName, string studentName, string instituteName, bool IsCetOrOtherCondition)
+        {
+            Event @event;
+            string proccess = _engine.StartWorkFlow(cardId, courseName, studentName, instituteName, IsCetOrOtherCondition);
+            if (string.IsNullOrEmpty(proccess))
+            {
+                _log.Fatal("Proccess Engine couldn't start!");
+                @event = new WorkFlowStartFailedEvent("The process engine couldn't start!");
+                _workFlowEventHandler.Handler(@event as WorkFlowStartFailedEvent);
+                _trello.DeleteCard(cardId);
+                return string.Empty;
+            }
+            @event = new WorkFlowStartCompletedEvent(proccess, "Creditações");
+            _workFlowEventHandler.Handler(@event as WorkFlowStartCompletedEvent);
+            return cardId;
+        }
+
         private Event ReturnEventBasedOnCardId(AddCardCommand request, string cardId)
         {
             Event @event;
@@ -66,63 +98,54 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             {
                 @event = new CardStatusCompletedEvent(request.Id);
                 _cardEventHandler.Handler(@event as CardStatusCompletedEvent);
-                return @event;
             }
             else if (result == (int)CardStatus.Active)
             {
                 @event = new CardStatusIncompletedEvent(request.Id);
                 _cardEventHandler.Handler(@event as CardStatusIncompletedEvent);
-                return @event;
             }
             else
             {
                 @event = new CardStatusUnableToFindEvent(request.Id);
                 _cardEventHandler.Handler(@event as CardStatusUnableToFindEvent);
-                return @event;
             }
+            return @event;
         }
 
         public Event Handler(GetCardAttachmentsCommand request)
         {
+            Event @event;
             var filesUrl = _trello.ReturnCardAttachmenets(request.CardId).Result;
             if (filesUrl == null)
-                return new UnableToFindCardAttachmentsEvent(request.CardId);
+            {
+                @event = new UnableToFindCardAttachmentsEvent(request.CardId);
+                _cardEventHandler.Handler(@event as UnableToFindCardAttachmentsEvent);
+            }
             else if (filesUrl.Count == 0)
-                return new CardDosentHaveAttchmentsEvent(request.CardId);
+            {
+                @event = new CardDosentHaveAttchmentsEvent(request.CardId);
+                _cardEventHandler.Handler(@event as CardDosentHaveAttchmentsEvent);
+            }
             else
-                return new ReturnCardAttachmentsEvent(request.CardId, filesUrl);
+            {
+                @event = new ReturnCardAttachmentsEvent(request.CardId, filesUrl);
+                _cardEventHandler.Handler(@event as ReturnCardAttachmentsEvent);
+            }
+            return @event;
         }
 
-        public Event HandlerProcess(AddCardCommand request)
+        public Event Handler(DeleteCardCommand request)
         {
             Event @event;
-            if (!request.IsValid())
+            if (_trello.DeleteCard(request.CardId).Result)
             {
-                _log.Fatal("A invalid card was been submited in the Domain");
-                @event = new AddCardFailedEvent(NotifyValidationErrors(request), "", request.Name, request.Description, request.DueTime);
-                _cardEventHandler.Handler(@event as AddCardFailedEvent);
+                @event = new CardHasBeenDeletedEvent(request.CardId);
+                _cardEventHandler.Handler(@event as CardHasBeenDeletedEvent);
                 return @event;
             }
-            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
-            cardId = DeployProccess(cardId, request.CourseName, request.StudentName, request.InstituteName, request.IsCetOrOtherCondition);
-            return ReturnEventBasedOnCardId(request, cardId);
-        }
-
-        private string DeployProccess(string cardId, string courseName, string studentName, string instituteName, bool IsCetOrOtherCondition)
-        {
-            Event @event;
-            string proccess = _engine.StartWorkFlow(cardId, courseName, studentName, instituteName, IsCetOrOtherCondition);
-            if (string.IsNullOrEmpty(proccess))
-            {
-                _log.Fatal("Proccess Engine couldn't start!");
-                @event = new WorkFlowStartFailedEvent("The process engine couldn't start!");
-                _workFlowEventHandler.Handler(@event as WorkFlowStartFailedEvent);
-                _trello.DeleteCard(cardId);
-                return string.Empty;
-            }
-            @event = new WorkFlowStartCompletedEvent(proccess, "Creditações");
-            _workFlowEventHandler.Handler(@event as WorkFlowStartCompletedEvent);
-            return cardId;
+            @event = new CardHasNotBeenDeletedEvent(request.CardId);
+            _cardEventHandler.Handler(@event as CardHasNotBeenDeletedEvent);
+            return @event;
         }
     }
 }
