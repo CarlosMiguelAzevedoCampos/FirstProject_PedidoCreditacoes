@@ -1,5 +1,5 @@
 ﻿using CMA.ISMAI.Logging.Interface;
-using CMA.ISMAI.Sagas.Domain.Service;
+using CMA.ISMAI.Sagas.Domain.Service.Creditacao;
 using CMA.ISMAI.Sagas.Service.Interface;
 using CMA.ISMAI.Sagas.Service.Model;
 using Moq;
@@ -7,9 +7,9 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace CMA.ISMAI.UnitTests.Sagas
+namespace CMA.ISMAI.UnitTests.Sagas.Domain
 {
-    public class CreditacaoDomain_Test
+    public class CreditacaoDomainService_Test
     {
         [Trait("Creditação Service", "Card creation")]
         [Theory(DisplayName ="Get attachmnents from a card and create a new card with the same attachments.")]

@@ -17,61 +17,71 @@ namespace CMA.ISMAI.Trello.Domain.EventHandlers
             _sendNotificationService = sendNotificationService;
         }
 
-        public void Handler(AddCardCompletedEvent notification)
+        public Task Handler(AddCardCompletedEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
-            Task.Run(() => _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card was added with success!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId} - {notification.DueTime} - {notification.Name} - {notification.Description} "));
+            _eventStore.SaveToEventStore(notification);
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card was added with success!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId} - {notification.DueTime} - {notification.Name} - {notification.Description} ");
+            return Task.CompletedTask;
         }
 
-        public void Handler(AddCardFailedEvent notification)
+        public Task Handler(AddCardFailedEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
-            Task.Run(() => _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card adition failed!!, with  {notification.DomainNotifications.Count} errors -  {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId} - {notification.DueTime} - {notification.Name} - {notification.Description} "));
+            _eventStore.SaveToEventStore(notification);
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card adition failed!!, with  {notification.DomainNotifications.Count} errors -  {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId} - {notification.DueTime} - {notification.Name} - {notification.Description} ");
+            return Task.CompletedTask;
         }
 
-        public void Handler(CardStatusCompletedEvent notification)
+        public Task Handler(CardStatusCompletedEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
-            Task.Run(() => _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card was completed with success!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}"));
+            _eventStore.SaveToEventStore(notification);
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card was completed with success!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            return Task.CompletedTask;
         }
 
-        public void Handler(CardStatusIncompletedEvent notification)
+        public Task Handler(CardStatusIncompletedEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
-            Task.Run(() => _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card need's to be completed!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}"));
+            _eventStore.SaveToEventStore(notification);
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card need's to be completed!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            return Task.CompletedTask;
         }
 
-        public void Handler(CardStatusUnableToFindEvent notification)
+        public Task Handler(CardStatusUnableToFindEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
-            Task.Run(() => _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card not found!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}"));
+            _eventStore.SaveToEventStore(notification);
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card not found!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            return Task.CompletedTask;
         }
 
-        public void Handler(CardHasNotBeenDeletedEvent notification)
+        public Task Handler(CardHasNotBeenDeletedEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
-            Task.Run(() => _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card had a probem been deleted!, {notification.CardId} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}"));
+            _eventStore.SaveToEventStore(notification);
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card had a probem been deleted!, {notification.CardId} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            return Task.CompletedTask;
         }
 
-        public void Handler(CardHasBeenDeletedEvent notification)
+        public Task Handler(CardHasBeenDeletedEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
-            Task.Run(() => _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card has been deleted!, {notification.CardId} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}"));
+            _eventStore.SaveToEventStore(notification);
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card has been deleted!, {notification.CardId} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            return Task.CompletedTask;
         }
 
-        public void Handler(CardDosentHaveAttchmentsEvent notification)
+        public Task Handler(CardDosentHaveAttchmentsEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
+            _eventStore.SaveToEventStore(notification);
+            return Task.CompletedTask;
         }
 
-        public void Handler(ReturnCardAttachmentsEvent notification)
+        public Task Handler(ReturnCardAttachmentsEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
+            _eventStore.SaveToEventStore(notification);
+            return Task.CompletedTask;
         }
 
-        public void Handler(UnableToFindCardAttachmentsEvent notification)
+        public Task Handler(UnableToFindCardAttachmentsEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
+            _eventStore.SaveToEventStore(notification);
+            return Task.CompletedTask;
         }
     }
 }

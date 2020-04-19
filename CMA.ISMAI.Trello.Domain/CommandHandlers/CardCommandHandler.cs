@@ -6,7 +6,7 @@ using CMA.ISMAI.Trello.Domain.Events;
 using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Automation;
 using CMA.ISMAI.Trello.Engine.Interface;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Trello.Domain.CommandHandlers
 {
@@ -35,7 +35,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             {
                 _log.Fatal("A invalid card was been submited in the Domain");
                 @event = new AddCardFailedEvent(NotifyValidationErrors(request), "", request.Name, request.Description, request.DueTime);
-                _cardEventHandler.Handler(@event as AddCardFailedEvent);
+                CreateCardEvent(@event as AddCardFailedEvent);
                 return @event;
             }
             string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
@@ -50,7 +50,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             {
                 _log.Fatal("A invalid card was been submited in the Domain");
                 @event = new AddCardFailedEvent(NotifyValidationErrors(request), "", request.Name, request.Description, request.DueTime);
-                _cardEventHandler.Handler(@event as AddCardFailedEvent);
+                CreateCardEvent(@event as AddCardFailedEvent);
                 return @event;
             }
             string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
@@ -66,12 +66,12 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             {
                 _log.Fatal("Proccess Engine couldn't start!");
                 @event = new WorkFlowStartFailedEvent("The process engine couldn't start!");
-                _workFlowEventHandler.Handler(@event as WorkFlowStartFailedEvent);
+                CreateEngineEvent(@event as WorkFlowStartFailedEvent);
                 _trello.DeleteCard(cardId);
                 return string.Empty;
             }
             @event = new WorkFlowStartCompletedEvent(proccess, "Creditações");
-            _workFlowEventHandler.Handler(@event as WorkFlowStartCompletedEvent);
+            CreateEngineEvent(@event as WorkFlowStartCompletedEvent);
             return cardId;
         }
 
@@ -82,11 +82,11 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             {
                 _log.Fatal($"The creation of an card failed! - TimeStamp {request.Timestamp} - AggregateId - {request.AggregateId}");
                 @event = new AddCardFailedEvent(NotifyDomainErrors("CardId", "CardId is null or empty!"), cardId, request.Name, request.Description, request.DueTime);
-                _cardEventHandler.Handler(@event as AddCardFailedEvent);
+                CreateCardEvent(@event as AddCardFailedEvent);
                 return @event;
             }
             @event = new AddCardCompletedEvent(cardId, request.Name, request.Description, request.DueTime);
-            _cardEventHandler.Handler(@event as AddCardCompletedEvent);
+            CreateCardEvent(@event as AddCardCompletedEvent);
             return @event;
         }
 
@@ -97,17 +97,17 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             if (result == (int)CardStatus.Completed)
             {
                 @event = new CardStatusCompletedEvent(request.Id);
-                _cardEventHandler.Handler(@event as CardStatusCompletedEvent);
+                CreateCardEvent(@event as CardStatusCompletedEvent);
             }
             else if (result == (int)CardStatus.Active)
             {
                 @event = new CardStatusIncompletedEvent(request.Id);
-                _cardEventHandler.Handler(@event as CardStatusIncompletedEvent);
+                CreateCardEvent(@event as CardStatusIncompletedEvent);
             }
             else
             {
                 @event = new CardStatusUnableToFindEvent(request.Id);
-                _cardEventHandler.Handler(@event as CardStatusUnableToFindEvent);
+                CreateCardEvent(@event as CardStatusUnableToFindEvent);
             }
             return @event;
         }
@@ -119,17 +119,17 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             if (filesUrl == null)
             {
                 @event = new UnableToFindCardAttachmentsEvent(request.CardId);
-                _cardEventHandler.Handler(@event as UnableToFindCardAttachmentsEvent);
+                CreateCardEvent(@event as UnableToFindCardAttachmentsEvent);
             }
             else if (filesUrl.Count == 0)
             {
                 @event = new CardDosentHaveAttchmentsEvent(request.CardId);
-                _cardEventHandler.Handler(@event as CardDosentHaveAttchmentsEvent);
+                CreateCardEvent(@event as CardDosentHaveAttchmentsEvent);
             }
             else
             {
                 @event = new ReturnCardAttachmentsEvent(request.CardId, filesUrl);
-                _cardEventHandler.Handler(@event as ReturnCardAttachmentsEvent);
+                CreateCardEvent(@event as ReturnCardAttachmentsEvent);
             }
             return @event;
         }
@@ -140,12 +140,22 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
             if (_trello.DeleteCard(request.CardId).Result)
             {
                 @event = new CardHasBeenDeletedEvent(request.CardId);
-                _cardEventHandler.Handler(@event as CardHasBeenDeletedEvent);
+                CreateCardEvent(@event as CardHasBeenDeletedEvent);
                 return @event;
             }
             @event = new CardHasNotBeenDeletedEvent(request.CardId);
-            _cardEventHandler.Handler(@event as CardHasNotBeenDeletedEvent);
+            CreateCardEvent(@event as CardHasNotBeenDeletedEvent);
             return @event;
+        }
+
+        private void CreateCardEvent(dynamic @event)
+        {
+            Task.Run(() => _cardEventHandler.Handler(@event));
+        }
+
+        private void CreateEngineEvent(dynamic @event)
+        {
+            Task.Run(() => _workFlowEventHandler.Handler(@event));
         }
     }
 }

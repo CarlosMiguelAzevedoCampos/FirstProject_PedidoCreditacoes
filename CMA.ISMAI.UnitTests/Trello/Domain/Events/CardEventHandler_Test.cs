@@ -1,19 +1,18 @@
-﻿using CMA.ISMAI.Core.Events.Store.Interface;
-using CMA.ISMAI.Logging.Interface;
+﻿using CMA.ISMAI.Core.Events;
+using CMA.ISMAI.Core.Events.Store.Interface;
+using CMA.ISMAI.Core.Notifications;
 using CMA.ISMAI.Trello.Domain.EventHandlers;
 using CMA.ISMAI.Trello.Domain.Events;
+using CMA.ISMAI.Trello.MessageBroker.Interface;
 using Moq;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
-using System;
-using CMA.ISMAI.Core.Notifications;
-using System.Collections.Generic;
-using CMA.ISMAI.Trello.MessageBroker.Interface;
-using CMA.ISMAI.Core.Events;
 
-namespace CMA.ISMAI.UnitTests.Trello.Domain
+namespace CMA.ISMAI.UnitTests.Trello.Domain.Events
 {
-    public class DomainEventHandler_TrelloServiceTest
+    public class CardEventHandler_Test
     {
         [Trait("CardEventHandler", "Add Card")]
         [Fact(DisplayName = "New card creation should generate this event")]
@@ -23,11 +22,12 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new AddCardCompletedEvent(It.IsAny<string>(), It.IsAny<string>(),
+            Task result =  cardCommandHandler.Handler(new AddCardCompletedEvent(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<DateTime>()));
 
             serviceNotificationMock.Verify(x => x.SendNotificationToBroker(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
 
         [Trait("CardEventHandler", "Add Card")]
@@ -38,11 +38,12 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new AddCardFailedEvent(new List<DomainNotification>(), It.IsAny<string>(), It.IsAny<string>(),
+           Task result = cardCommandHandler.Handler(new AddCardFailedEvent(new List<DomainNotification>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<DateTime>()));
 
             serviceNotificationMock.Verify(x => x.SendNotificationToBroker(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
 
         [Trait("CardEventHandler", "Card Status")]
@@ -53,10 +54,11 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new CardStatusCompletedEvent(It.IsAny<string>()));
+           Task result = cardCommandHandler.Handler(new CardStatusCompletedEvent(It.IsAny<string>()));
 
             serviceNotificationMock.Verify(x => x.SendNotificationToBroker(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
 
         [Trait("CardEventHandler", "Card Status")]
@@ -67,10 +69,11 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new CardStatusIncompletedEvent(It.IsAny<string>()));
+            Task result = cardCommandHandler.Handler(new CardStatusIncompletedEvent(It.IsAny<string>()));
 
             serviceNotificationMock.Verify(x => x.SendNotificationToBroker(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
 
         [Trait("CardEventHandler", "Card Status")]
@@ -81,36 +84,11 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new CardStatusUnableToFindEvent(It.IsAny<string>()));
+           Task result= cardCommandHandler.Handler(new CardStatusUnableToFindEvent(It.IsAny<string>()));
 
             serviceNotificationMock.Verify(x => x.SendNotificationToBroker(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
-        }
-
-        [Trait("CardEventHandler", "Card Status")]
-        [Fact(DisplayName = "Workflow engine fail should generate this event")]
-        public void CardEventHandler_EngineEventHandler_WorkFlowStartFailedEventNotification()
-        {
-            var serviceNotificationMock = new Mock<ISendNotificationService>();
-            var eventStoreMock = new Mock<IEventStore>();
-
-            EngineEventHandler engineEventHandler = new EngineEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            engineEventHandler.Handler(new WorkFlowStartFailedEvent(It.IsAny<string>()));
-
-        }
-
-        [Trait("CardEventHandler", "Card Status")]
-        [Fact(DisplayName = "Workflow engine start should generate this event")]
-        public void CardEventHandler_EngineEventHandler_WorkFlowStartCompletedEventNotification()
-        {
-            var serviceNotificationMock = new Mock<ISendNotificationService>();
-            var eventStoreMock = new Mock<IEventStore>();
-
-            EngineEventHandler engineEventHandler = new EngineEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            engineEventHandler.Handler(new WorkFlowStartCompletedEvent(It.IsAny<string>(), It.IsAny<string>()));
-
-            serviceNotificationMock.Verify(x => x.SendNotificationToBroker(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-            eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
 
         [Trait("CardEventHandler", "Card Status")]
@@ -121,10 +99,11 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new CardHasBeenDeletedEvent(It.IsAny<string>()));
+            Task result =  cardCommandHandler.Handler(new CardHasBeenDeletedEvent(It.IsAny<string>()));
 
             serviceNotificationMock.Verify(x => x.SendNotificationToBroker(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
 
         [Trait("CardEventHandler", "Card Status")]
@@ -135,10 +114,11 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new CardHasNotBeenDeletedEvent(It.IsAny<string>()));
+            Task result = cardCommandHandler.Handler(new CardHasNotBeenDeletedEvent(It.IsAny<string>()));
 
             serviceNotificationMock.Verify(x => x.SendNotificationToBroker(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
 
 
@@ -150,9 +130,10 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new CardDosentHaveAttchmentsEvent(It.IsAny<string>()));
+            Task result = cardCommandHandler.Handler(new CardDosentHaveAttchmentsEvent(It.IsAny<string>()));
 
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
 
 
@@ -164,9 +145,10 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new ReturnCardAttachmentsEvent(It.IsAny<string>(), It.IsAny<List<string>>()));
+            Task result = cardCommandHandler.Handler(new ReturnCardAttachmentsEvent(It.IsAny<string>(), It.IsAny<List<string>>()));
 
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
 
         [Trait("CardEventHandler", "Card Status")]
@@ -177,9 +159,10 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             var eventStoreMock = new Mock<IEventStore>();
 
             CardEventHandler cardCommandHandler = new CardEventHandler(eventStoreMock.Object, serviceNotificationMock.Object);
-            cardCommandHandler.Handler(new UnableToFindCardAttachmentsEvent(It.IsAny<string>()));
+            Task result = cardCommandHandler.Handler(new UnableToFindCardAttachmentsEvent(It.IsAny<string>()));
 
             eventStoreMock.Verify(x => x.SaveToEventStore(It.IsAny<Event>()), Times.Once);
+            Assert.True(result.IsCompleted);
         }
     }
 }

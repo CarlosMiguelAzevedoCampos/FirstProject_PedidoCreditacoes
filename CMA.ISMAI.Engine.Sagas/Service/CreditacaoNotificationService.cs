@@ -8,11 +8,11 @@ using System.Text;
 
 namespace CMA.ISMAI.Sagas.Service
 {
-    public class SagaNotificationService : ISagaNotification
+    public class CreditacaoNotificationService : ISagaNotification
     {
         private readonly ILog _log;
 
-        public SagaNotificationService(ILog log)
+        public CreditacaoNotificationService(ILog log)
         {
             _log = log;
         }

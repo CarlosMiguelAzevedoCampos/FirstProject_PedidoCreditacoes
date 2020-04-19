@@ -11,9 +11,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CMA.ISMAI.UnitTests.Trello.Domain
+namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
 {
-    public class DomainGetCardDetails_TrelloServiceTest
+    public class DomainGetCardDetailsCommand_Test
     {
         [Trait("CardCommandHandler", "Get Card Details")]
         [Theory(DisplayName = "Obtain card attachments")]

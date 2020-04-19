@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CMA.ISMAI.Sagas.Domain.Service
+namespace CMA.ISMAI.Sagas.Domain.Service.Saga
 {
     public class SagaDomainService : ISagaDomainService
     {

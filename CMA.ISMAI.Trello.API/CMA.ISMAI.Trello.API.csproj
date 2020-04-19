@@ -18,7 +18,6 @@
     <ProjectReference Include="..\CMA.ISMAI.Logging\CMA.ISMAI.Logging.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.Domain\CMA.ISMAI.Trello.Domain.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.Engine\CMA.ISMAI.Trello.Engine.csproj" />
-    <ProjectReference Include="..\CMA.ISMAI.Trello.Settings\CMA.ISMAI.Trello.Settings.csproj" />
   </ItemGroup>
 
 

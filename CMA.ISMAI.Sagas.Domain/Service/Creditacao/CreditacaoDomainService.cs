@@ -4,7 +4,7 @@ using CMA.ISMAI.Sagas.Service.Model;
 using System;
 using System.Collections.Generic;
 
-namespace CMA.ISMAI.Sagas.Domain.Service
+namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
 {
     public class CreditacaoDomainService : ICreditacaoDomainService
     {
@@ -17,9 +17,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service
 
         public string CreateNewCard(string cardId, string courseName, string studentName, string courseInstitute, DateTime dueTime, bool IsCetOrOtherCondition, int boardId)
         {
-            if (!getCardStatus(cardId))
-                return string.Empty;
-            List<string> filesUrl = getCardAttachments(cardId);
+            List<string> filesUrl = GetCardAttachments(cardId);
             string newCardId = _creditacoesService.PostNewCard(new CardDto($"{courseInstitute} - {courseName} - {studentName}",
                 dueTime, $"{courseInstitute} - {courseName} - {studentName} - A new card has been created. When this task is done, please check it has done",
                 boardId,
@@ -27,16 +25,6 @@ namespace CMA.ISMAI.Sagas.Domain.Service
             if (string.IsNullOrEmpty(newCardId))
                 return string.Empty;
             return newCardId;
-        }
-        private bool getCardStatus(string cardId)
-        {
-            bool getCardStatus = _creditacoesService.GetCardState(cardId);
-            return getCardStatus;
-        }
-
-        private List<string> getCardAttachments(string cardId)
-        {
-            return _creditacoesService.GetCardAttachments(cardId);
         }
 
         public List<string> GetCardAttachments(string cardId)

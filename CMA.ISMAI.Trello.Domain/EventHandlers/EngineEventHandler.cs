@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Trello.Domain.EventHandlers
 {
-    public class EngineEventHandler :  IEngineEventHandler
+    public class EngineEventHandler : IEngineEventHandler
     {
         private readonly IEventStore _eventStore;
         private readonly ISendNotificationService _sendNotificationService;
@@ -16,15 +16,17 @@ namespace CMA.ISMAI.Trello.Domain.EventHandlers
             _eventStore = eventStore;
             _sendNotificationService = sendNotificationService;
         }
-        public void Handler(WorkFlowStartFailedEvent notification)
+        public Task Handler(WorkFlowStartFailedEvent notification)
         {
-            Task.Run(()=> _eventStore.SaveToEventStore(notification));
-            Task.Run(() => _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"An new deploy failed!!, {notification.Motive} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}"));
+            _eventStore.SaveToEventStore(notification);
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"An new deploy failed!!, {notification.Motive} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            return Task.CompletedTask;
         }
-        public void Handler(WorkFlowStartCompletedEvent notification)
+        public Task Handler(WorkFlowStartCompletedEvent notification)
         {
-            Task.Run(() => _eventStore.SaveToEventStore(notification));
-            Task.Run(() => _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"An new deploy was submited!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId} -  {notification.WorkFlowName}"));
+            _eventStore.SaveToEventStore(notification);
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"An new deploy was submited!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId} -  {notification.WorkFlowName}");
+            return Task.CompletedTask;
         }
     }
 }

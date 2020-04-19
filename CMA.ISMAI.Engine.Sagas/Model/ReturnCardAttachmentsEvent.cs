@@ -5,7 +5,7 @@ namespace CMA.ISMAI.Sagas.Service.Model
 {
     public class ReturnCardAttachmentsEvent
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public List<string> Attachments { get; set; }
         public DateTime Timestamp { get; set; }
         public string MessageType { get; set; }

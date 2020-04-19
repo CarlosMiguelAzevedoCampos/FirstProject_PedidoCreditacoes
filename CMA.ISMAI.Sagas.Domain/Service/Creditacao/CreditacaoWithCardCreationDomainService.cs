@@ -3,7 +3,7 @@ using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Sagas.Domain.Interface;
 using System;
 
-namespace CMA.ISMAI.Sagas.Domain.Service
+namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
 {
     public class CreditacaoWithCardCreationDomainService : ICreditacaoWithCardCreationDomainService
     {
@@ -21,18 +21,28 @@ namespace CMA.ISMAI.Sagas.Domain.Service
         public bool CreateCardAndFinishProcess(string processName, ExternalTask externalTask, int boardId, DateTime dueTime, bool IsCetOrOtherCondition)
         {
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - executing..");
-            string cardId = _taskProcessing.ReturnValueFromExternalTask(externalTask, "cardId").ToString();
-            string courseName = _taskProcessing.ReturnValueFromExternalTask(externalTask, "courseName").ToString();
-            string studentName = _taskProcessing.ReturnValueFromExternalTask(externalTask, "studentName").ToString();
-            string courseInstitute = _taskProcessing.ReturnValueFromExternalTask(externalTask, "courseInstitute").ToString();
+            if (ItsSummerBreakTime(DateTime.Now.Month) || ItsSummerBreakTime(dueTime.Month))
+                return false;
+            string cardId = _taskProcessing.ReturnCardIdFromExternalTask(externalTask);
+            string courseName = _taskProcessing.ReturnCourseNameFromExternalTask(externalTask);
+            string studentName = _taskProcessing.ReturnStudentNameFromExternalTask(externalTask);
+            string courseInstitute = _taskProcessing.ReturnCourseInstitueFromExternalTask(externalTask);
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - card details obtained from camunda..");
 
+            if (!_creditacaoService.GetCardStatus(cardId))
+                return false;
+            
             string newCardId = _creditacaoService.CreateNewCard(cardId, courseName, studentName, courseInstitute, dueTime, IsCetOrOtherCondition, boardId);
 
             if (string.IsNullOrEmpty(newCardId))
                 return false;
 
             return ReturnFinishTaskResult(processName, externalTask, courseName, studentName, courseInstitute, newCardId);
+        }
+
+        private bool ItsSummerBreakTime(int month)
+        {
+            return _creditacaoService.IsSummerBreakTime(month);
         }
 
         private bool ReturnFinishTaskResult(string processName, ExternalTask externalTask, string courseName, string studentName, string courseInstitute, string newCardId)

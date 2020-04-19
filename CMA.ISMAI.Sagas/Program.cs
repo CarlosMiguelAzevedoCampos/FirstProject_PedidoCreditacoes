@@ -1,9 +1,9 @@
 ﻿using CMA.ISMAI.Core;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
-using CMA.ISMAI.Sagas.Domain;
 using CMA.ISMAI.Sagas.Domain.Interface;
-using CMA.ISMAI.Sagas.Domain.Service;
+using CMA.ISMAI.Sagas.Domain.Service.Creditacao;
+using CMA.ISMAI.Sagas.Domain.Service.Saga;
 using CMA.ISMAI.Sagas.Service;
 using CMA.ISMAI.Sagas.Service.Interface;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,13 +42,14 @@ namespace CMA.ISMAI.Sagas
             services.AddLogging();
             services.AddScoped<ILog, LoggingService>();
             services.AddScoped<ICreditacaoDomainService, CreditacaoDomainService>();
-            services.AddScoped<ISagaService, SagaService>();
+            services.AddScoped<ISagaService, CreditacaoService>();
             services.AddScoped<IHttpRequest, HttpRequest>();
             services.AddScoped<ISagaDomainService, SagaDomainService>();
             services.AddScoped<ICreditacaoWithCardCreationDomainService, CreditacaoWithCardCreationDomainService>();
             services.AddScoped<ICreditacaoWithNoCardCreationDomainService, CreditacaoWithNoCardCreationService>();
             services.AddScoped<ICreditacaoFinalStepDomainService, CreditacaoFinalStepDomainService>();
-            services.AddScoped<ISagaNotification, SagaNotificationService>();
+            services.AddScoped<ISagaNotification, CreditacaoNotificationService>();
+            services.AddScoped<ITaskProcessingDomainService, TaskProcessingDomainService>();
             services.AddTransient<ConsoleApplication>();
             return services;
         }

@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CMA.ISMAI.UnitTests.Trello.Domain
+namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
 {
-    public class DomainAddCard_TrelloServiceTest
+    public class DomainAddCardCommand_Test
     {
         [Trait("CardCommandHandler", "Add Card")]
         [Theory(DisplayName = "New card creation, but should fail because of invalid parameters")]
@@ -36,7 +36,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
                 engineMock.Object, engineEventMock.Object);
 
             Event result = cardCommandHandler.Handler(addCard);
-            cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardFailedEvent>()), Times.Once);
             Assert.True(result is AddCardFailedEvent);
         }
 
@@ -60,7 +59,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
                 engineMock.Object, engineEventMock.Object);
 
             Event result = cardCommandHandler.Handler(addCard);
-            cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardFailedEvent>()), Times.Once);
             Assert.True(result is AddCardFailedEvent);
         }
 
@@ -88,7 +86,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
                 engineMock.Object, engineEventMock.Object);
 
             Event result = cardCommandHandler.Handler(addCard);
-            cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardCompletedEvent>()), Times.Once);
             Assert.True(result is AddCardCompletedEvent);
         }
     }

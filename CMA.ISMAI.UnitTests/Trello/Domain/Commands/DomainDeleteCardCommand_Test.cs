@@ -11,9 +11,9 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CMA.ISMAI.UnitTests.Trello.Domain
+namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
 {
-    public class DomainDeleteCard_TrelloService
+    public class DomainDeleteCardCommand_Test
     {
         [Trait("CardCommandHandler", "Delete Card")]
         [Fact(DisplayName = "Delete a card - should be deleted")]
@@ -29,7 +29,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
                 engineMock.Object, engineEventMock.Object);
             Event result = cardCommandHandler.Handler(deleteCardCommand);
-            cardnotificationMock.Verify(x => x.Handler(It.IsAny<CardHasBeenDeletedEvent>()), Times.Once);
             Assert.True(result is CardHasBeenDeletedEvent);
         }
 
@@ -47,7 +46,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
                 engineMock.Object, engineEventMock.Object);
             Event result = cardCommandHandler.Handler(deleteCardCommand);
-            cardnotificationMock.Verify(x => x.Handler(It.IsAny<CardHasNotBeenDeletedEvent>()), Times.Once);
             Assert.True(result is CardHasNotBeenDeletedEvent);
         }
     }

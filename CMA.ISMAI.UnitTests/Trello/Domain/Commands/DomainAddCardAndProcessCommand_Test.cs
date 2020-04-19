@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CMA.ISMAI.UnitTests.Trello.Domain
+namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
 {
-    public class DomainAddCardAndProcess_TrelloServiceTest
+    public class DomainAddCardAndProcessCommand_Test
     {
         [Trait("CardCommandHandler", "Add Card and Camunda Process")]
         [Theory(DisplayName = "New card creation, but should fail because of invalid parameters")]
@@ -36,7 +36,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
                 engineMock.Object, engineEventMock.Object);
 
             Event result = cardCommandHandler.Handler(addCard);
-            cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardFailedEvent>()), Times.Once);
             Assert.True(result is AddCardFailedEvent);
         }
 
@@ -59,7 +58,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
                 engineMock.Object, engineEventMock.Object);
 
             Event result = cardCommandHandler.Handler(addCard);
-            cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardFailedEvent>()), Times.Once);
             Assert.True(result is AddCardFailedEvent);
         }
 
@@ -92,8 +90,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
 
             Event result = cardCommandHandler.Handler(addCard);
             trelloMock.Verify(x => x.DeleteCard(It.IsAny<string>()), Times.Once);
-            engineEventMock.Verify(x => x.Handler(It.IsAny<WorkFlowStartFailedEvent>()), Times.Once);
-            cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardFailedEvent>()), Times.Once);
             Assert.True(result is AddCardFailedEvent);
         }
 
@@ -127,8 +123,6 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain
                 engineMock.Object, engineEventMock.Object);
 
             Event result = cardCommandHandler.Handler(addCard);
-            engineEventMock.Verify(x => x.Handler(It.IsAny<WorkFlowStartCompletedEvent>()), Times.Once);
-            cardnotificationMock.Verify(x => x.Handler(It.IsAny<AddCardCompletedEvent>()), Times.Once);
             Assert.True(result is AddCardCompletedEvent);
         }
     }

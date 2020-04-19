@@ -33,7 +33,7 @@ namespace CMA.ISMAI.Trello.Engine.Service
                 await board.Refresh();
                 var list = board.Lists.FirstOrDefault();
                 var newCard = await list.Cards.Add(name, description, null, dueDate);
-                var tasks = AddAttachmentsToACardAsync(newCard, filesUrl);
+                var tasks = AddAttachmentsToACard(newCard, filesUrl);
                 await Task.WhenAll(tasks);
                 this._log.Info("A new card has created in trello!");
                 return newCard.Id;
@@ -45,7 +45,7 @@ namespace CMA.ISMAI.Trello.Engine.Service
             return string.Empty;
         }
 
-        private async Task AddAttachmentsToACardAsync(ICard newCard, List<string> filesUrl)
+        private async Task AddAttachmentsToACard(ICard newCard, List<string> filesUrl)
         {
             foreach (var item in filesUrl)
             {

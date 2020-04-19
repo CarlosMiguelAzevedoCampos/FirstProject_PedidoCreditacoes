@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace CMA.ISMAI.Sagas.Service
 {
-    public class SagaService : ISagaService
+    public class CreditacaoService : ISagaService
     {
         private readonly ILog _log;
         private readonly IHttpRequest _httpRequest;
-        public SagaService(ILog log, IHttpRequest httpRequest)
+        public CreditacaoService(ILog log, IHttpRequest httpRequest)
         {
             this._log = log;
             this._httpRequest = httpRequest;
@@ -36,7 +36,7 @@ namespace CMA.ISMAI.Sagas.Service
         public bool GetCardState(string cardId)
         {
             _log.Info($"CoordenatorExcelAction for card Id {cardId}");
-            bool getCardState = _httpRequest.CardStateAsync(cardId).Result;
+            bool getCardState = _httpRequest.CardState(cardId).Result;
             _log.Info($"CoordenatorExcelAction for card Id {cardId} - the result was {getCardState.ToString()}");
             return getCardState;
         }
@@ -57,7 +57,7 @@ namespace CMA.ISMAI.Sagas.Service
         public string PostNewCard(CardDto card)
         {
             _log.Info($"PostNewCard for card Name {card.Name}");
-            string createCard = _httpRequest.CardPostAsync(card).Result;
+            string createCard = _httpRequest.CardPost(card).Result;
             return string.IsNullOrEmpty(createCard) ? string.Empty : createCard;
         }
     }

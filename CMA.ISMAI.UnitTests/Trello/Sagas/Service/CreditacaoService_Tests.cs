@@ -10,7 +10,7 @@ using Xunit;
 
 namespace CMA.ISMAI.UnitTests.Sagas
 {
-    public class SagaService_Tests
+    public class CreditacaoService_Tests
     {
         [Fact(DisplayName = "Get Card Status. Should return card completed.")]
         [Trait("SagaService", "Get Card Status")]
@@ -18,8 +18,8 @@ namespace CMA.ISMAI.UnitTests.Sagas
         {
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
-            httprequestMock.Setup(x => x.CardStateAsync(It.IsAny<string>())).Returns(Task.FromResult(true));
-            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            httprequestMock.Setup(x => x.CardState(It.IsAny<string>())).Returns(Task.FromResult(true));
+            ISagaService creditacoesService = new CreditacaoService(logMock.Object, httprequestMock.Object);
             bool result = creditacoesService.GetCardState("12");
             Assert.True(result);
         }
@@ -30,8 +30,8 @@ namespace CMA.ISMAI.UnitTests.Sagas
         {
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
-            httprequestMock.Setup(x => x.CardStateAsync(It.IsAny<string>())).Returns(Task.FromResult(false));
-            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            httprequestMock.Setup(x => x.CardState(It.IsAny<string>())).Returns(Task.FromResult(false));
+            ISagaService creditacoesService = new CreditacaoService(logMock.Object, httprequestMock.Object);
             bool result = creditacoesService.GetCardState("12");
             Assert.False(result);
         }
@@ -44,8 +44,8 @@ namespace CMA.ISMAI.UnitTests.Sagas
             list.Add("google.pt");
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
-            httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(string.Empty));
-            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            httprequestMock.Setup(x => x.CardPost(It.IsAny<CardDto>())).Returns(Task.FromResult(string.Empty));
+            ISagaService creditacoesService = new CreditacaoService(logMock.Object, httprequestMock.Object);
             string result = creditacoesService.PostNewCard(new CardDto("Carlos Campos", DateTime.Now.AddDays(1), "Carlos Campos", 1, list,
                 "ISMAI", "Informática", "Carlos Campos", false));
             Assert.Empty(result);
@@ -59,8 +59,8 @@ namespace CMA.ISMAI.UnitTests.Sagas
             list.Add("google.pt");
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
-            httprequestMock.Setup(x => x.CardPostAsync(It.IsAny<CardDto>())).Returns(Task.FromResult(Guid.NewGuid().ToString()));
-            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            httprequestMock.Setup(x => x.CardPost(It.IsAny<CardDto>())).Returns(Task.FromResult(Guid.NewGuid().ToString()));
+            ISagaService creditacoesService = new CreditacaoService(logMock.Object, httprequestMock.Object);
             string result = creditacoesService.PostNewCard(new CardDto("Carlos Campos", DateTime.Now.AddDays(1), "Carlos Campos", 1, list,
                 "ISMAI", "Informática", "Carlos Campos", false));
             Assert.NotEmpty(result);
@@ -76,7 +76,7 @@ namespace CMA.ISMAI.UnitTests.Sagas
             var httprequestMock = new Mock<IHttpRequest>();
             httprequestMock.Setup(x => x.GetCardAttachments(It.IsAny<string>()))
                 .Returns(Task.FromResult(list));
-            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            ISagaService creditacoesService = new CreditacaoService(logMock.Object, httprequestMock.Object);
             List<string> result = creditacoesService.GetCardAttachments("12");
             Assert.True(result.Count > 0);
         }
@@ -87,7 +87,7 @@ namespace CMA.ISMAI.UnitTests.Sagas
         {
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
-            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            ISagaService creditacoesService = new CreditacaoService(logMock.Object, httprequestMock.Object);
             bool result = creditacoesService.IsSummerBreakTime();
             Assert.True(result);
         }
@@ -99,7 +99,7 @@ namespace CMA.ISMAI.UnitTests.Sagas
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
             httprequestMock.Setup(x => x.DeleteCard(It.IsAny<string>())).Returns(Task.FromResult(false));
-            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            ISagaService creditacoesService = new CreditacaoService(logMock.Object, httprequestMock.Object);
             bool result = creditacoesService.DeleteCard(Guid.NewGuid().ToString());
             Assert.False(result);
         }
@@ -111,7 +111,7 @@ namespace CMA.ISMAI.UnitTests.Sagas
             var logMock = new Mock<ILog>();
             var httprequestMock = new Mock<IHttpRequest>();
             httprequestMock.Setup(x => x.DeleteCard(It.IsAny<string>())).Returns(Task.FromResult(true));
-            ISagaService creditacoesService = new SagaService(logMock.Object, httprequestMock.Object);
+            ISagaService creditacoesService = new CreditacaoService(logMock.Object, httprequestMock.Object);
             bool result = creditacoesService.DeleteCard(Guid.NewGuid().ToString());
             Assert.True(result);
         }
