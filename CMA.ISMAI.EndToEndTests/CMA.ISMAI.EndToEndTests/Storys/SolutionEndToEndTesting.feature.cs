@@ -20,7 +20,7 @@ namespace CMA.ISMAI.EndToEndTests.Storys
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.1.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute()]
-    public partial class CreditacaoFeature
+    public partial class SolutionEndToEndTestingFeature
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -29,7 +29,7 @@ namespace CMA.ISMAI.EndToEndTests.Storys
         
         private string[] _featureTags = ((string[])(null));
         
-#line 1 "NormalProcess.feature"
+#line 1 "SolutionEndToEndTesting.feature"
 #line hidden
         
         public virtual Microsoft.VisualStudio.TestTools.UnitTesting.TestContext TestContext
@@ -48,8 +48,8 @@ namespace CMA.ISMAI.EndToEndTests.Storys
         public static void FeatureSetup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext testContext)
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Creditacao", "\tIn order to avoid silly mistakes\r\n\tAs a person\r\n\tI want to add a new process in " +
-                    "the system", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "SolutionEndToEndTesting", "\tTo make sure that this project works\r\n\tAll processes will be tested in this feat" +
+                    "ure.", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -64,9 +64,9 @@ namespace CMA.ISMAI.EndToEndTests.Storys
         public virtual void TestInitialize()
         {
             if (((testRunner.FeatureContext != null) 
-                        && (testRunner.FeatureContext.FeatureInfo.Title != "Creditacao")))
+                        && (testRunner.FeatureContext.FeatureInfo.Title != "SolutionEndToEndTesting")))
             {
-                global::CMA.ISMAI.EndToEndTests.Storys.CreditacaoFeature.FeatureSetup(null);
+                global::CMA.ISMAI.EndToEndTests.Storys.SolutionEndToEndTestingFeature.FeatureSetup(null);
             }
         }
         
@@ -93,16 +93,16 @@ namespace CMA.ISMAI.EndToEndTests.Storys
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Add a new process for a normal process")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Creditacao")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Test the solution behaivor in production")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "SolutionEndToEndTesting")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("mytag")]
-        public virtual void AddANewProcessForANormalProcess()
+        public virtual void TestTheSolutionBehaivorInProduction()
         {
             string[] tagsOfScenario = new string[] {
                     "mytag"};
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add a new process for a normal process", null, new string[] {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Test the solution behaivor in production", null, new string[] {
                         "mytag"});
-#line 7
+#line 6
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -122,17 +122,35 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
+#line 7
+ testRunner.When("I navigate to Criar Processo", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
 #line 8
- testRunner.When("Navigate to Criar Novo Processo", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.And("I fill in the necessary information", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 9
- testRunner.When("Enter the form asking details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.And("Click on the submit button to crate the process", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 10
- testRunner.When("Click on the submit button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.Then("A sucess message should appear on the screen", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 11
- testRunner.Then("The result should appear in the screen", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I must go to the course coordinators board on Trello", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 12
+ testRunner.And("Put the created card on the scientific council board in done", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 13
+ testRunner.Then("I must go to the departament directors board on trello", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 14
+ testRunner.And("Put the created card on the departament directors board in done", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 15
+ testRunner.Then("I must go to the cientific concil board on trello", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 16
+ testRunner.And("Put the created card on the cientific concil board in done", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();

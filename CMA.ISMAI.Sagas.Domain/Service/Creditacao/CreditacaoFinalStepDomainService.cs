@@ -50,7 +50,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
         {
             string attachmentsLinks = string.Empty;
             foreach (var item in filesUrl)
-                attachmentsLinks += item + ",";
+                attachmentsLinks += item + " ";
             return attachmentsLinks;
         }
     }
