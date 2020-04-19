@@ -20,49 +20,49 @@ namespace CMA.ISMAI.Trello.Domain.EventHandlers
         public Task Handler(AddCardCompletedEvent notification)
         {
             _eventStore.SaveToEventStore(notification);
-            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card was added with success!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId} - {notification.DueTime} - {notification.Name} - {notification.Description} ");
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card was added with success! - {notification.Timestamp}");
             return Task.CompletedTask;
         }
 
         public Task Handler(AddCardFailedEvent notification)
         {
             _eventStore.SaveToEventStore(notification);
-            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card adition failed!!, with  {notification.DomainNotifications.Count} errors -  {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId} - {notification.DueTime} - {notification.Name} - {notification.Description} ");
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card adition failed!!, with  {notification.DomainNotifications.Count} errors - {notification.Timestamp}");
             return Task.CompletedTask;
         }
 
         public Task Handler(CardStatusCompletedEvent notification)
         {
             _eventStore.SaveToEventStore(notification);
-            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card was completed with success!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card was completed with success! - {notification.Timestamp}");
             return Task.CompletedTask;
         }
 
         public Task Handler(CardStatusIncompletedEvent notification)
         {
             _eventStore.SaveToEventStore(notification);
-            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card need's to be completed!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card need's to be completed! - {notification.Timestamp}");
             return Task.CompletedTask;
         }
 
         public Task Handler(CardStatusUnableToFindEvent notification)
         {
             _eventStore.SaveToEventStore(notification);
-            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card not found!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card not found! - {notification.Timestamp}");
             return Task.CompletedTask;
         }
 
         public Task Handler(CardHasNotBeenDeletedEvent notification)
         {
             _eventStore.SaveToEventStore(notification);
-            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card had a probem been deleted!, {notification.CardId} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card had a probem been deleted! - {notification.Timestamp}");
             return Task.CompletedTask;
         }
 
         public Task Handler(CardHasBeenDeletedEvent notification)
         {
             _eventStore.SaveToEventStore(notification);
-            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card has been deleted!, {notification.CardId} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"Card has been deleted! - {notification.Timestamp}");
             return Task.CompletedTask;
         }
 

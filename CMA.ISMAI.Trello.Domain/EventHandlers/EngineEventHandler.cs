@@ -19,13 +19,13 @@ namespace CMA.ISMAI.Trello.Domain.EventHandlers
         public Task Handler(WorkFlowStartFailedEvent notification)
         {
             _eventStore.SaveToEventStore(notification);
-            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"An new deploy failed!!, {notification.Motive} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId}");
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"An new deploy failed!!, {notification.Motive} - {notification.Timestamp}");
             return Task.CompletedTask;
         }
         public Task Handler(WorkFlowStartCompletedEvent notification)
         {
             _eventStore.SaveToEventStore(notification);
-            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"An new deploy was submited!, {notification.Id} - {notification.Timestamp} - {notification.MessageType} - {notification.AggregateId} -  {notification.WorkFlowName}");
+            _sendNotificationService.SendNotificationToBroker("trelloismai@gmail.com", $"An new deploy was submited! - {notification.Timestamp}");
             return Task.CompletedTask;
         }
     }

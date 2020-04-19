@@ -3,7 +3,7 @@ using CMA.ISMAI.Sagas.Domain.Interface;
 using System;
 using System.Threading;
 
-namespace CMA.ISMAI.Sagas
+namespace CMA.ISMAI.Sagas.UI
 {
     public class ConsoleApplication
     {

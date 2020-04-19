@@ -35,7 +35,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
         {
             registerWorker("course-coordinator", externalTask =>
             {
-                _log.Info($"Course coordinator task non-cet is running..{externalTask.Id} -{DateTime.Now}");
+                _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
                 Console.WriteLine($"Course coordinator  non-cet task is running..{externalTask.Id} -{DateTime.Now}");
                 DateTime dueTime = DateTime.Now.AddDays(Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "course-coordinator")));
                 bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 1, dueTime);
@@ -60,7 +60,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
 
             registerWorker("coordenator-jury", externalTask =>
             {
-                Console.WriteLine($"Course coordinator CET task is running..{externalTask.Id} -{DateTime.Now}");
+                Console.WriteLine($"Course coordinator Jury task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Course coordinator CET task is running..{externalTask.Id} -{DateTime.Now}");
                 DateTime dueTime = DateTime.Now.AddDays(Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "coordenator-jury")));
                 bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 0, dueTime, true);

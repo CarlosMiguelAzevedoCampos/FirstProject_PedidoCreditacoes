@@ -19,7 +19,7 @@
     <ProjectReference Include="..\CMA.ISMAI.Engine.Sagas\CMA.ISMAI.Sagas.Service.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Logging\CMA.ISMAI.Logging.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Sagas.Domain\CMA.ISMAI.Sagas.Domain.csproj" />
-    <ProjectReference Include="..\CMA.ISMAI.Sagas\CMA.ISMAI.Sagas.csproj" />
+    <ProjectReference Include="..\CMA.ISMAI.Sagas\CMA.ISMAI.Sagas.UI.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Solutions.Creditacoes.UI\CMA.ISMAI.Solutions.Creditacoes.UI.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.API\CMA.ISMAI.Trello.API.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.Domain\CMA.ISMAI.Trello.Domain.csproj" />

@@ -67,7 +67,7 @@ namespace CMA.ISMAI.Notifications
                 SmtpClient smtp = new SmtpClient();
                 message.From = new MailAddress(email);
                 message.To.Add(new MailAddress(notification.To));
-                message.Subject = string.Format("ISMAI - {0}", notification.Message.GetType());
+                message.Subject = "ISMAI - Trello";
                 message.IsBodyHtml = true; //to make message body as html  
                 message.Body = notification.Message;
                 smtp.Port = 587;
