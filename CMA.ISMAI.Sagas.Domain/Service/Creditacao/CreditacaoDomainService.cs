@@ -15,11 +15,11 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
             _creditacoesService = creditacoesService;
         }
 
-        public string CreateNewCard(string cardId, string courseName, string studentName, string courseInstitute, DateTime dueTime, bool IsCetOrOtherCondition, int boardId)
+        public string CreateNewCard(string cardId, string description, string courseName, string studentName, string courseInstitute, DateTime dueTime, bool IsCetOrOtherCondition, int boardId)
         {
             List<string> filesUrl = GetCardAttachments(cardId);
             string newCardId = _creditacoesService.PostNewCard(new CardDto($"{courseInstitute} - {courseName} - {studentName}",
-                dueTime, $"{courseInstitute} - {courseName} - {studentName} - A new card has been created. When this task is done, please check it has done",
+                dueTime, $"{courseInstitute} - {courseName} - {studentName} - {description}",
                 boardId,
                 filesUrl, courseInstitute, courseName, studentName, IsCetOrOtherCondition));
             if (string.IsNullOrEmpty(newCardId))
@@ -52,6 +52,19 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
         public bool DeleteCard(string cardId)
         {
             return _creditacoesService.DeleteCard(cardId);
+        }
+
+        public DateTime AddWorkingDays(int days)
+        {
+            DateTime tmpDate = DateTime.Now;
+            while (days > 0)
+            {
+                tmpDate = tmpDate.AddDays(1);
+                if (tmpDate.DayOfWeek < DayOfWeek.Saturday &&
+                    tmpDate.DayOfWeek > DayOfWeek.Sunday)
+                    days--;
+            }
+            return tmpDate;
         }
     }
 }

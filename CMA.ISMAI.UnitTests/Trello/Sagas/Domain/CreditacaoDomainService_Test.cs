@@ -13,9 +13,9 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
     {
         [Trait("Creditação Service", "Card creation")]
         [Theory(DisplayName ="Get attachmnents from a card and create a new card with the same attachments.")]
-        [InlineData("jffh8ywnnnojsob", "Informática", "Carlos Campos", "ISMAI", true, 1)]
-        [InlineData("jffh8ywnnnojsob", "Informática", "Carlos Campos", "ISMAI", false, 1)]
-        public void Creditacao_CreditacaoWithNewCardCreation_ShouldGetCardAttachmentsAndCreateOneCard(string cardId, string courseName, string studentName, string courseInstitute, bool IsCetOrOtherCondition, int boardId)
+        [InlineData("jffh8ywnnnojsob", "Informática", "Carlos Campos", "ISMAI", true, 1, "O Coordenador de Curso convoca o Júri")]
+        [InlineData("jffh8ywnnnojsob", "Informática", "Carlos Campos", "ISMAI", false, 1, "O Coordenador de Curso convoca o Júri")]
+        public void Creditacao_CreditacaoWithNewCardCreation_ShouldGetCardAttachmentsAndCreateOneCard(string cardId, string courseName, string studentName, string courseInstitute, bool IsCetOrOtherCondition, int boardId,string description)
         {
             var logMock = new Mock<ILog>();
             var sagaMock = new Mock<ISagaService>();
@@ -25,15 +25,15 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
             sagaMock.Setup(x => x.GetCardState(It.IsAny<string>())).Returns(true);
 
             CreditacaoDomainService creditacaoDomain = new CreditacaoDomainService(sagaMock.Object);
-            string value = creditacaoDomain.CreateNewCard(cardId, courseName, studentName, courseInstitute, DateTime.Now.AddDays(2), IsCetOrOtherCondition, boardId);
+            string value = creditacaoDomain.CreateNewCard(cardId, description, courseName, studentName, courseInstitute, DateTime.Now.AddDays(2), IsCetOrOtherCondition, boardId);
             Assert.NotEmpty(value);
         }
 
         [Trait("Creditação Service", "Card creation")]
         [Theory(DisplayName = "Get attachmnents from a card and fail creating a new card with the same attachments.")]
-        [InlineData("jffh8ywnnnojsob", "Informática", "Carlos Campos", "ISMAI", true, 1)]
-        [InlineData("jffh8ywnnnojsob", "Informática", "Carlos Campos", "ISMAI", false, 1)]
-        public void Creditacao_CreditacaoWithNewCardCreation_FailOnCardCreation(string cardId, string courseName, string studentName, string courseInstitute, bool IsCetOrOtherCondition, int boardId)
+        [InlineData("jffh8ywnnnojsob", "Informática", "Carlos Campos", "ISMAI", true, 1, "O Coordenador de Curso convoca o Júri")]
+        [InlineData("jffh8ywnnnojsob", "Informática", "Carlos Campos", "ISMAI", false, 1, "O Coordenador de Curso convoca o Júri")]
+        public void Creditacao_CreditacaoWithNewCardCreation_FailOnCardCreation(string cardId, string courseName, string studentName, string courseInstitute, bool IsCetOrOtherCondition, int boardId, string description)
         {
             var logMock = new Mock<ILog>();
             var sagaMock = new Mock<ISagaService>();
@@ -43,7 +43,7 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
             sagaMock.Setup(x => x.GetCardState(It.IsAny<string>())).Returns(false);
 
             CreditacaoDomainService creditacaoDomain = new CreditacaoDomainService(sagaMock.Object);
-            string value = creditacaoDomain.CreateNewCard(cardId, courseName, studentName, courseInstitute, DateTime.Now.AddDays(2), IsCetOrOtherCondition, boardId);
+            string value = creditacaoDomain.CreateNewCard(cardId, description, courseName, studentName, courseInstitute, DateTime.Now.AddDays(2), IsCetOrOtherCondition, boardId);
             Assert.Empty(value);
         }
 
@@ -99,7 +99,7 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
 
         [Fact(DisplayName = "Delete Card. Should Fail.")]
         [Trait("Creditação Service", "Delete Card")]
-        public void CreditacoesService_DeleteCCard_ShouldFailToDeleteTheCard()
+        public void CreditacoesService_DeleteCard_ShouldFailToDeleteTheCard()
         {
             var sagaMock = new Mock<ISagaService>();
             sagaMock.Setup(x => x.DeleteCard(It.IsAny<string>())).Returns(false);
@@ -117,6 +117,17 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
             CreditacaoDomainService creditacoesService = new CreditacaoDomainService(sagaMock.Object);
             bool result = creditacoesService.DeleteCard(Guid.NewGuid().ToString());
             Assert.True(result);
+        }
+
+        [Fact(DisplayName = "Add Working Days. Should return the datetime with number of days added has business days.")]
+        [Trait("Creditação Service", "Add Working Days")]
+        public void CreditacoesService_AddWorkingDays_ShouldReturnTheDateTimeWithBusinessDaysRepresented()
+        {
+            var sagaMock = new Mock<ISagaService>();
+            CreditacaoDomainService creditacoesService = new CreditacaoDomainService(sagaMock.Object);
+            DateTime result = creditacoesService.AddWorkingDays(22);
+            Assert.True(result.Date.DayOfWeek != DayOfWeek.Saturday);
+            Assert.True(result.Date.DayOfWeek != DayOfWeek.Sunday);
         }
     }
 }

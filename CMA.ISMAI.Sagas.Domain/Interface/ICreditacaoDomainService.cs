@@ -5,11 +5,12 @@ namespace CMA.ISMAI.Sagas.Domain.Interface
 {
     public interface ICreditacaoDomainService
     {
-        string CreateNewCard(string cardId, string courseName, string studentName, string courseInstitute,
-            DateTime dueTime, bool IsCetOrOtherCondition, int boardId);
+        string CreateNewCard(string cardId, string description, string courseName, string studentName, 
+            string courseInstitute, DateTime dueTime, bool IsCetOrOtherCondition, int boardId);
         bool GetCardStatus(string cardId);
         List<string> GetCardAttachments(string cardId);
         bool IsSummerBreakTime(int month);
+        DateTime AddWorkingDays(int days);
         bool DeleteCard(string cardId);
     }
 }

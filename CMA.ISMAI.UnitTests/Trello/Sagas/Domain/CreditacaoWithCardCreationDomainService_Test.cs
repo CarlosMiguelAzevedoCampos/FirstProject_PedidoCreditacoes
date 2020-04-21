@@ -18,8 +18,10 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
             var creditacaoDomainMock = new Mock<ICreditacaoDomainService>();
             var taskProcessingMock = new Mock<ITaskProcessingDomainService>();
 
-            creditacaoDomainMock.Setup(x => x.CreateNewCard(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+            creditacaoDomainMock.Setup(x => x.CreateNewCard(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                  It.IsAny<DateTime>(), It.IsAny<bool>(), It.IsAny<int>())).Returns(Guid.NewGuid().ToString());
+
+            creditacaoDomainMock.Setup(x => x.GetCardStatus(It.IsAny<string>())).Returns(true);
 
             taskProcessingMock.Setup(x => x.FinishTasks(It.IsAny<string>(), It.IsAny<string>(), null
                 )).Returns(true);
@@ -31,7 +33,7 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
 
             CreditacaoWithCardCreationDomainService creditacaoWithCardCreationDomain = new CreditacaoWithCardCreationDomainService(creditacaoDomainMock.Object, logMock.Object,
                 taskProcessingMock.Object);
-            bool result = creditacaoWithCardCreationDomain.CreateCardAndFinishProcess("ISMAI", new ExternalTask(), 0,DateTime.Now.AddDays(1), true);
+            bool result = creditacaoWithCardCreationDomain.CreateCardAndFinishProcess("ISMAI", new ExternalTask(), 0,1, "O Coordenador de Curso convoca o Júri", true);
 
             taskProcessingMock.Verify(x => x.FinishTasks(It.IsAny<string>(), It.IsAny<string>(), null), Times.Once);
             Assert.True(result);
@@ -45,8 +47,9 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
             var creditacaoDomainMock = new Mock<ICreditacaoDomainService>();
             var taskProcessingMock = new Mock<ITaskProcessingDomainService>();
 
-            creditacaoDomainMock.Setup(x => x.CreateNewCard(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+            creditacaoDomainMock.Setup(x => x.CreateNewCard(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                  It.IsAny<DateTime>(), It.IsAny<bool>(), It.IsAny<int>())).Returns(Guid.NewGuid().ToString());
+            creditacaoDomainMock.Setup(x => x.GetCardStatus(It.IsAny<string>())).Returns(true);
 
             taskProcessingMock.Setup(x => x.FinishTasks(It.IsAny<string>(), It.IsAny<string>(), null
                 )).Returns(false);
@@ -58,7 +61,7 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
 
             CreditacaoWithCardCreationDomainService creditacaoWithCardCreationDomain = new CreditacaoWithCardCreationDomainService(creditacaoDomainMock.Object, logMock.Object,
                 taskProcessingMock.Object);
-            bool result = creditacaoWithCardCreationDomain.CreateCardAndFinishProcess("ISMAI", new ExternalTask(), 0, DateTime.Now.AddDays(1), true);
+            bool result = creditacaoWithCardCreationDomain.CreateCardAndFinishProcess("ISMAI", new ExternalTask(), 0, 1, "O Coordenador de Curso convoca o Júri", true);
 
             taskProcessingMock.Verify(x => x.FinishTasks(It.IsAny<string>(), It.IsAny<string>(), null), Times.Once);
             Assert.False(result);
@@ -72,7 +75,7 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
             var creditacaoDomainMock = new Mock<ICreditacaoDomainService>();
             var taskProcessingMock = new Mock<ITaskProcessingDomainService>();
 
-            creditacaoDomainMock.Setup(x => x.CreateNewCard(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+            creditacaoDomainMock.Setup(x => x.CreateNewCard(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
                  It.IsAny<DateTime>(), It.IsAny<bool>(), It.IsAny<int>())).Returns(string.Empty);
 
             taskProcessingMock.Setup(x => x.ReturnCardIdFromExternalTask(It.IsAny<ExternalTask>())).Returns(Guid.NewGuid().ToString());
@@ -82,7 +85,7 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
 
             CreditacaoWithCardCreationDomainService creditacaoWithCardCreationDomain = new CreditacaoWithCardCreationDomainService(creditacaoDomainMock.Object, logMock.Object,
                 taskProcessingMock.Object);
-            bool result = creditacaoWithCardCreationDomain.CreateCardAndFinishProcess("ISMAI", new ExternalTask(), 0, DateTime.Now.AddDays(1), true);
+            bool result = creditacaoWithCardCreationDomain.CreateCardAndFinishProcess("ISMAI", new ExternalTask(), 0, 1, "O Coordenador de Curso convoca o Júri",  true);
 
             taskProcessingMock.Verify(x => x.FinishTasks(It.IsAny<string>(), It.IsAny<string>(), null), Times.Never);
             Assert.False(result);
@@ -98,7 +101,7 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
             creditacaoDomainMock.Setup(x => x.IsSummerBreakTime(It.IsAny<int>())).Returns(true);
             CreditacaoWithCardCreationDomainService creditacaoWithCardCreationDomain = new CreditacaoWithCardCreationDomainService(creditacaoDomainMock.Object, logMock.Object,
                   taskProcessingMock.Object);
-            bool result = creditacaoWithCardCreationDomain.CreateCardAndFinishProcess("ISMAI", new ExternalTask(), 0, DateTime.Now.AddDays(1), true);
+            bool result = creditacaoWithCardCreationDomain.CreateCardAndFinishProcess("ISMAI", new ExternalTask(), 0, 1, "O Coordenador de Curso convoca o Júri", true);
             Assert.False(result);
         }
     }

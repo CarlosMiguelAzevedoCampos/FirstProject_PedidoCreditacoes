@@ -36,44 +36,44 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
             registerWorker("course-coordinator", externalTask =>
             {
                 _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
-                Console.WriteLine($"Course coordinator  non-cet task is running..{externalTask.Id} -{DateTime.Now}");
-                DateTime dueTime = DateTime.Now.AddDays(Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "course-coordinator")));
-                bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 1, dueTime);
-                Console.WriteLine($"The process has been completed? {result.ToString()}");
+                Console.WriteLine($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
+                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "course-coordinator"));
+                bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 1, dueTime, "O diretor de departamento deve verificar o processo e remetê-lo ao Conselho Científico");
+                Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
 
             registerWorker("department-director", externalTask =>
             {
                 Console.WriteLine($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
-                DateTime dueTime = DateTime.Now.AddDays(Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "department-director")));
-                bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 2, dueTime);
-                Console.WriteLine($"The process has been completed? {result.ToString()}");
+                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "department-director"));
+                bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 2, dueTime, "Deve ser decidido, podendo recusar uma parte das creditações caso estas não cumpram a lei ou o establecido no Regulamento.");
+                Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
             registerWorker("scientific-council", externalTask =>
             {
                 Console.WriteLine($"Scientific council task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Scientific council task is running..{externalTask.Id} -{DateTime.Now}");
-                bool result = _creditacaoWithNoCardCreation.ValidCardStateAndFinishProcess("CreditacaoISMAI", externalTask); 
-                Console.WriteLine($"The process has been completed? {result.ToString()}");
+                bool result = _creditacaoWithNoCardCreation.ValidCardStateAndFinishProcess("CreditacaoISMAI", externalTask);
+                Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
 
             registerWorker("coordenator-jury", externalTask =>
             {
                 Console.WriteLine($"Course coordinator Jury task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Course coordinator CET task is running..{externalTask.Id} -{DateTime.Now}");
-                DateTime dueTime = DateTime.Now.AddDays(Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "coordenator-jury")));
-                bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 0, dueTime, true);
-                Console.WriteLine($"The process has been completed? {result.ToString()}");
+                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "coordenator-jury"));
+                bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 0, dueTime,"O júri delibera sobre o pedido de creditação e o Coordenador de Curso remete o processo para o Conselho Científico.", true);
+                Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
 
             registerWorker("jury-delibers", externalTask =>
             {
                 Console.WriteLine($"Jury delibers task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Jury delibers task is running..{externalTask.Id} -{DateTime.Now}");
-                DateTime dueTime = DateTime.Now.AddDays(Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "jury-delibers")));
-                bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 2, dueTime, true);
-                Console.WriteLine($"The process has been completed? {result.ToString()}");
+                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "jury-delibers"));
+                bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 2, dueTime,"Presidente do conselho científico valida os dados.", true);
+                Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
 
             registerWorker("presidentcouncil-evaluates", externalTask =>
@@ -89,7 +89,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
                 Console.WriteLine($"Final result task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Final result task is running..{externalTask.Id} -{DateTime.Now}");
                 bool result = _creditacaoFinalStep.FinishProcess("CreditacaoISMAI", externalTask);
-                Console.WriteLine($"The process has been completed? {result.ToString()}");
+                Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
 
             pollingTimer = new Timer(_ => StartPolling(), null, _pollingtime, Timeout.Infinite);

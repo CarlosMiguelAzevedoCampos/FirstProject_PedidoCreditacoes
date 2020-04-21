@@ -18,10 +18,11 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
             _log = log;
         }
 
-        public bool CreateCardAndFinishProcess(string processName, ExternalTask externalTask, int boardId, DateTime dueTime, bool IsCetOrOtherCondition)
+        public bool CreateCardAndFinishProcess(string processName, ExternalTask externalTask, int boardId, int dueTime,string description, bool IsCetOrOtherCondition)
         {
+            DateTime createDueTime = _creditacaoService.AddWorkingDays(dueTime);
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - executing..");
-            if (ItsSummerBreakTime(DateTime.Now.Month) || ItsSummerBreakTime(dueTime.Month))
+            if (ItsSummerBreakTime(DateTime.Now.Month) || ItsSummerBreakTime(createDueTime.Month))
                 return false;
             string cardId = _taskProcessing.ReturnCardIdFromExternalTask(externalTask);
             string courseName = _taskProcessing.ReturnCourseNameFromExternalTask(externalTask);
@@ -32,7 +33,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
             if (!_creditacaoService.GetCardStatus(cardId))
                 return false;
             
-            string newCardId = _creditacaoService.CreateNewCard(cardId, courseName, studentName, courseInstitute, dueTime, IsCetOrOtherCondition, boardId);
+            string newCardId = _creditacaoService.CreateNewCard(cardId, description, courseName, studentName, courseInstitute, createDueTime, IsCetOrOtherCondition, boardId);
 
             if (string.IsNullOrEmpty(newCardId))
                 return false;
