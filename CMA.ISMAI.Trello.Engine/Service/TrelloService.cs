@@ -21,7 +21,7 @@ namespace CMA.ISMAI.Trello.Engine.Service
             TrelloAuthorization.Default.UserToken = GetUserToken();
         }
 
-        public async Task<string> AddCard(string name, string description, DateTime dueDate, int boardId, List<string> filesUrl)
+        public async Task<string> AddCard(string name, string description, DateTime dueDate, int boardId, List<string> filesUrl, string username)
         {
             try
             {
@@ -31,8 +31,9 @@ namespace CMA.ISMAI.Trello.Engine.Service
 
                 var board = _factory.Board(GetBoardId(boardId));
                 await board.Refresh();
+                IEnumerable<IMember> members = ObainUserForTheCard(username, board);
                 var list = board.Lists.FirstOrDefault();
-                var newCard = await list.Cards.Add(name, description, null, dueDate);
+                var newCard = await list.Cards.Add(name, description, null, dueDate, null, members);
                 var tasks = AddAttachmentsToACard(newCard, filesUrl);
                 await Task.WhenAll(tasks);
                 this._log.Info("A new card has created in trello!");
@@ -43,6 +44,16 @@ namespace CMA.ISMAI.Trello.Engine.Service
                 this._log.Fatal(ex.ToString());
             }
             return string.Empty;
+        }
+
+        private static IEnumerable<IMember> ObainUserForTheCard(string username, IBoard board)
+        {
+            var member = board.Memberships;
+            int userPosition = member.ToList().FindIndex(x => x.Member.UserName == username);
+            List<IMember> mem = new List<IMember>();
+            mem.Add(member[userPosition].Member);
+            IEnumerable<IMember> members = mem;
+            return members;
         }
 
         private async Task AddAttachmentsToACard(ICard newCard, List<string> filesUrl)

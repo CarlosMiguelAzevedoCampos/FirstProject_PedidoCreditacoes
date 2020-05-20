@@ -29,7 +29,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
             _creditacaoFinalStep = creditacaoFinalStep;
             _creditacaoWithNoCardCreation = creditacaoWithNoCardCreation;
             workers = new Dictionary<string, Action<ExternalTask>>();
-            _pollingtime = 30000;
+            _pollingtime = 1;
         }
         public void RegistWorkers()
         {

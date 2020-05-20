@@ -6,6 +6,7 @@ using CMA.ISMAI.Trello.Domain.Events;
 using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Automation;
 using CMA.ISMAI.Trello.Engine.Interface;
+using CMA.ISMAI.Trello.FileReader.Interfaces;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
             var cardnotificationMock = new Mock<ICardEventHandler>();
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
+            var fileReader = new Mock<IFileReader>();
 
             var urls = new List<string>();
             urls.Add("google.pt");
@@ -36,7 +38,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
 
             GetCardAttachmentsCommand getCardAttachmentsCommand = new GetCardAttachmentsCommand(cardId);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
-                 engineMock.Object, engineEventMock.Object);
+                engineMock.Object, engineEventMock.Object, fileReader.Object);
 
             Event result = cardCommandHandler.Handler(getCardAttachmentsCommand);
             trelloMock.Verify(x => x.ReturnCardAttachmenets(It.IsAny<string>()), Times.Once);
@@ -55,6 +57,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
             var cardnotificationMock = new Mock<ICardEventHandler>();
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
+            var fileReader = new Mock<IFileReader>();
 
             var urls = new List<string>();
 
@@ -63,7 +66,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
 
             GetCardAttachmentsCommand getCardAttachmentsCommand = new GetCardAttachmentsCommand(cardId);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
-                 engineMock.Object, engineEventMock.Object);
+                engineMock.Object, engineEventMock.Object, fileReader.Object);
 
             Event result = cardCommandHandler.Handler(getCardAttachmentsCommand);
             trelloMock.Verify(x => x.ReturnCardAttachmenets(It.IsAny<string>()), Times.Once);
@@ -82,10 +85,11 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
             var cardnotificationMock = new Mock<ICardEventHandler>();
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
+            var fileReader = new Mock<IFileReader>();
 
             GetCardAttachmentsCommand getCardAttachmentsCommand = new GetCardAttachmentsCommand(cardId);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
-                 engineMock.Object, engineEventMock.Object);
+                engineMock.Object, engineEventMock.Object, fileReader.Object);
 
             Event result = cardCommandHandler.Handler(getCardAttachmentsCommand);
             trelloMock.Verify(x => x.ReturnCardAttachmenets(It.IsAny<string>()), Times.Once);
@@ -104,6 +108,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
             var cardnotificationMock = new Mock<ICardEventHandler>();
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
+            var fileReader = new Mock<IFileReader>();
 
 
             trelloMock.Setup(x => x.IsTheProcessFinished(It.IsAny<string>()))
@@ -111,7 +116,7 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
 
             GetCardStatusCommand getCardStatusCommand = new GetCardStatusCommand(cardId);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
-                   engineMock.Object, engineEventMock.Object);
+                engineMock.Object, engineEventMock.Object, fileReader.Object);
 
             Event result = cardCommandHandler.Handler(getCardStatusCommand);
             Assert.True(result is CardStatusCompletedEvent);
@@ -129,13 +134,14 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
             var cardnotificationMock = new Mock<ICardEventHandler>();
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
+            var fileReader = new Mock<IFileReader>();
 
             trelloMock.Setup(x => x.IsTheProcessFinished(It.IsAny<string>()))
                        .Returns(Task.FromResult(0));
 
             GetCardStatusCommand getCardStatusCommand = new GetCardStatusCommand(cardId);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
-              engineMock.Object, engineEventMock.Object);
+                engineMock.Object, engineEventMock.Object, fileReader.Object);
 
             Event result = cardCommandHandler.Handler(getCardStatusCommand);
             Assert.True(result is CardStatusIncompletedEvent);
@@ -153,13 +159,14 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
             var cardnotificationMock = new Mock<ICardEventHandler>();
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
+            var fileReader = new Mock<IFileReader>();
 
             trelloMock.Setup(x => x.IsTheProcessFinished(It.IsAny<string>()))
                .Returns(Task.FromResult(2));
 
             GetCardStatusCommand getCardStatusCommand = new GetCardStatusCommand(cardId);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
-              engineMock.Object, engineEventMock.Object);
+                engineMock.Object, engineEventMock.Object, fileReader.Object);
 
             Event result = cardCommandHandler.Handler(getCardStatusCommand);
             Assert.True(result is CardStatusUnableToFindEvent);

@@ -6,6 +6,7 @@ using CMA.ISMAI.Trello.Domain.Events;
 using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Automation;
 using CMA.ISMAI.Trello.Engine.Interface;
+using CMA.ISMAI.Trello.FileReader.Interfaces;
 using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Trello.Domain.CommandHandlers
@@ -17,15 +18,17 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
         private readonly ICardEventHandler _cardEventHandler;
         private readonly IEngineEventHandler _workFlowEventHandler;
         private readonly IEngine _engine;
+        private readonly IFileReader _fileReader;
 
         public CardCommandHandler(ILog log, ITrello trello, ICardEventHandler cardEventHandler, IEngine engine,
-             IEngineEventHandler workFlowEventHandler)
+             IEngineEventHandler workFlowEventHandler, IFileReader fileReader)
         {
             _log = log;
             _trello = trello;
             _cardEventHandler = cardEventHandler;
             _engine = engine;
             _workFlowEventHandler = workFlowEventHandler;
+            _fileReader = fileReader;
         }
 
         public Event Handler(AddCardCommand request)
@@ -38,7 +41,9 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 CreateCardEvent(@event as AddCardFailedEvent);
                 return @event;
             }
-            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
+            string username = _fileReader.ReturnUserNameForTheCard(request.InstituteName, request.CourseName, request.BoardId);
+
+            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl, username).Result;
 
             return ReturnEventBasedOnCardId(request, cardId);
         }
@@ -53,7 +58,8 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 CreateCardEvent(@event as AddCardFailedEvent);
                 return @event;
             }
-            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl).Result;
+            string username = _fileReader.ReturnUserNameForTheCard(request.InstituteName, request.CourseName, request.BoardId);
+            string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl, username).Result;
             cardId = DeployProcess(cardId, request.CourseName, request.StudentName, request.InstituteName, request.IsCetOrOtherCondition);
             return ReturnEventBasedOnCardId(request, cardId);
         }

@@ -24,6 +24,7 @@
     <ProjectReference Include="..\CMA.ISMAI.Trello.API\CMA.ISMAI.Trello.API.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.Domain\CMA.ISMAI.Trello.Domain.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Trello.Engine\CMA.ISMAI.Trello.Engine.csproj" />
+    <ProjectReference Include="..\CMA.ISMAI.Trello.FileReader\CMA.ISMAI.Trello.FileReader.csproj" />
   </ItemGroup>
 
 </Project>

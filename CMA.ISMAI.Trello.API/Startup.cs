@@ -11,8 +11,8 @@ using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Automation;
 using CMA.ISMAI.Trello.Engine.Interface;
 using CMA.ISMAI.Trello.Engine.Service;
-using CMA.ISMAI.Trello.MessageBroker.Interface;
-using CMA.ISMAI.Trello.MessageBroker.Service;
+using CMA.ISMAI.Trello.FileReader.Interfaces;
+using CMA.ISMAI.Trello.FileReader.Services;
 using HealthChecks.UI.Client;
 using HealthChecks.UI.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -47,12 +47,11 @@ namespace CMA.ISMAI.Trello.API
             services.AddControllers();
             InitializeDependecyInjection(services);
 
-            if (!_currentEnvironment.IsDevelopment())
-            {
+       
                 services.AddHealthChecks().AddRabbitMQ(BaseConfiguration.ReturnSettingsValue("RabbitMq", "Uri"), null, "RabbitMQ")
                 .AddCheck<CamundaHealthCheck>("Camunda BPM").AddCheck<TrelloHealthCheck>("Trello");
                 services.AddHealthChecksUI();
-            }
+            
         }
 
         private void InitializeDependecyInjection(IServiceCollection services)
@@ -62,7 +61,7 @@ namespace CMA.ISMAI.Trello.API
             services.AddScoped<IEngine, EngineService>();
             services.AddScoped<IHttpRequest, HttpRequest>();
             services.AddScoped<IEventStore, StoreEvent>();
-            services.AddScoped<ISendNotificationService, SendNotificationService>();
+            services.AddScoped<IFileReader, FileReaderService>();
             // Domain - Commands
             services.AddScoped<ICardCommandHandler, CardCommandHandler>();
             // Domain - Events
@@ -86,8 +85,6 @@ namespace CMA.ISMAI.Trello.API
 
             loggerFactory.AddSerilog();
 
-            if (!_currentEnvironment.IsDevelopment())
-            {
                 app.UseHealthChecks("/hc", new HealthCheckOptions()
                 {
                     Predicate = _ => true,
@@ -98,7 +95,7 @@ namespace CMA.ISMAI.Trello.API
                 {
                     options.UIPath = "/hc-ui";
                 });
-            }
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

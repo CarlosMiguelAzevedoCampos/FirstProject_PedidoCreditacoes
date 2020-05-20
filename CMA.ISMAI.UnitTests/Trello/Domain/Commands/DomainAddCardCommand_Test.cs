@@ -6,6 +6,7 @@ using CMA.ISMAI.Trello.Domain.Events;
 using CMA.ISMAI.Trello.Domain.Interface;
 using CMA.ISMAI.Trello.Engine.Automation;
 using CMA.ISMAI.Trello.Engine.Interface;
+using CMA.ISMAI.Trello.FileReader.Interfaces;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -29,11 +30,12 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
             var cardnotificationMock = new Mock<ICardEventHandler>();
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
+            var fileReader = new Mock<IFileReader>();
 
             AddCardCommand addCard = new AddCardCommand(name, DateTime.Now, description, boardId, new List<string>(),
                 instituteName, courseName, studentName, IsCetOrOtherCondition);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
-                engineMock.Object, engineEventMock.Object);
+              engineMock.Object, engineEventMock.Object, fileReader.Object);
 
             Event result = cardCommandHandler.Handler(addCard);
             Assert.True(result is AddCardFailedEvent);
@@ -51,12 +53,13 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
             var cardnotificationMock = new Mock<ICardEventHandler>();
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
+            var fileReader = new Mock<IFileReader>();
 
 
             AddCardCommand addCard = new AddCardCommand(name, DateTime.Now, description, boardId, null,
                instituteName, courseName, studentName, IsCetOrOtherCondition);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
-                engineMock.Object, engineEventMock.Object);
+                engineMock.Object, engineEventMock.Object, fileReader.Object);
 
             Event result = cardCommandHandler.Handler(addCard);
             Assert.True(result is AddCardFailedEvent);
@@ -76,14 +79,15 @@ namespace CMA.ISMAI.UnitTests.Trello.Domain.Commands
             var cardnotificationMock = new Mock<ICardEventHandler>();
             var engineMock = new Mock<IEngine>();
             var engineEventMock = new Mock<IEngineEventHandler>();
+            var fileReader = new Mock<IFileReader>();
 
-            trelloMock.Setup(x => x.AddCard(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<List<string>>()))
+            trelloMock.Setup(x => x.AddCard(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<List<string>>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(Guid.NewGuid().ToString()));
 
             AddCardCommand addCard = new AddCardCommand(name, DateTime.Now.AddDays(20), description, boardId, new List<string>(),
                instituteName, courseName, studentName, IsCetOrOtherCondition);
             CardCommandHandler cardCommandHandler = new CardCommandHandler(logMock.Object, trelloMock.Object, cardnotificationMock.Object,
-                engineMock.Object, engineEventMock.Object);
+                engineMock.Object, engineEventMock.Object, fileReader.Object);
 
             Event result = cardCommandHandler.Handler(addCard);
             Assert.True(result is AddCardCompletedEvent);
