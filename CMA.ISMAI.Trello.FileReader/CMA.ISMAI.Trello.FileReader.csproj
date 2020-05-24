@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CMA.ISMAI.Core\CMA.ISMAI.Core.csproj" />
     <ProjectReference Include="..\CMA.ISMAI.Logging\CMA.ISMAI.Logging.csproj" />
   </ItemGroup>
 

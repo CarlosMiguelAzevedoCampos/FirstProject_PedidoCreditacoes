@@ -20,5 +20,11 @@
     <ProjectReference Include="..\CMA.ISMAI.Trello.Engine\CMA.ISMAI.Trello.Engine.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 
 </Project>

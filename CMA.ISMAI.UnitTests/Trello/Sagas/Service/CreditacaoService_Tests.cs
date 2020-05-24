@@ -81,17 +81,6 @@ namespace CMA.ISMAI.UnitTests.Sagas
             Assert.True(result.Count > 0);
         }
 
-        [Fact(DisplayName = "Summer break is activated and it's time to delay activities")]
-        [Trait("SagaService", "Summer break condition")]
-        public void CreditacoesService_ISummerBreakActivated_ShouldReturnTheOptionState()
-        {
-            var logMock = new Mock<ILog>();
-            var httprequestMock = new Mock<IHttpRequest>();
-            ISagaService creditacoesService = new CreditacaoService(logMock.Object, httprequestMock.Object);
-            bool result = creditacoesService.IsSummerBreakTime();
-            Assert.True(result);
-        }
-
         [Fact(DisplayName = "Delete Card. Should Fail.")]
         [Trait("SagaService", "Delete Card")]
         public void CreditacoesService_DeleteCCard_ShouldFailToDeleteTheCard()

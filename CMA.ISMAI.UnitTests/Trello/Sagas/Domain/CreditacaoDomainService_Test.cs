@@ -75,17 +75,7 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
             Assert.True(value);
         }
 
-        [Fact(DisplayName = "Summer break is activated and it's time to delay activities")]
-        [Trait("SagaService", "Summer break condition")]
-        public void CreditacoesService_ISummerBreakActivated_ShouldReturnTheOptionState()
-        {
-            var sagaMock = new Mock<ISagaService>();
-            sagaMock.Setup(x => x.IsSummerBreakTime()).Returns(true);
-            CreditacaoDomainService creditacaoDomain = new CreditacaoDomainService(sagaMock.Object);
-            bool result = creditacaoDomain.IsSummerBreakTime(8);
-            Assert.True(result);
-        }
-
+     
         [Fact(DisplayName = "Summer break is activated and it's July. No delay will be activated")]
         [Trait("Creditação Service", "Summer break condition")]
         public void CreditacoesService_IsTimeForSummerBreak_ShouldReturnFalse()

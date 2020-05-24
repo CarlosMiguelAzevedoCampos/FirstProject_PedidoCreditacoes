@@ -1,4 +1,5 @@
-﻿using CMA.ISMAI.Core.Events;
+﻿using CMA.ISMAI.Core;
+using CMA.ISMAI.Core.Events;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Trello.Domain.Commands;
 using CMA.ISMAI.Trello.Domain.Enum;
@@ -41,7 +42,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 CreateCardEvent(@event as AddCardFailedEvent);
                 return @event;
             }
-            string username = _fileReader.ReturnUserNameForTheCard(request.InstituteName, request.CourseName, request.BoardId);
+            string username = _fileReader.ReturnUserNameForTheCard(request.InstituteName, request.CourseName, request.BoardId, BaseConfiguration.ReturnSettingsValue("FileReader", "Path"));
 
             string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl, username).Result;
 
@@ -58,7 +59,7 @@ namespace CMA.ISMAI.Trello.Domain.CommandHandlers
                 CreateCardEvent(@event as AddCardFailedEvent);
                 return @event;
             }
-            string username = _fileReader.ReturnUserNameForTheCard(request.InstituteName, request.CourseName, request.BoardId);
+            string username = _fileReader.ReturnUserNameForTheCard(request.InstituteName, request.CourseName, request.BoardId, BaseConfiguration.ReturnSettingsValue("FileReader", "Path"));
             string cardId = _trello.AddCard(request.Name, request.Description, request.DueTime, request.BoardId, request.FilesUrl, username).Result;
             cardId = DeployProcess(cardId, request.CourseName, request.StudentName, request.InstituteName, request.IsCetOrOtherCondition);
             return ReturnEventBasedOnCardId(request, cardId);
