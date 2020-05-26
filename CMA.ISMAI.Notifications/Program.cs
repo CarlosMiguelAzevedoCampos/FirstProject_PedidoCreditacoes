@@ -21,7 +21,7 @@ namespace CMA.ISMAI.Notifications
             loggerFactory.AddSerilog();
 
             serviceProvider.GetRequiredService<ConsoleApplication>().Run();
-            Console.ReadKey();
+            Console.Read();
         }
 
         private static IServiceCollection ConfigureServices()

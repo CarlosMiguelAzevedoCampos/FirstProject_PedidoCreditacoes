@@ -25,7 +25,7 @@ namespace CMA.ISMAI.Sagas.UI
             loggerFactory.AddSerilog();
 
             serviceProvider.GetRequiredService<ConsoleApplication>().Run();
-            Console.ReadKey();
+            Console.Read();
         }
          
         private static IServiceCollection ConfigureServices()

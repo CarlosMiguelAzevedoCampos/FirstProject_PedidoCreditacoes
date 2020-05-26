@@ -45,7 +45,6 @@ namespace CMA.ISMAI.Notifications
                          autoAck: true,
                          consumer: consumer);
 
-                    Console.WriteLine("Processing Notifications..");
                     Console.ReadKey();
                 }
             }
