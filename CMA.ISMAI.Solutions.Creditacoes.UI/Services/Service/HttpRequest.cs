@@ -24,12 +24,6 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Services.Service
         {
             try
             {
-                using (var x = new System.Net.Http.HttpClient())
-                {
-                    var s = new System.Net.Http.HttpRequestMessage();
-                    s.RequestUri = new Uri("http://mywebapi/Trello/GetCardStatus?cardId=132"); // ASP.NET 2.x
-                    var response = await x.SendAsync(s);
-                }
                 HttpClient client = new HttpClient();
                 var json = JsonConvert.SerializeObject(card);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
