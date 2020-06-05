@@ -6,7 +6,7 @@
     <ProjectGuid>b8c601e8-b303-44e6-8dcc-24cbc8284d95</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/weatherforecast</DockerServiceUrl>
-    <DockerServiceName>cma.ismai.trello.api</DockerServiceName>
+    <DockerServiceName>cma.ismai.solutions.creditacoes.ui</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

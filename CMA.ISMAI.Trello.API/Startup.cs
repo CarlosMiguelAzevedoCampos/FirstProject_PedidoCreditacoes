@@ -77,7 +77,7 @@ namespace CMA.ISMAI.Trello.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

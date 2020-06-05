@@ -3,27 +3,49 @@ version: '3.4'
 services:
   cma.ismai.trello.api:
     image: ${DOCKER_REGISTRY-}cmaismaitrelloapi
+    networks:
+      - network_cmaismai
+    container_name: cmaismaitrelloapi
+    ports:
+    - 5666:80
+    - 5667:443
     build:
       context: .
       dockerfile: CMA.ISMAI.Trello.API/Dockerfile
 
   cma.ismai.sagas.ui:
     image: ${DOCKER_REGISTRY-}cmaismaisagasui
+    container_name: cmaismaisagasui
     build:
       context: .
       dockerfile: CMA.ISMAI.Sagas/Dockerfile
+    networks:
+      - network_cmaismai
 
 
   cma.ismai.notifications:
     image: ${DOCKER_REGISTRY-}cmaismainotifications
+    container_name: cmaismainotifications
     build:
       context: .
       dockerfile: CMA.ISMAI.Notifications/Dockerfile
+    networks:
+      - network_cmaismai
 
 
   cma.ismai.solutions.creditacoes.ui:
     image: ${DOCKER_REGISTRY-}cmaismaisolutionscreditacoesui
+    container_name: cmaismaisolutionscreditacoesui
     build:
       context: .
       dockerfile: CMA.ISMAI.Solutions.Creditacoes.UI/Dockerfile
+    ports:
+    - 5668:80
+    - 5669:443
+    networks:
+      - network_cmaismai
 
+
+networks:
+   network_cmaismai:
+    driver: "bridge"
