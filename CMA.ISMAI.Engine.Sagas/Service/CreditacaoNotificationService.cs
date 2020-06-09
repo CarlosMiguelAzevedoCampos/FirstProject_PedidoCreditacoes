@@ -1,4 +1,5 @@
-﻿using CMA.ISMAI.Logging.Interface;
+﻿using CMA.ISMAI.Core;
+using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Sagas.Service.Interface;
 using CMA.ISMAI.Sagas.Service.Model;
 using Newtonsoft.Json;
@@ -23,16 +24,16 @@ namespace CMA.ISMAI.Sagas.Service
             {
                 var factory = new ConnectionFactory()
                 {
-                    HostName = "localhost",
-                    Port = 5672,
-                    UserName = "admin",
-                    Password = "admin"
+                    HostName = BaseConfiguration.ReturnSettingsValue("RabbitMq", "Uri"),
+                    Port = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("RabbitMq", "Port")),
+                    UserName = BaseConfiguration.ReturnSettingsValue("RabbitMq", "Username"),
+                    Password = BaseConfiguration.ReturnSettingsValue("RabbitMq", "Password")
                 };
 
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
                 {
-                    channel.QueueDeclare(queue: "NotificationsQueue",
+                    channel.QueueDeclare(queue: BaseConfiguration.ReturnSettingsValue("RabbitMq", "Queue"),
                                          durable: false,
                                          exclusive: false,
                                          autoDelete: false,
@@ -41,7 +42,7 @@ namespace CMA.ISMAI.Sagas.Service
                     var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new MessageBody(to, text)));
 
                     channel.BasicPublish(exchange: "",
-                                         routingKey: "NotificationsQueue",
+                                         routingKey: BaseConfiguration.ReturnSettingsValue("RabbitMq", "Queue"),
                                          basicProperties: null,
                                          body: body);
                 }

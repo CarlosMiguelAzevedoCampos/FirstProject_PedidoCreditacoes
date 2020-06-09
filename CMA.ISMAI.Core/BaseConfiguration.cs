@@ -13,6 +13,7 @@ namespace CMA.ISMAI.Core
             _configuration = new ConfigurationBuilder()
                                      .SetBasePath(Directory.GetCurrentDirectory()) // Directory where the json files are located
                                      .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                                     .AddEnvironmentVariables()
                                      .Build();
         }
         public static string ReturnSettingsValue(string sectionKey, string sectionValue)

@@ -105,7 +105,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
         private void PollTasks()
         {
             try
-            {
+            {   
                 var tasks = camundaEngineClient.ExternalTaskService.FetchAndLockTasks("CreditacaoISMAI", 1000000, workers.Keys, 30000, null);
                 Parallel.ForEach(
                     tasks,

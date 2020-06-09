@@ -33,7 +33,7 @@ namespace CMA.ISMAI.Notifications
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
                 {
-                    channel.QueueDeclare(queue: "NotificationsQueue",
+                    channel.QueueDeclare(queue: BaseConfiguration.ReturnSettingsValue("RabbitMq", "Queue"),
                                          durable: false,
                                          exclusive: false,
                                          autoDelete: false,
@@ -41,17 +41,17 @@ namespace CMA.ISMAI.Notifications
 
                     var consumer = new EventingBasicConsumer(channel);
                     consumer.Received += Consumer_Received;
-                    channel.BasicConsume(queue: "NotificationsQueue",
+                    channel.BasicConsume(queue: BaseConfiguration.ReturnSettingsValue("RabbitMq", "Queue"),
                          autoAck: true,
                          consumer: consumer);
 
-                    Console.ReadKey();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.Fatal(ex.ToString());
             }
+            Console.ReadLine();
         }
 
         private void Consumer_Received(object sender, BasicDeliverEventArgs e)

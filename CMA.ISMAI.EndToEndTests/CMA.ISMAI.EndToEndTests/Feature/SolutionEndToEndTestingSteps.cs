@@ -41,7 +41,7 @@ namespace CMA.ISMAI.EndToEndTests
         [When(@"I navigate to Criar Processo")]
         public void WhenINavigateToCriarProcesso()
         {
-            webDriver.Navigate().GoToUrl("https://localhost:5005/Creditacao/Create");
+            webDriver.Navigate().GoToUrl("http://localhost:5668/Creditacao/Create");
         }
 
         [When(@"I fill in the necessary information")]
