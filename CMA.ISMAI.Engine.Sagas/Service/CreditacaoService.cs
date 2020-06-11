@@ -45,7 +45,7 @@ namespace CMA.ISMAI.Sagas.Service
         {
             try
             {
-                return Convert.ToBoolean(BaseConfiguration.ReturnSettingsValue("SummerDealy", "Activate-delay"));
+                return Convert.ToBoolean(BaseConfiguration.ReturnSettingsValue("SummerDelay", "Activatedelay"));
             }
             catch (Exception ex)
             {

@@ -76,11 +76,11 @@ namespace CMA.ISMAI.Trello.Engine.Service
         {
             switch (boardId)
             {
-                case (int)BoardType.Course_coordinator:
+                case (int)BoardType.Coursecoordinator:
                     return GetCoordinatorBoardId();
-                case (int)BoardType.Department_director:
+                case (int)BoardType.Departmentdirector:
                     return GetDepartmentDirectorBoardId();
-                case (int)BoardType.Scientific_council:
+                case (int)BoardType.Scientificcouncil:
                     return GetScientificCouncilBoardId();
                 case (int)BoardType.Testing_board:
                     return GetTestingBoardId();
@@ -146,9 +146,9 @@ namespace CMA.ISMAI.Trello.Engine.Service
 
         private string GetAppKey() => BaseConfiguration.ReturnSettingsValue("TrelloKey", "AppKey");
         private string GetUserToken() => BaseConfiguration.ReturnSettingsValue("TrelloKey", "UserToken");
-        private string GetCoordinatorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Course_coordinator");
-        private string GetDepartmentDirectorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Department_director");
-        private string GetScientificCouncilBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Scientific_council");
+        private string GetCoordinatorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Coursecoordinator");
+        private string GetDepartmentDirectorBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Departmentdirector");
+        private string GetScientificCouncilBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Scientificcouncil");
         private string GetTestingBoardId() => BaseConfiguration.ReturnSettingsValue("BoardIds", "Testing_board");
     }
 }

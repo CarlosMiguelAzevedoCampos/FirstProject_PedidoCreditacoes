@@ -45,13 +45,13 @@ namespace CMA.ISMAI.Notifications
                          autoAck: true,
                          consumer: consumer);
 
+                    Console.ReadLine();
                 }
             }
             catch (Exception ex)
             {
                 _log.Fatal(ex.ToString());
             }
-            Console.ReadLine();
         }
 
         private void Consumer_Received(object sender, BasicDeliverEventArgs e)

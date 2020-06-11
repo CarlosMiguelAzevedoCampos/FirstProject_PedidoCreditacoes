@@ -12,26 +12,31 @@ services:
     build:
       context: .
       dockerfile: CMA.ISMAI.Trello.API/Dockerfile
+    volumes:
+      - C:/Shared/ismai.xlsx:/shared
     restart: always
     environment:
+      - COMPOSE_CONVERT_WINDOWS_PATHS=1
       - RabbitMqCore__Uri=rabbitmq
       - RabbitMqCore__Username=admin
       - RabbitMqCore__Password=admin
       - RabbitMqCore__Queue=NotificationsQueue
       - RabbitMqCore__Port=5672
-      - ElasticConfiguration__Uri=http://elasticsearch:9200/
+      - ElasticConfiguration__Uri=http://elasticsearch:9200/RabbitMq
       - EventStore__IPAddress=tcp://admin:changeit@eventstore:1113
-      - BoardIds__Course_coordinator=5e7a615492c8e839429fd13b
-      - BoardIds__Department_director=5e7a61697c32d815f76c71ce
-      - BoardIds__Scientific_council=5e7a617c1c87ae276116c00f
+      - BoardIds__Coursecoordinator=5e7a615492c8e839429fd13b
+      - BoardIds__Departmentdirector=5e7a61697c32d815f76c71ce
+      - BoardIds__Scientificcouncil=5e7a617c1c87ae276116c00f
       - TrelloKey__AppKey=b9ef9c087e54b015072af32ee9678bbe
       - TrelloKey__UserToken=0aa0946c32a9925cbcbf5125c4a6db676061502adde9b8213fc0e9059f59f9e9
       - Trello__Uri=https://api.trello.com
       - RabbitMq__Uri=amqp://admin:admin@rabbitmq:5672/
       - CamundaHealth__Uri=http://camunda:8080/
       - Camunda__Uri=http://camunda:8080/
-      - FileReader__Path=C:\\Users\\Carlos Campos\\Desktop\\ismai.xlsx
+      - FileReader__Path=//shared//ismai.xlsx
       - HealthChecksUI__HealthChecks_Uri=http://cmaismaitrelloapi/hc
+      - ASPNETCORE_ENVIRONMENT=Production
+
 
   cma.ismai.sagas.ui:
     image: ${DOCKER_REGISTRY-}cmaismaisagasui
@@ -48,18 +53,19 @@ services:
       - RabbitMq__Password=admin
       - RabbitMq__Queue=NotificationsQueue
       - RabbitMq__Port=5672
-      - TrelloCardsTime__course-coordinator=20
-      - TrelloCardsTime__department-director=5
-      - TrelloCardsTime__coordenator-jury=2
-      - TrelloCardsTime__jury-delibers=2
+      - TrelloCardsTime__coursecoordinator=20
+      - TrelloCardsTime__departmentdirector=5
+      - TrelloCardsTime__coordenatorjury=2
+      - TrelloCardsTime__jurydelibers=2
       - ElasticConfiguration__Uri=http://elasticsearch:9200/
-      - SummerDealy__Activate-delay=true
+      - SummerDelay__Activatedelay=true
       - EmailSecretaria__Email=carlosmiguelcampos1996@gmail.com
       - CamundaConfiguration__Uri=http://camunda:8080/
       - TrelloApi__AddCardUri=http://cmaismaitrelloapi/Trello/AddCard
       - TrelloApi__DeleteCardUri=http://cmaismaitrelloapi/Trello/DeleteCard
       - TrelloApi__GetCardStateUri=http://cmaismaitrelloapi/Trello/GetCardStatus
       - TrelloApi__GetCardAttachmentsUri=http://cmaismaitrelloapi/Trello/GetCardAttachments
+      - ASPNETCORE_ENVIRONMENT=Production
 
 
 
@@ -80,7 +86,8 @@ services:
       - RabbitMq__Port=5672
       - Notification__Email=trelloismai@gmail.com
       - Notification__Password=latiascampos
-      - ElasticConfiguration__Urit=http://elasticsearch:9200/
+      - ElasticConfiguration__Uri=http://elasticsearch:9200/
+      - ASPNETCORE_ENVIRONMENT=Production
 
 
   cma.ismai.solutions.creditacoes.ui:
@@ -96,11 +103,12 @@ services:
       - network_cmaismai
     restart: always
     environment:
-      - Trello__Uri=http://cmaismaitrelloapi:80/Trello/AddCardAndProcess
+      - Trello__Uri=http://cmaismaitrelloapi/Trello/AddCardAndProcess
       - ElasticConfiguration__Uri=http://elasticsearch:9200/
-      - ElasticConfiguration__Uri=http://elasticsearch:9200/
-      - TrelloCardsTime__course-coordinator-jury=5
-      - TrelloCardsTime__course-coordinator-proposal=15
+      - TrelloCardsTime__coursecoordinatorjury=5
+      - TrelloCardsTime__coursecoordinatorproposal=15
+      - ASPNETCORE_ENVIRONMENT=Production
+
 
   
   elasticsearch:

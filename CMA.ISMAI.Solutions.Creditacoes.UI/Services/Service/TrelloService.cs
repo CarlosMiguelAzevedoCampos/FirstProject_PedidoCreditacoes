@@ -20,7 +20,7 @@ namespace CMA.ISMAI.Solutions.Creditacoes.UI.Services.Service
         {
             string cardName = $"{creditacaoDto.InstituteName} - {creditacaoDto.CourseName} - {creditacaoDto.StudentName}";
             string cardDescription = ReturnCardDescriptionBasedOnTheChoseenProcess(creditacaoDto.IsCetOrOtherCondition);
-            var card = new CardDto(cardName, CreateDueTime(creditacaoDto.IsCetOrOtherCondition ? Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "course-coordinator-jury")) : Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "course-coordinator-proposal"))) , cardDescription, 0, new List<string>() { creditacaoDto.Documents },
+            var card = new CardDto(cardName, CreateDueTime(creditacaoDto.IsCetOrOtherCondition ? Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "coursecoordinatorjury")) : Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "coursecoordinatorproposal"))) , cardDescription, 0, new List<string>() { creditacaoDto.Documents },
                 creditacaoDto.InstituteName, creditacaoDto.CourseName, creditacaoDto.StudentName, creditacaoDto.IsCetOrOtherCondition);
             _log.Info("Posting a new card to trello...");
             bool value = _request.PostNewCardAsync(card).Result;

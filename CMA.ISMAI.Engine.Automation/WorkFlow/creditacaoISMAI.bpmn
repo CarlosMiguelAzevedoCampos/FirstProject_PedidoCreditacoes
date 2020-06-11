@@ -4,12 +4,12 @@
     <bpmn:startEvent id="Event_1sz4su4">
       <bpmn:outgoing>Flow_1h33v1b</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="Activity_09wn22t" name="Coordenador de Curso processa pedido de creditação" camunda:type="external" camunda:topic="course-coordinator">
+    <bpmn:serviceTask id="Activity_09wn22t" name="Coordenador de Curso processa pedido de creditação" camunda:type="external" camunda:topic="coursecoordinator">
       <bpmn:incoming>Flow_1r75eh1</bpmn:incoming>
       <bpmn:outgoing>Flow_026rhfc</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_026rhfc" sourceRef="Activity_09wn22t" targetRef="Activity_0yx2ura" />
-    <bpmn:serviceTask id="Activity_0yx2ura" name="Diretor de departamento verifica processo" camunda:type="external" camunda:topic="department-director">
+    <bpmn:serviceTask id="Activity_0yx2ura" name="Diretor de departamento verifica processo" camunda:type="external" camunda:topic="departmentdirector">
       <bpmn:incoming>Flow_026rhfc</bpmn:incoming>
       <bpmn:outgoing>Flow_0d2qhg2</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -40,7 +40,7 @@
     <bpmn:sequenceFlow id="Flow_02bu10o" sourceRef="Gateway_0qc9jlb" targetRef="Activity_1lh3t0a">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{cet}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Activity_1v5lfxr" name="Júri delibera e Coordenador remete" camunda:type="external" camunda:topic="jury-delibers">
+    <bpmn:serviceTask id="Activity_1v5lfxr" name="Júri delibera e Coordenador remete" camunda:type="external" camunda:topic="jurydelibers">
       <bpmn:incoming>Flow_0vf3qpm</bpmn:incoming>
       <bpmn:outgoing>Flow_17qga1d</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -50,7 +50,7 @@
       <bpmn:incoming>Flow_17qga1d</bpmn:incoming>
       <bpmn:outgoing>Flow_1ctsyv5</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_1lh3t0a" name="Coordenador de Curso convoca o Júri" camunda:type="external" camunda:topic="coordenator-jury">
+    <bpmn:serviceTask id="Activity_1lh3t0a" name="Coordenador de Curso convoca o Júri" camunda:type="external" camunda:topic="coordenatorjury">
       <bpmn:incoming>Flow_02bu10o</bpmn:incoming>
       <bpmn:outgoing>Flow_0vf3qpm</bpmn:outgoing>
     </bpmn:serviceTask>

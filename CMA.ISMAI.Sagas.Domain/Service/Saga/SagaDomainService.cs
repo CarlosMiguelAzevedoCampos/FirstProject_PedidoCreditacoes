@@ -33,20 +33,20 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
         }
         public void RegistWorkers()
         {
-            registerWorker("course-coordinator", externalTask =>
+            registerWorker("coursecoordinator", externalTask =>
             {
                 _log.Info($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
                 Console.WriteLine($"Course coordinator task is running..{externalTask.Id} -{DateTime.Now}");
-                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "course-coordinator"));
+                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "coursecoordinator"));
                 bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 1, dueTime, "O diretor de departamento deve verificar o processo e remetê-lo ao Conselho Científico");
                 Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
 
-            registerWorker("department-director", externalTask =>
+            registerWorker("departmentdirector", externalTask =>
             {
                 Console.WriteLine($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Department director task is running..{externalTask.Id} -{DateTime.Now}");
-                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "department-director"));
+                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "departmentdirector"));
                 bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 2, dueTime, "Deve ser decidido, podendo recusar uma parte das creditações caso estas não cumpram a lei ou o establecido no Regulamento.");
                 Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
@@ -58,20 +58,20 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
                 Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
 
-            registerWorker("coordenator-jury", externalTask =>
+            registerWorker("coordenatorjury", externalTask =>
             {
                 Console.WriteLine($"Course coordinator Jury task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Course coordinator CET task is running..{externalTask.Id} -{DateTime.Now}");
-                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "coordenator-jury"));
+                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "coordenatorjury"));
                 bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 0, dueTime,"O júri delibera sobre o pedido de creditação e o Coordenador de Curso remete o processo para o Conselho Científico.", true);
                 Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
 
-            registerWorker("jury-delibers", externalTask =>
+            registerWorker("jurydelibers", externalTask =>
             {
                 Console.WriteLine($"Jury delibers task is running..{externalTask.Id} -{DateTime.Now}");
                 _log.Info($"Jury delibers task is running..{externalTask.Id} -{DateTime.Now}");
-                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "jury-delibers"));
+                int dueTime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TrelloCardsTime", "jurydelibers"));
                 bool result = _creditacaoWithCardCreation.CreateCardAndFinishProcess("CreditacaoISMAI", externalTask, 2, dueTime,"Presidente do conselho científico valida os dados.", true);
                 Console.WriteLine($"{externalTask.Id} -{DateTime.Now} - The process has been completed? {result.ToString()}");
             });
@@ -117,7 +117,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
             }
             catch (Exception ex)
             {
-                _log.Fatal(ex.InnerException.ToString());
+                _log.Fatal(ex.ToString());
             }
         }
 
