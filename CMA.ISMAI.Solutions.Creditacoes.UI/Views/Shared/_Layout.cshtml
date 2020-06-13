@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using CMA.ISMAI.Core
+
+@{
+    var healthUrl = BaseConfiguration.ReturnSettingsValue("HealthCheck", "Uri");
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,7 +30,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Creditacao" asp-action="Create">Criar Processo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="https://localhost:5001/hc-ui#/healthchecks">HealthChecks</a>
+                            <a class="nav-link text-dark" href="@healthUrl">HealthChecks</a>
                         </li>
                     </ul>
                 </div>

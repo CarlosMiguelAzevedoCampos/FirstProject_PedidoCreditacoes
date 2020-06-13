@@ -50,14 +50,14 @@ namespace CMA.ISMAI.Trello.FileReader.Services
                                 }
                                 catch (Exception ex)
                                 {
-                                    _log.Info(ex.ToString());
+                                    _log.Info(string.Format("{0}, This error's can happend when empty cells are in the excel..", ex.ToString()));
                                 }
                             }
                         }
                     }
                     return fileModelList;
                 }
-                _log.Info("File not found..., please verify AppSettings.json");
+                _log.Info("File not found...");
             }
             catch (Exception ex)
             {

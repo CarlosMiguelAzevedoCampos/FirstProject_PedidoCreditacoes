@@ -97,8 +97,6 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
 
         private void StartPolling()
         {
-            _log.Info($"Time to poll tasks!, workerId is CreditacaoISMAI");
-            Console.WriteLine($"Time to poll tasks!, workerId is CreditacaoISMAI - {DateTime.Now}");
             PollTasks();
             pollingTimer.Change(_pollingtime, Timeout.Infinite);
         }
@@ -117,7 +115,9 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
             }
             catch (Exception ex)
             {
-                _log.Fatal(ex.ToString());
+                _log.Fatal(string.Format("{0}, Camunda is starting..?", ex.ToString()));
+                Console.WriteLine(string.Format("{0},Camunda is starting..?, let's wait 30 seconds", ex.ToString()));
+                Thread.Sleep(30000);
             }
         }
 

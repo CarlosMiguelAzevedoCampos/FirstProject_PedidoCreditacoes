@@ -12,10 +12,12 @@ services:
     build:
       context: .
       dockerfile: CMA.ISMAI.Trello.API/Dockerfile
-    volumes:
-      - C:/Shared/ismai.xlsx:/shared
     restart: always
+    volumes:
+      - C:/Shared:/shared
     environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - FileReader__Path=//shared//ismai.xlsx
       - COMPOSE_CONVERT_WINDOWS_PATHS=1
       - RabbitMqCore__Uri=rabbitmq
       - RabbitMqCore__Username=admin
@@ -32,10 +34,8 @@ services:
       - Trello__Uri=https://api.trello.com
       - RabbitMq__Uri=amqp://admin:admin@rabbitmq:5672/
       - CamundaHealth__Uri=http://camunda:8080/
-      - Camunda__Uri=http://camunda:8080/
-      - FileReader__Path=//shared//ismai.xlsx
+      - Camunda__Uri=http://camunda:8080/engine-rest/engine/default/
       - HealthChecksUI__HealthChecks_Uri=http://cmaismaitrelloapi/hc
-      - ASPNETCORE_ENVIRONMENT=Production
 
 
   cma.ismai.sagas.ui:
@@ -48,6 +48,7 @@ services:
       - network_cmaismai
     restart: always
     environment:
+      - ASPNETCORE_ENVIRONMENT=Production
       - RabbitMq__Uri=rabbitmq
       - RabbitMq__Username=admin
       - RabbitMq__Password=admin
@@ -60,12 +61,11 @@ services:
       - ElasticConfiguration__Uri=http://elasticsearch:9200/
       - SummerDelay__Activatedelay=true
       - EmailSecretaria__Email=carlosmiguelcampos1996@gmail.com
-      - CamundaConfiguration__Uri=http://camunda:8080/
+      - CamundaConfiguration__Uri=http://camunda:8080/engine-rest/engine/default/
       - TrelloApi__AddCardUri=http://cmaismaitrelloapi/Trello/AddCard
       - TrelloApi__DeleteCardUri=http://cmaismaitrelloapi/Trello/DeleteCard
       - TrelloApi__GetCardStateUri=http://cmaismaitrelloapi/Trello/GetCardStatus
       - TrelloApi__GetCardAttachmentsUri=http://cmaismaitrelloapi/Trello/GetCardAttachments
-      - ASPNETCORE_ENVIRONMENT=Production
 
 
 
@@ -85,7 +85,7 @@ services:
       - RabbitMq__Queue=NotificationsQueue
       - RabbitMq__Port=5672
       - Notification__Email=trelloismai@gmail.com
-      - Notification__Password=latiascampos
+      - Notification__Password=trelloteste123
       - ElasticConfiguration__Uri=http://elasticsearch:9200/
       - ASPNETCORE_ENVIRONMENT=Production
 
@@ -107,6 +107,7 @@ services:
       - ElasticConfiguration__Uri=http://elasticsearch:9200/
       - TrelloCardsTime__coursecoordinatorjury=5
       - TrelloCardsTime__coursecoordinatorproposal=15
+      - HealthCheck__Uri=http://localhost:5666/hc-ui
       - ASPNETCORE_ENVIRONMENT=Production
 
 
@@ -160,7 +161,7 @@ services:
 
   eventstore.db:
     container_name: eventstore
-    image: eventstore/eventstore
+    image: eventstore/eventstore:release-5.0.8
     environment:
       - EVENTSTORE_CLUSTER_SIZE=1
       - EVENTSTORE_INT_TCP_PORT=1112

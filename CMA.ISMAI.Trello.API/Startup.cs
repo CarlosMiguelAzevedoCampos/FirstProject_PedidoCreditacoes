@@ -86,7 +86,7 @@ namespace CMA.ISMAI.Trello.API
             loggerFactory.AddSerilog();
             if (!_currentEnvironment.IsDevelopment())
             {
-                app.UseHealthChecks("/hc", new HealthCheckOptions()
+                 app.UseHealthChecks("/hc", new HealthCheckOptions()
                 {
                     Predicate = _ => true,
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse

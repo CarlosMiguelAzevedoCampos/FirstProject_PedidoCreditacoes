@@ -7,17 +7,20 @@ using CMA.ISMAI.Sagas.Domain.Service.Saga;
 using CMA.ISMAI.Sagas.Service;
 using CMA.ISMAI.Sagas.Service.Interface;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System;
+using System.Threading.Tasks;
 
 namespace CMA.ISMAI.Sagas.UI
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
+            var hostBuilder = new HostBuilder();
             var services = ConfigureServices();
 
             var serviceProvider = services.BuildServiceProvider();
@@ -25,9 +28,9 @@ namespace CMA.ISMAI.Sagas.UI
             loggerFactory.AddSerilog();
 
             serviceProvider.GetRequiredService<ConsoleApplication>().Run();
-            Console.Read();
+            await hostBuilder.RunConsoleAsync();
         }
-         
+
         private static IServiceCollection ConfigureServices()
         {
             IServiceCollection  services = new ServiceCollection();
