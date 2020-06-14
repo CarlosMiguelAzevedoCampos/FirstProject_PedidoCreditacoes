@@ -1,3 +1,4 @@
+#Variaveis de ambiente devem ser prenchidas da seguinte forma  -> NomedaKey__NomeQueApontaoValor
 version: '3.4'
 
 services:
@@ -177,7 +178,7 @@ services:
     - network_cmaismai
     restart: always
 
-networks: # Todos os projetos devem estar na mesma network. 
+networks: # Todos os projetos devem estar na mesma network. as
   network_cmaismai:
     driver: bridge
 volumes:
