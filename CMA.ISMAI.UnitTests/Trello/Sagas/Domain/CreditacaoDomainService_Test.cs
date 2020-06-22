@@ -115,9 +115,10 @@ namespace CMA.ISMAI.UnitTests.Sagas.Domain
         {
             var sagaMock = new Mock<ISagaService>();
             CreditacaoDomainService creditacoesService = new CreditacaoDomainService(sagaMock.Object);
-            DateTime result = creditacoesService.AddWorkingDays(22);
+            DateTime result = creditacoesService.AddWorkingDays(new DateTime(2020, 01, 01),22);
             Assert.True(result.Date.DayOfWeek != DayOfWeek.Saturday);
             Assert.True(result.Date.DayOfWeek != DayOfWeek.Sunday);
+            Assert.Equal(result.Date, new DateTime(2020, 01, 31));
         }
     }
 }

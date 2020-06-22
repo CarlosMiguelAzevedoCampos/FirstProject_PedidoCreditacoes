@@ -20,7 +20,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
 
         public bool CreateCardAndFinishProcess(string processName, ExternalTask externalTask, int boardId, int dueTime,string description, bool IsCetOrOtherCondition)
         {
-            DateTime createDueTime = _creditacaoService.AddWorkingDays(dueTime);
+            DateTime createDueTime = _creditacaoService.AddWorkingDays(DateTime.Now, dueTime);
             _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - executing..");
             if (ItsSummerBreakTime(DateTime.Now.Month) || ItsSummerBreakTime(createDueTime.Month))
                 return false;

@@ -10,7 +10,7 @@ namespace CMA.ISMAI.Sagas.Domain.Interface
         bool GetCardStatus(string cardId);
         List<string> GetCardAttachments(string cardId);
         bool IsSummerBreakTime(int month);
-        DateTime AddWorkingDays(int days);
+        DateTime AddWorkingDays(DateTime date, int days);
         bool DeleteCard(string cardId);
     }
 }

@@ -54,17 +54,16 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
             return _creditacoesService.DeleteCard(cardId);
         }
 
-        public DateTime AddWorkingDays(int days)
+        public DateTime AddWorkingDays(DateTime date, int days)
         {
-            DateTime tmpDate = DateTime.Now;
             while (days > 0)
             {
-                tmpDate = tmpDate.AddDays(1);
-                if (tmpDate.DayOfWeek < DayOfWeek.Saturday &&
-                    tmpDate.DayOfWeek > DayOfWeek.Sunday)
+                date = date.AddDays(1);
+                if (date.DayOfWeek < DayOfWeek.Saturday &&
+                    date.DayOfWeek > DayOfWeek.Sunday)
                     days--;
             }
-            return tmpDate;
+            return date;
         }
     }
 }
