@@ -67,6 +67,7 @@ services:
       - TrelloApi__DeleteCardUri=http://cmaismaitrelloapi/Trello/DeleteCard # URL para a API do projeto CMA.ISMAI.Trello.API para apagar uma card
       - TrelloApi__GetCardStateUri=http://cmaismaitrelloapi/Trello/GetCardStatus # URL para a API do projeto CMA.ISMAI.Trello.API para obter o estado de uma card
       - TrelloApi__GetCardAttachmentsUri=http://cmaismaitrelloapi/Trello/GetCardAttachments # URL para a API do projeto CMA.ISMAI.Trello.API para obter os anxeos de uma card
+      - TimerConfiguration__Time=3600000   # Deve estar em milisegundos, serve como um timer para ir buscar tasks ao Camunda
 
 
 
