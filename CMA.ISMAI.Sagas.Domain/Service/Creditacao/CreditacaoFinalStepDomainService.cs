@@ -33,7 +33,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Creditacao
                 List<string> filesUrl = _creditacaoService.GetCardAttachments(cardId);
                 string attachmentsLinks = createStringOfAttachements(filesUrl);
                 _creditacoesNotification.SendNotification(BaseConfiguration.ReturnSettingsValue("EmailSecretaria", "Email"),
-                    $"Processo de {studentName}, foi terminado. De seguida, seguem os anexos do seu processo. {attachmentsLinks}");
+                    $"Estado do Processo  <br/> <br/> Processo de {studentName}, foi terminado. <br/> <br/> De seguida, seguem os anexos do seu processo. <br/><br/> {attachmentsLinks}");
                 _log.Info($"{externalTask.Id} - {processName} - {externalTask.TopicName} - Task is completed");
                 return true;
             }

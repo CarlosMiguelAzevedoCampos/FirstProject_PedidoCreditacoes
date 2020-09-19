@@ -179,7 +179,7 @@ services:
     - network_cmaismai
     restart: always
 
-networks: # Todos os projetos devem estar na mesma network. as
+networks: # Todos os projetos devem estar na mesma network.
   network_cmaismai:
     driver: bridge
 volumes:
