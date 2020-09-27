@@ -84,8 +84,8 @@ namespace CMA.ISMAI.Notifications
                 message.Subject = "ISMAI - Trello";
                 message.IsBodyHtml = true; //to make message body as html  
                 message.Body = notification.Message;
-                smtp.Port = 587;
-                smtp.Host = "smtp.gmail.com"; //for gmail host  
+                smtp.Port = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("Notification", "Port"));
+                smtp.Host = BaseConfiguration.ReturnSettingsValue("Notification", "Host");  
                 smtp.EnableSsl = true;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(email,
