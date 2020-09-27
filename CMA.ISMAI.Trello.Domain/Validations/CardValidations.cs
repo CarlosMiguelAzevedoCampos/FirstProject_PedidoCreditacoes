@@ -9,15 +9,15 @@ namespace CMA.ISMAI.Trello.Domain.Validations
         protected void ValidateProcessName()
         {
             RuleFor(c => c.Name)
-                .NotEmpty().WithMessage("Please ensure you have entered the Name")
-                .NotNull().WithMessage("Please ensure you have entered the Name");
+                .NotEmpty().WithMessage("Porfavor insira um nome para o Processo!")
+                .NotNull().WithMessage("Porfavor insira um nome para o Processo!");
         }
 
         protected void ValidateDescription()
         {
             RuleFor(c => c.Description)
-                 .NotEmpty().WithMessage("Please ensure you have entered the Description")
-                .NotNull().WithMessage("Please ensure you have entered the Description");
+                 .NotEmpty().WithMessage("Porfavor, verifique que colocou uma descrição")
+                .NotNull().WithMessage("Porfavor insira uma descrição!");
         }
 
         protected void ValidateDueDate()
@@ -25,38 +25,38 @@ namespace CMA.ISMAI.Trello.Domain.Validations
             RuleFor(c => c.DueTime)
                 .NotEmpty()
                 .Must(TimeToFinishIt)
-                .WithMessage("The card must have an date bigger than the today date!");
+                .WithMessage("A carta tem de ter uma data de fim maior que a de hoje!");
         }
 
         protected void ValidateBoardId()
         {
             RuleFor(c => c.BoardId)
-                 .GreaterThanOrEqualTo(0).WithMessage("The card must have an boardId bigger or equal than the 0!");
+                 .GreaterThanOrEqualTo(0).WithMessage("A carta tem de ter um ID maior ou igual a 0!");
         }
 
         protected void ValidateFilesUrl()
         {
             RuleFor(c => c.FilesUrl)
-                .NotNull().WithMessage("Please ensure you have entered the files url list");
+                .NotNull().WithMessage("Porfavor, verifique que inseriu os links para o ficheiros");
         }
 
         protected void ValidateInstituteName()
         {
             RuleFor(c => c.InstituteName)
-                .NotNull().WithMessage("Please ensure you have entered the Institute Name").
-                    NotEmpty().WithMessage("Please ensure you have entered the Institute Name");
+                                .NotEmpty().WithMessage("Porfavor insira o nome da Instituição!")
+                .NotNull().WithMessage("Porfavor insira o nome da Instituição!");
         }
         protected void ValidateCourseName()
         {
             RuleFor(c => c.CourseName)
-                .NotNull().WithMessage("Please ensure you have entered the Course Name").
-                    NotEmpty().WithMessage("Please ensure you have entered the Course Name");
+                .NotNull().WithMessage("Porfavor insira o nome do curso!").
+                    NotEmpty().WithMessage("Porfavor insira o nome do curso");
         }
         protected void ValidateStudentName()
         {
             RuleFor(c => c.StudentName)
-                .NotNull().WithMessage("Please ensure you have entered the Student Name").
-                    NotEmpty().WithMessage("Please ensure you have entered the Student Name");
+                .NotNull().WithMessage("Porfavor, insira um nome de um Aluno").
+                    NotEmpty().WithMessage("Porfavor, insira um nome de um Aluno");
         }
 
         private bool TimeToFinishIt(DateTime arg)

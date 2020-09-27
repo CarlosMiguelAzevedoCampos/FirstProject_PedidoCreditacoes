@@ -2,9 +2,6 @@
   "profiles": {
     "CMA.ISMAI.Sagas.UI": {
       "commandName": "Project"
-    },
-    "Docker": {
-      "commandName": "Docker"
     }
   }
 }
