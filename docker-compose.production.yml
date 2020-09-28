@@ -66,7 +66,7 @@ services:
       - TrelloApi__DeleteCardUri=http://cmaismaitrelloapi/Trello/DeleteCard # URL para a API do projeto CMA.ISMAI.Trello.API para apagar uma card
       - TrelloApi__GetCardStateUri=http://cmaismaitrelloapi/Trello/GetCardStatus # URL para a API do projeto CMA.ISMAI.Trello.API para obter o estado de uma card
       - TrelloApi__GetCardAttachmentsUri=http://cmaismaitrelloapi/Trello/GetCardAttachments # URL para a API do projeto CMA.ISMAI.Trello.API para obter os anxeos de uma card
-
+      - TimerConfiguration__Time=3600000   # Deve estar em milisegundos, serve como um timer para ir buscar tasks ao Camunda
 
 
   cma.ismai.notifications:
@@ -83,6 +83,8 @@ services:
       - RabbitMq__Port=5672                      # Porta do rabbitmq
       - Notification__Email=trelloismai@gmail.com # Email que faz o envio de notificações
       - Notification__Password=trelloteste123 # Password do email que faz o envio de notificações
+      - Notification__Host=smtp.gmail.com # Host do email que faz o envio de notificações
+      - Notification__Port=587 # Porta do email que faz o envio de notificações
       - ElasticConfiguration__Uri=http://elasticsearch:9200/ # Nome do conainer do ElasticSearch. Os containers internamente comunicam pelo seu nome
       - ASPNETCORE_ENVIRONMENT=Production # Ambiente em que o projeto executará
 

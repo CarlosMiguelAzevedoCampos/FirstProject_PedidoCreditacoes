@@ -88,6 +88,8 @@ services:
       - RabbitMq__Port=5672                      # Porta do rabbitmq
       - Notification__Email=trelloismai@gmail.com # Email que faz o envio de notificações
       - Notification__Password=trelloteste123 # Password do email que faz o envio de notificações
+      - Notification__Host=smtp.gmail.com # Host do email que faz o envio de notificações
+      - Notification__Port=587 # Porta do email que faz o envio de notificações
       - ElasticConfiguration__Uri=http://elasticsearch:9200/ # Nome do conainer do ElasticSearch. Os containers internamente comunicam pelo seu nome
       - ASPNETCORE_ENVIRONMENT=Development # Ambiente em que o projeto executará
 

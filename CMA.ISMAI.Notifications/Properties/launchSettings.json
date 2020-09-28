@@ -2,6 +2,9 @@
   "profiles": {
     "CMA.ISMAI.Notifications": {
       "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
     }
   }
 }
