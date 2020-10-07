@@ -39,6 +39,7 @@ namespace CMA.ISMAI.Sagas.UI
                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(BaseConfiguration.ReturnSettingsValue("ElasticConfiguration", "Uri")))
                {
                    AutoRegisterTemplate = true,
+                   IndexFormat = "TrelloISMAISaga"
                })
             .CreateLogger();
 

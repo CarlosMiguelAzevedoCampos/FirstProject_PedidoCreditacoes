@@ -3,8 +3,6 @@ using CMA.ISMAI.Core.Events.Store.Interface;
 using CMA.ISMAI.Core.Events.Store.Service;
 using CMA.ISMAI.Logging.Interface;
 using CMA.ISMAI.Logging.Service;
-using CMA.ISMAI.Trello.API.HealthCheck;
-using CMA.ISMAI.Trello.API.HealthCheck.Interface;
 using CMA.ISMAI.Trello.Domain.CommandHandlers;
 using CMA.ISMAI.Trello.Domain.EventHandlers;
 using CMA.ISMAI.Trello.Domain.Interface;
@@ -13,10 +11,7 @@ using CMA.ISMAI.Trello.Engine.Interface;
 using CMA.ISMAI.Trello.Engine.Service;
 using CMA.ISMAI.Trello.FileReader.Interfaces;
 using CMA.ISMAI.Trello.FileReader.Services;
-using HealthChecks.UI.Client;
-using HealthChecks.UI.Configuration;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,6 +33,7 @@ namespace CMA.ISMAI.Trello.API
                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(BaseConfiguration.ReturnSettingsValue("ElasticConfiguration", "Uri")))
                {
                    AutoRegisterTemplate = true,
+                   IndexFormat = "TrelloISMAIAPI"
                })
             .CreateLogger();
         }
@@ -46,12 +42,6 @@ namespace CMA.ISMAI.Trello.API
         {
             services.AddControllers();
             InitializeDependecyInjection(services);
-            if (!_currentEnvironment.IsDevelopment())
-            {
-                services.AddHealthChecks().AddRabbitMQ(BaseConfiguration.ReturnSettingsValue("RabbitMq", "Uri"), null, "RabbitMQ")
-                .AddCheck<CamundaHealthCheck>("Camunda BPM").AddCheck<TrelloHealthCheck>("Trello");
-                services.AddHealthChecksUI();
-            }
         } 
 
         private void InitializeDependecyInjection(IServiceCollection services)
@@ -59,7 +49,6 @@ namespace CMA.ISMAI.Trello.API
             services.AddScoped<ILog, LoggingService>();
             services.AddScoped<ITrello, TrelloService>();
             services.AddScoped<IEngine, EngineService>();
-            services.AddScoped<IHttpRequest, HttpRequest>();
             services.AddScoped<IEventStore, StoreEvent>();
             services.AddScoped<IFileReader, FileReaderService>();
             // Domain - Commands
@@ -84,19 +73,6 @@ namespace CMA.ISMAI.Trello.API
             app.UseAuthorization();
 
             loggerFactory.AddSerilog();
-            if (!_currentEnvironment.IsDevelopment())
-            {
-                 app.UseHealthChecks("/hc", new HealthCheckOptions()
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
-
-                app.UseHealthChecksUI(delegate (Options options)
-                {
-                    options.UIPath = "/hc-ui";
-                });
-            }
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

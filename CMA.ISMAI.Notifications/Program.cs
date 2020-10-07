@@ -108,6 +108,7 @@ namespace CMA.ISMAI.Notifications
                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(BaseConfiguration.ReturnSettingsValue("ElasticConfiguration", "Uri")))
                {
                    AutoRegisterTemplate = true,
+                   IndexFormat = "TrelloISMAINotification"
                })
             .CreateLogger();
 
