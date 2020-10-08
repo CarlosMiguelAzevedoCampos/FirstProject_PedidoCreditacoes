@@ -66,13 +66,13 @@ namespace CMA.ISMAI.Trello.API
                 app.UseDeveloperExceptionPage();
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
-
             loggerFactory.AddSerilog();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

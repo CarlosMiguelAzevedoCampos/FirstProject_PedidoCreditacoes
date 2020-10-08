@@ -33,6 +33,9 @@ namespace CMA.ISMAI.Notifications
 
             try
             {
+                serviceProvider.GetService<ILog>().Info("Notification is starting");
+                Console.WriteLine("Notification is starting");
+
                 var factory = new ConnectionFactory()
                 {
                     HostName = BaseConfiguration.ReturnSettingsValue("RabbitMq", "Uri"),
