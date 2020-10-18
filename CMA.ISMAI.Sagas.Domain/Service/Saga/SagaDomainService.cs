@@ -20,6 +20,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
         private readonly ICreditacaoWithNoCardCreationDomainService _creditacaoWithNoCardCreation;
         private Timer pollingTimer;
         private readonly int _pollingtime;
+        private readonly int _taskNumbers;
 
         public SagaDomainService(ILog log, ICreditacaoFinalStepDomainService creditacaoFinalStep, ICreditacaoWithNoCardCreationDomainService creditacaoWithNoCardCreation, ICreditacaoWithCardCreationDomainService creditacaoWithCardCreation)
         {
@@ -30,6 +31,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
             _creditacaoWithNoCardCreation = creditacaoWithNoCardCreation;
             workers = new Dictionary<string, Action<ExternalTask>>();
             _pollingtime = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TimerConfiguration", "Time"));
+            _taskNumbers = Convert.ToInt32(BaseConfiguration.ReturnSettingsValue("TimerConfiguration", "Tasks"));
         }
         public void RegistWorkers()
         {
@@ -104,7 +106,7 @@ namespace CMA.ISMAI.Sagas.Domain.Service.Saga
         {
             try
             {   
-                var tasks = camundaEngineClient.ExternalTaskService.FetchAndLockTasks("CreditacaoISMAI", 1000000, workers.Keys, 30000, null);
+                var tasks = camundaEngineClient.ExternalTaskService.FetchAndLockTasks("CreditacaoISMAI", _taskNumbers, workers.Keys, _pollingtime/2, null);
                 Parallel.ForEach(
                     tasks,
                     new ParallelOptions { MaxDegreeOfParallelism = 1 },

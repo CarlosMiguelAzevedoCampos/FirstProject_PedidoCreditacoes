@@ -1,205 +1,190 @@
-#Variaveis de ambiente devem ser prenchidas da seguinte forma  -> NomedaKey__NomeQueApontaoValor
 version: '3.4'
 
 services:
   cma.ismai.trello.api:
-    image: ${DOCKER_REGISTRY-}cmaismaitrelloapi
+    image: a029216/cmaismaitrelloapi:latest
     networks:
       - network_cmaismai
     container_name: cmaismaitrelloapi
     ports:
     - 5666:80
     - 5667:443
-    build:
-      context: .
-      dockerfile: CMA.ISMAI.Trello.API/Dockerfile
-    restart: always
+    restart: unless-stopped
     volumes:
-      - C:/Shared:/shared
+      - C:\Users\Carlos Campos\Desktop\Projeto\TrelloProject_windows\excel:/shared # caminho do host :/ caminho onde estará no container
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development # Ambiente em que o projeto executará
-      - FileReader__Path=//shared//ismai.xlsx # Caminho onde o ficheiro estará no container.
-      - COMPOSE_CONVERT_WINDOWS_PATHS=1 # Caso o host seja um SO Windows.
-      - RabbitMqCore__Uri=rabbitmq # Nome do conainer do rabbitmq. Os containers internamente comunicam pelo seu nome
-      - RabbitMqCore__Username=admin # username do rabbitmq
-      - RabbitMqCore__Password=admin # password do rabbitmq
-      - RabbitMqCore__Queue=NotificationsQueue # Queue do rabbitmq
-      - RabbitMqCore__Port=5672 # Porta do rabbitmq
-      - ElasticConfiguration__Uri=http://elasticsearch:9200/ # Nome do conainer do ElasticSearch. Os containers internamente comunicam pelo seu nome
-      - EventStore__IPAddress=tcp://admin:changeit@eventstore:1113 # Ligação ao EventStore - tcp://username:password@nomedocontainer:portaExposta
-      - BoardIds__Coursecoordinator=5e7a615492c8e839429fd13b # BoardID para os cordenadores de curso
-      - BoardIds__Departmentdirector=5e7a61697c32d815f76c71ce # BoardID para os diretores de departamento
-      - BoardIds__Scientificcouncil=5e7a617c1c87ae276116c00f # BoardID para o concelho cientifico
-      - TrelloKey__AppKey=b9ef9c087e54b015072af32ee9678bbe # APPKey para a API do Trello -  Descrito nos passos em comum
-      - TrelloKey__UserToken=0aa0946c32a9925cbcbf5125c4a6db676061502adde9b8213fc0e9059f59f9e9 # UserToken para a API do Trello -  Descrito nos passos em comum
-      - Trello__Uri=https://api.trello.com # URL da API do Trello
-      - RabbitMq__Uri=amqp://admin:admin@rabbitmq:5672/ # Comunicação com o RabbitMQ amqp://username:password@nomedoContainer:porta
-      - CamundaHealth__Uri=http://camunda:8080/ # URL para o container do camunda
-      - Camunda__Uri=http://camunda:8080/engine-rest/engine/default/ # URL para a API exposta do container do camunda
-      - HealthChecksUI__HealthChecks_Uri=http://cmaismaitrelloapi/hc # nomedocontainerdotrello/hc -> HealthChecks da solução
+      - ASPNETCORE_ENVIRONMENT=Production
+      - FileReader__Path=//shared//ismai.xlsx
+      - RabbitMqCore__Uri=rabbitmq
+      - RabbitMqCore__Username=admin
+      - RabbitMqCore__Password=admin
+      - RabbitMqCore__Queue=NotificationsQueue
+      - RabbitMqCore__Port=5672
+      - ElasticConfiguration__Uri=http://elasticsearch:9200/
+      - EventStore__IPAddress=tcp://admin:changeit@eventstore:1113
+      - BoardIds__Coursecoordinator=5e7a615492c8e839429fd13b
+      - BoardIds__Departmentdirector=5e7a61697c32d815f76c71ce
+      - BoardIds__Scientificcouncil=5e7a617c1c87ae276116c00f
+      - TrelloKey__AppKey=b9ef9c087e54b015072af32ee9678bbe
+      - TrelloKey__UserToken=0aa0946c32a9925cbcbf5125c4a6db676061502adde9b8213fc0e9059f59f9e9
+      - Trello__Uri=https://api.trello.com
+      - RabbitMq__Uri=amqp://admin:admin@rabbitmq:5672/
+      - Camunda__Uri=http://camunda:8080/engine-rest/engine/default/
+
 
 
   cma.ismai.sagas.ui:
-    image: ${DOCKER_REGISTRY-}cmaismaisagasui
+    image: a029216/cmaismaisagastrello:latest
     container_name: cmaismaisagasui
-    build:
-      context: .
-      dockerfile: CMA.ISMAI.Sagas/Dockerfile
     networks:
       - network_cmaismai
     restart: always
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development # Ambiente em que o projeto executará
-      - RabbitMq__Uri=rabbitmq # Nome do conainer do rabbitmq. Os containers internamente comunicam pelo seu nome
-      - RabbitMq__Username=admin # username do rabbitmq
-      - RabbitMq__Password=admin                  # password do rabbitmq
-      - RabbitMq__Queue=NotificationsQueue       # Queue do rabbitmq
-      - RabbitMq__Port=5672                      # Porta do rabbitmq
-      - TrelloCardsTime__coursecoordinator=20  # Tempo para a tramitação coursecoordinator - Verificar diagrama BPMN
-      - TrelloCardsTime__departmentdirector=5 #Tempo para a tramitação departmentdirector - Verificar diagrama BPMN
-      - TrelloCardsTime__coordenatorjury=2 # Tempo para a tramitação coordenatorjury - Verificar diagrama BPMN
-      - TrelloCardsTime__jurydelibers=2 # Tempo para a tramitação jurydelibers - Verificar diagrama BPMN
-      - ElasticConfiguration__Uri=http://elasticsearch:9200/ # Nome do conainer do ElasticSearch. Os containers internamente comunicam pelo seu nome
-      - SummerDelay__Activatedelay=true # Se desejamos que as tramitações sejam interrompidas em Agosto
-      - EmailSecretaria__Email=carlosmiguelcampos1996@gmail.com # Email da secretaria para o envio do email no final do processo
-      - CamundaConfiguration__Uri=http://camunda:8080/engine-rest/engine/default/ # URL para a API exposta do container do camunda
-      - TrelloApi__AddCardUri=http://cmaismaitrelloapi/Trello/AddCard # URL para a API do projeto CMA.ISMAI.Trello.API para adicionar uma nova card
-      - TrelloApi__DeleteCardUri=http://cmaismaitrelloapi/Trello/DeleteCard # URL para a API do projeto CMA.ISMAI.Trello.API para apagar uma card
-      - TrelloApi__GetCardStateUri=http://cmaismaitrelloapi/Trello/GetCardStatus # URL para a API do projeto CMA.ISMAI.Trello.API para obter o estado de uma card
-      - TrelloApi__GetCardAttachmentsUri=http://cmaismaitrelloapi/Trello/GetCardAttachments # URL para a API do projeto CMA.ISMAI.Trello.API para obter os anxeos de uma card
-      - TimerConfiguration__Time=3600000   # Deve estar em milisegundos, serve como um timer para ir buscar tasks ao Camunda
+      - ASPNETCORE_ENVIRONMENT=Production
+      - RabbitMq__Uri=rabbitmq
+      - RabbitMq__Username=admin
+      - RabbitMq__Password=admin
+      - RabbitMq__Queue=NotificationsQueue
+      - RabbitMq__Port=5672
+      - TrelloCardsTime__coursecoordinator=20
+      - TrelloCardsTime__departmentdirector=5
+      - TrelloCardsTime__coordenatorjury=2
+      - TrelloCardsTime__jurydelibers=2
+      - ElasticConfiguration__Uri=http://elasticsearch:9200/
+      - SummerDelay__Activatedelay=true
+      - EmailSecretaria__Email=carlosmiguelcampos1996@gmail.com
+      - CamundaConfiguration__Uri=http://camunda:8080/engine-rest/engine/default/
+      - TrelloApi__AddCardUri=http://cmaismaitrelloapi/Trello/AddCard
+      - TrelloApi__DeleteCardUri=http://cmaismaitrelloapi/Trello/DeleteCard
+      - TrelloApi__GetCardStateUri=http://cmaismaitrelloapi/Trello/GetCardStatus
+      - TrelloApi__GetCardAttachmentsUri=http://cmaismaitrelloapi/Trello/GetCardAttachments
+      - TimerConfiguration__Time=30000
+      - TimerConfiguration__Tasks=30
 
 
 
   cma.ismai.notifications:
-    image: ${DOCKER_REGISTRY-}cmaismainotifications
+    image: a029216/cmaismainotifications:latest
     container_name: cmaismainotifications
-    build:
-      context: .
-      dockerfile: CMA.ISMAI.Notifications/Dockerfile
     networks:
       - network_cmaismai
-    restart: always
+    restart: unless-stopped
     environment:
-      - RabbitMq__Uri=rabbitmq # Nome do conainer do rabbitmq. Os containers internamente comunicam pelo seu nome
-      - RabbitMq__Username=admin # username do rabbitmq
-      - RabbitMq__Password=admin                  # password do rabbitmq
-      - RabbitMq__Queue=NotificationsQueue       # Queue do rabbitmq
-      - RabbitMq__Port=5672                      # Porta do rabbitmq
-      - Notification__Email=trelloismai@gmail.com # Email que faz o envio de notificações
-      - Notification__Password=trelloteste123 # Password do email que faz o envio de notificações
-      - Notification__Host=smtp.gmail.com # Host do email que faz o envio de notificações
-      - Notification__Port=587 # Porta do email que faz o envio de notificações
-      - ElasticConfiguration__Uri=http://elasticsearch:9200/ # Nome do conainer do ElasticSearch. Os containers internamente comunicam pelo seu nome
-      - ASPNETCORE_ENVIRONMENT=Development # Ambiente em que o projeto executará
+      - RabbitMq__Uri=rabbitmq
+      - RabbitMq__Username=admin
+      - RabbitMq__Password=admin
+      - RabbitMq__Queue=NotificationsQueue
+      - RabbitMq__Port=5672
+      - Notification__Email=trelloismai@gmail.com
+      - Notification__Password=trelloteste123
+      - Notification__Host=smtp.gmail.com
+      - Notification__Port=587
+      - ElasticConfiguration__Uri=http://elasticsearch:9200/
+      - ASPNETCORE_ENVIRONMENT=Production
 
 
   cma.ismai.solutions.creditacoes.ui:
-    image: ${DOCKER_REGISTRY-}cmaismaisolutionscreditacoesui
+    image: a029216/cmaismaisolutionsui:latest
     container_name: cmaismaisolutionscreditacoesui
-    build:
-      context: .
-      dockerfile: CMA.ISMAI.Solutions.Creditacoes.UI/Dockerfile
     ports:
     - 5668:80
     - 5669:443
     networks:
       - network_cmaismai
-    restart: always
+    restart: unless-stopped
     environment:
-      - Trello__Uri=http://cmaismaitrelloapi/Trello/AddCardAndProcess # URL para a API do projeto CMA.ISMAI.Trello.API para adicionar uma card e iniciar o processo no camunda
+      - Trello__Uri=http://cmaismaitrelloapi/Trello/AddCardAndProcess
       - ElasticConfiguration__Uri=http://elasticsearch:9200/
-      - TrelloCardsTime__coursecoordinatorjury=5 # Tempo para a tramitação coursecoordinatorjury - Verificar diagrama BPMN
-      - TrelloCardsTime__coursecoordinatorproposal=15 # Tempo para a tramitação coursecoordinatorproposal - Verificar diagrama BPMN
-      - HealthCheck__Uri=http://localhost:5666/hc-ui # HealthChecks estão presentes no container CMA.ISMAI.Trello.API - para obtermos estes healthchecks, devemos colocar aqui o nomedocontainerdotrello:portaexposta
-      - ASPNETCORE_ENVIRONMENT=Development # Ambiente em que o projeto executará
+      - TrelloCardsTime__coursecoordinatorjury=5
+      - TrelloCardsTime__coursecoordinatorproposal=15
+      - ASPNETCORE_ENVIRONMENT=Production
 
-  # Containers auxiliares a solução
+
   
- elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
-    container_name: elasticsearch
-    ports:
-     - "9200:9200"
-    volumes:
-     - ./elasticsearch-data:/usr/share/elasticsearch/data
-    networks:
-     - network_cmaismai
-    restart: always
- 
-   kibana:
-    image: docker.elastic.co/kibana/kibana:6.2.4
-    container_name: kibana
-    ports:
-     - "5601:5601"
-    depends_on:
-     - elasticsearch
-    volumes:
-      - ./kibana-data:/usr/share/kibana/kibana.yml
-    networks:
-     - network_cmaismai
-    restart: always
- 
-   rabbitmq:
-    image: rabbitmq:management
-    container_name: rabbitmq
-    hostname: rabbitmq
+  elasticsearch:
+   image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+   container_name: elasticsearch
+   ports:
+    - "9200:9200"
+   volumes:
+    - ./elasticsearch-data:/usr/share/elasticsearch/data
+   networks:
+    - network_cmaismai
+   restart: unless-stopped
+
+  kibana:
+   image: docker.elastic.co/kibana/kibana:6.2.4
+   container_name: kibana
+   ports:
+    - "5601:5601"
+   depends_on:
+    - elasticsearch
+   volumes:
+    - ./kibana-data:/usr/share/kibana/kibana.yml
+   networks:
+    - network_cmaismai
+   restart: unless-stopped
+
+  rabbitmq:
+   image: rabbitmq:management
+   container_name: rabbitmq
+   hostname: rabbitmq
+   environment:
+    RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+    RABBITMQ_DEFAULT_USER: "admin"
+    RABBITMQ_DEFAULT_PASS: "admin"
+    RABBITMQ_DEFAULT_VHOST: "/"
+   ports:
+    - "5672:5672"
+    - "15672:15672"
+   networks:
+   - network_cmaismai
+   privileged: true
+   volumes:
+   - ./rabbitmq-data/:/var/lib/rabbitmq/mnesia
+   restart: unless-stopped
+
+  camunda:
+   container_name: camunda
+   image: camunda/camunda-bpm-platform:latest
+   ports:
+    - "8080:8080"
+   volumes:
+    - ./camunda-data/:/camunda/camunda-h2-dbs
+   networks:
+    - network_cmaismai
+   restart: unless-stopped
+
+  eventstore.db:
+    container_name: eventstore
+    image: eventstore/eventstore:release-5.0.8
     environment:
-     RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
-     RABBITMQ_DEFAULT_USER: "admin"
-     RABBITMQ_DEFAULT_PASS: "admin"
-     RABBITMQ_DEFAULT_VHOST: "/"
+      - EVENTSTORE_CLUSTER_SIZE=1
+      - EVENTSTORE_INT_TCP_PORT=1112
+      - EVENTSTORE_EXT_TCP_PORT=1113
+      - EVENTSTORE_INT_HTTP_PORT=2112
+      - EVENTSTORE_EXT_HTTP_PORT=2113
     ports:
-     - "5672:5672"
-     - "15672:15672"
+      - "1112:1112"
+      - "1113:1113"
+      - "2112:2112"
+      - "2113:2113"
+    volumes:
+      - ./eventstore-data:/var/lib/eventstore
+      - ./eventstore-log:/var/log/eventstore
     networks:
     - network_cmaismai
-    privileged: true
-    volumes:
-    - ./rabbitmq-data/:/var/lib/rabbitmq/mnesia
-    restart: always
- 
-   camunda:
-    container_name: camunda
-    image: camunda/camunda-bpm-platform:latest
+    restart: unless-stopped
+  portainer:
+    image: portainer/portainer
     ports:
-     - "8080:8080"
-    networks:
-     - network_cmaismai
+      - "9000:9000"
     volumes:
-    - ./camunda-data/:/camunda/camunda-h2-dbs
-    restart: always
- 
-   eventstore.db:
-     container_name: eventstore
-     image: eventstore/eventstore:release-5.0.8
-     environment:
-       - EVENTSTORE_CLUSTER_SIZE=1
-       - EVENTSTORE_INT_TCP_PORT=1112
-       - EVENTSTORE_EXT_TCP_PORT=1113
-       - EVENTSTORE_INT_HTTP_PORT=2112
-       - EVENTSTORE_EXT_HTTP_PORT=2113
-     ports:
-       - "1112:1112"
-       - "1113:1113"
-       - "2112:2112"
-       - "2113:2113"
-     volumes:
-       - ./eventstore-data:/var/lib/eventstore
-       - ./eventstore-log:/var/log/eventstore
-     networks:
-       - network_cmaismai
-     restart: always
-   portainer:
-      image: portainer/portainer
-      ports:
-        - "9000:9000"
-      volumes:
-        - ./portainer_data:/data
-        - /var/run/docker.sock:/var/run/docker.sock
-      networks:
-        - network_cmaismai
-
-networks: # Todos os projetos devem estar na mesma network.
+      - ./portainer-data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - network_cmaismai
+    restart: unless-stopped
+networks:
   network_cmaismai:
     driver: bridge
