@@ -32,7 +32,7 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             IActionResult action = creditacaoController.Create(creditacaoDto);
 
             string result = tempData["Process_status"].ToString();
-            Assert.True(result == "Process deployed!");
+            Assert.True(result == "Processo Criado com Sucesso!");
         }
 
         [Fact(DisplayName = "Fail on creating a new card and on creating Process")]
@@ -54,7 +54,7 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             IActionResult action = creditacaoController.Create(creditacaoDto);
 
             string result = tempData["Process_status"].ToString(); 
-            Assert.True(result == "An error happend while creating the process!, please contact the IT!");
+            Assert.True(result == "Ocorreu um erro!, porfavor, contacte o IT");
         }
 
 
@@ -79,7 +79,7 @@ namespace CMA.ISMAI.UnitTests.Solutions.Creditacoes
             IActionResult action = creditacaoController.Create(creditacaoDto);
 
             string result = tempData["Process_status"].ToString();
-            Assert.True(result == "An error happend while creating the process!, invalid model!");
+            Assert.True(result == "Ocorreu um erro!, porfavor, verifique os seus campos");
         }
     }
 }
