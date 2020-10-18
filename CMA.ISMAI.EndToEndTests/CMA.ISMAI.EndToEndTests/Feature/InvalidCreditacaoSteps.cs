@@ -12,7 +12,7 @@ namespace CMA.ISMAI.EndToEndTests.Feature
         public InvalidCreditacaoSteps()
         {
             // Onde se encontra o web driver
-            webDriver = new ChromeDriver(@"C:\Users\Carlos Campos\Downloads\chromedriver_win32");
+            webDriver = new ChromeDriver(@"C:\Users\Carlos Campos\Downloads\google");
         }
 
         [When(@"Navigate to Criar Novo Processo page")]
@@ -21,7 +21,7 @@ namespace CMA.ISMAI.EndToEndTests.Feature
             // Endereço onde o website se encontra
             webDriver.Navigate().GoToUrl("https://localhost:5005/Creditacao/Create");
         }
-        
+
         [When(@"Entered the information in some fields")]
         public void WhenEnteredTheInformationInSomeFields()
         {
