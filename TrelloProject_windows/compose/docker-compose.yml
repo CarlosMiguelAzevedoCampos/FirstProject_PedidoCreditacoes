@@ -1,6 +1,12 @@
 # Neste ficheiro, devemos modificar o caminho dos volumes para o caminho onde se encontra a informação pretendida.
-# Nas variaveis de ambiente, estas são simples de ser compreendidas, logo, devemos preenche-lás com a informação pedida. - Não necessitamos obrigatóriamente de modificar o que se encontra para a frente deste valor ":". 
+# Nas variaveis de ambiente, estas são simples de ser compreendidas, logo, devemos preenche-lás com a informação pedida.
 # Nas imagens, elasticsearch até portainer, não necessitamos de fazer modificações.
+# !! Variaveis importantes
+#  TimeToFetch__Time=30000 e TaskPerFetch__Time=30 são varáveis importantes, pois representam o tempo de obtenção de dados do camunda e o número de tasks que iremos requistiar ao Camunda BPM
+# Nos volumes, apenas necessitamos de editar a parte esquerda ao ":", pois é onde devemos indicar onde, no nosso computar, a pasta do container se vai localizar.
+# Uma variavel de volume que tenha este aspeto :C:\Users\Carlos Campos\Desktop\Projeto\TrelloProject_windows\excel - Representa uma pasta que se encontra no nosso computador. O ficheiro que nela se encontrar, o ficheiro com o nome de utilizadores do Trello, deve ter o seguinte nome : ismai.xlsx
+# Ou, caso tenha um nome diferente, este deverá ser atualizado na seguinte váriavel       - FileReader__Path=//shared//ismai.xlsx
+
 version: '3.4'
 
 services:
