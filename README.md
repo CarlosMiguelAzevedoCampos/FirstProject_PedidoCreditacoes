@@ -24,3 +24,13 @@ Com este projeto, o pretendido passa por inovar e simplificar este processo manu
 
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/THPOhAIXoMk/0.jpg)](https://youtu.be/THPOhAIXoMk "Primeiro Projeto")
+
+
+## Tema
+
+Para desenvolver este tema foi decidido que para se poder ter um acompanhamento visual dos processos, o Trello é a ferramenta indicada para assegurar que os prazos são cumpridos de forma cómoda e para que nenhum documento se perca durante o processo. 
+O Trello organiza os projetos em boards e por temas, logo, pode ter-se a perceção do que está a ser feito, por quem, e o estado do mesmo. Posto isto, existem três boards, um para os processos dos coordenadores de curso, outro para os diretores de departamento e, por fim, um para o concelho científico. Os boards não necessitam obrigatoriamente ter estes nomes, pois na solução vão ser utilizados os seus identificadores:
+
+Ao usar esta ferramenta consegue-se, não só, ter um controlo visual de um processo, como também fazer lembretes aos associados das entregas que têm pendentes, e ainda garantir a segurança de todos os documentos.
+Além de termos uma representação visual do processo, vamos ter também um responsável por orquestrar todos os processos de tramitações, o Camunda BPMN, sendo responsável por finalizar ou iniciar uma tramitação consoante o estado de uma card no Trello.
+Por fim, para fazer o envio da notificação para a secretária, além de se recorrer ao RabbitMQ para enfileirar a mensagem para o serviço de notificações a processar, vai ser utilizado um serviço de envio de e-mails.
