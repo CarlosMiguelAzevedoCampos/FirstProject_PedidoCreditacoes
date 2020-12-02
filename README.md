@@ -26,7 +26,7 @@ Com este projeto, o pretendido passa por inovar e simplificar este processo manu
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/THPOhAIXoMk/0.jpg)](https://youtu.be/THPOhAIXoMk "Primeiro Projeto")
 
 
-## Tema
+## Ferramentas de apoio à construção da solução
 
 Para desenvolver este tema foi decidido que para se poder ter um acompanhamento visual dos processos, o Trello é a ferramenta indicada para assegurar que os prazos são cumpridos de forma cómoda e para que nenhum documento se perca durante o processo. 
 O Trello organiza os projetos em boards e por temas, logo, pode ter-se a perceção do que está a ser feito, por quem, e o estado do mesmo. Posto isto, existem três boards, um para os processos dos coordenadores de curso, outro para os diretores de departamento e, por fim, um para o concelho científico. Os boards não necessitam obrigatoriamente ter estes nomes, pois na solução vão ser utilizados os seus identificadores:
