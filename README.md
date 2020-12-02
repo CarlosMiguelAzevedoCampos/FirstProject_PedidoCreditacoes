@@ -20,11 +20,6 @@ Caso o aluno pretenda obter creditação no contexto de Cursos de Especializaç�
 3.	No prazo de 5 dias úteis o Presidente do Conselho Científico remete aos Serviços de Secretaria com o conhecimento ao Reitor.
 Com este projeto, o pretendido passa por inovar e simplificar este processo manual, permitindo ter um controlo visual do processo e garantir a segurança de todos os documentos envolvidos neste processo.
 
-## Vídeo
-
-
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/THPOhAIXoMk/0.jpg)](https://youtu.be/THPOhAIXoMk "Primeiro Projeto")
-
 
 ## Ferramentas de apoio à construção da solução
 
@@ -34,3 +29,8 @@ O Trello organiza os projetos em boards e por temas, logo, pode ter-se a perceç
 Ao usar esta ferramenta consegue-se, não só, ter um controlo visual de um processo, como também fazer lembretes aos associados das entregas que têm pendentes, e ainda garantir a segurança de todos os documentos.
 Além de termos uma representação visual do processo, vamos ter também um responsável por orquestrar todos os processos de tramitações, o Camunda BPMN, sendo responsável por finalizar ou iniciar uma tramitação consoante o estado de uma card no Trello.
 Por fim, para fazer o envio da notificação para a secretária, além de se recorrer ao RabbitMQ para enfileirar a mensagem para o serviço de notificações a processar, vai ser utilizado um serviço de envio de e-mails.
+
+## Vídeo
+
+
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/THPOhAIXoMk/0.jpg)](https://youtu.be/THPOhAIXoMk "Primeiro Projeto")
